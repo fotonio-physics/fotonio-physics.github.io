@@ -1,0 +1,24 @@
+{
+ "name": "Φωτόνιο Quiz",
+ "short_name": "Φωτόνιο",
+ "start_url": "/",
+ "scope": "/",
+ "display": "standalone",
+ "background_color": "#0F1B2D",
+ "theme_color": "#0F1B2D",
+ "lang": "el",
+ "icons": [
+  {
+   "src": "/icon-quiz-192.png",
+   "sizes": "192x192",
+   "type": "image/png",
+   "purpose": "any maskable"
+  },
+  {
+   "src": "/icon-quiz-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "any maskable"
+  }
+ ]
+}
