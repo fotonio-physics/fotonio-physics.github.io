@@ -2,7 +2,7 @@
  "name": "Φωτόνιο · Πίνακας",
  "short_name": "Πίνακας",
  "start_url": "/pinakas.html",
- "scope": "/",
+ "scope": "/pinakas.html",
  "display": "standalone",
  "background_color": "#0F1B2D",
  "theme_color": "#0F1B2D",
@@ -20,5 +20,6 @@
    "type": "image/png",
    "purpose": "any maskable"
   }
- ]
+ ],
+ "id": "/pinakas.html"
 }
