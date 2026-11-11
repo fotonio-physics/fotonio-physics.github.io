@@ -222,10 +222,11 @@ textarea#cpt{width:100%;height:90px;background:var(--bg);color:var(--soft);borde
 .ps.emp .ph{opacity:.35}
 .podme{margin-top:12px;text-align:center;font-size:13.5px;color:var(--soft)}
 .podme b{color:var(--ban)}
+
 </style>
 <link rel="manifest" href="/manifest-quiz.webmanifest">
-<link rel="icon" href="/icon-quiz-192.png">
-<link rel="apple-touch-icon" href="/icon-quiz-180.png">
+<link rel="icon" href="/icon2-quiz-192.png">
+<link rel="apple-touch-icon" href="/icon2-quiz-180.png">
 <meta name="theme-color" content="#0F1B2D">
 </head>
 <body>
@@ -522,6 +523,7 @@ let S=null;   // γύρος
 let saving=Promise.resolve();
 
 /* ---------- Είσοδος ---------- */
+
 function login(msg){
   const saved=loadLogin();
   app.innerHTML=`
@@ -900,5 +902,6 @@ async function share(isAch){
 /* ---------- Εκκίνηση ---------- */
 login();
 </script>
+<script>if("serviceWorker" in navigator)navigator.serviceWorker.register("/sw.js").catch(function(){});</script>
 </body>
 </html>

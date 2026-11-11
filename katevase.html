@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="el"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Κατέβασε το Φωτόνιο Quiz</title>
+<meta name="description" content="Κατέβασε το Φωτόνιο Quiz στο κινητό σου.">
+<link rel="manifest" href="/manifest-quiz.webmanifest">
+<link rel="icon" href="/icon2-quiz-192.png">
+<link rel="apple-touch-icon" href="/icon2-quiz-180.png">
+<meta name="theme-color" content="#0F1B2D">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:#0A1424}
+html,body{color:#EEF2F8;font-family:Inter,system-ui,-apple-system,'Segoe UI',sans-serif;min-height:100%}
+body{min-height:100vh;background:radial-gradient(ellipse 90% 50% at 50% 18%,#22406A 0%,#13233D 50%,#0A1424 100%) no-repeat #0A1424;padding:max(28px,env(safe-area-inset-top)) 20px 40px}
+.w{max-width:440px;margin:0 auto;display:flex;flex-direction:column;align-items:center;text-align:center}
+.brand{display:flex;align-items:center;gap:12px}
+.brand svg{width:52px;height:52px}
+.wm{font-weight:900;font-size:24px;letter-spacing:.05em}.wm b{color:#F5B841}
+.hero{margin:22px 0 4px}
+.hero svg{width:230px;height:auto;max-height:170px}
+h1{font-size:30px;font-weight:900;line-height:1.15;margin-top:6px}
+h1 b{color:#F5B841}
+.sub{color:#9FB0C4;font-size:15.5px;margin-top:8px;line-height:1.45}
+.big{margin-top:24px;width:100%;border:0;border-radius:18px;padding:18px;font:inherit;font-weight:900;font-size:20px;background:#F5B841;color:#1B1300;cursor:pointer;box-shadow:0 0 30px rgba(245,184,65,.35);display:flex;align-items:center;justify-content:center;gap:10px;text-decoration:none}
+.big:disabled{opacity:.55}
+.sec{margin-top:12px;width:100%;border:1px solid #2E4566;border-radius:16px;padding:14px;font:inherit;font-weight:700;font-size:16px;background:#16263D;color:#EEF2F8;cursor:pointer;text-decoration:none;display:block}
+.steps{margin-top:20px;width:100%;display:flex;flex-direction:column;gap:10px;text-align:left}
+.st{display:flex;gap:14px;align-items:center;background:#16263D;border:1px solid #2E4566;border-radius:16px;padding:13px 14px;font-size:16px;line-height:1.4}
+.st .k{flex:0 0 34px;height:34px;border-radius:50%;background:#F5B841;color:#1B1300;font-weight:900;display:flex;align-items:center;justify-content:center}
+.st em{font-style:normal;color:#F5B841;font-weight:800}
+.shi{display:inline-flex;vertical-align:middle;width:28px;height:28px;border:1.5px solid #2E4566;border-radius:7px;align-items:center;justify-content:center;margin:0 3px;background:#0F1B2D}
+.note{color:#7F93AD;font-size:13.5px;margin-top:16px;line-height:1.45}
+.ok{margin-top:22px;background:linear-gradient(90deg,rgba(245,184,65,.18),rgba(245,184,65,.05));border:1.5px solid rgba(245,184,65,.6);border-radius:18px;padding:16px;font-size:16.5px;font-weight:700}
+.arrow{position:fixed;font-size:44px;color:#F5B841;animation:b 1s ease-in-out infinite;font-weight:900}
+.arrow.tr{top:6px;right:16px}.arrow.bc{bottom:10px;left:50%;margin-left:-14px}
+@keyframes b{50%{transform:translateY(-8px)}}
+.foot{margin-top:26px;color:#3FC1C9;font-weight:700;font-size:14px}
+.hide{display:none!important}
+</style></head><body>
+<div class="w">
+ <div class="brand"><svg viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="100" r="82" fill="none" stroke="#3FC1C9" stroke-width="8"/><path d="M18.0 98.6 L20.0 95.5 L22.0 91.4 L24.0 87.2 L26.0 83.4 L28.0 80.7 L30.0 79.3 L32.0 79.6 L34.0 81.7 L36.0 85.7 L38.0 91.5 L40.0 100.0 L42.0 109.1 L44.0 116.3 L46.0 122.4 L48.0 127.1 L50.0 130.2 L52.0 131.5 L54.0 131.0 L56.0 128.6 L58.0 124.3 L60.0 118.3 L62.0 110.6 L64.0 100.0 L66.0 89.2 L68.0 80.9 L70.0 74.0 L72.0 68.8 L74.0 65.3 L76.0 63.8 L78.0 64.4 L80.0 67.1 L82.0 72.0 L84.0 78.9 L86.0 87.8 L88.0 100.0 L90.0 112.4 L92.0 121.9 L94.0 129.6 L96.0 135.3 L98.0 138.8 L100.0 140.0 L102.0 138.8 L104.0 135.3 L106.0 129.6 L108.0 121.9 L110.0 112.4 L112.0 100.0 L114.0 87.8 L116.0 78.9 L118.0 72.0 L120.0 67.1 L122.0 64.4 L124.0 63.8 L126.0 65.3 L128.0 68.8 L130.0 74.0 L132.0 80.9 L134.0 89.2 L136.0 100.0 L138.0 110.6 L140.0 118.3 L142.0 124.3 L144.0 128.6 L146.0 131.0 L148.0 131.5 L150.0 130.2 L152.0 127.1 L154.0 122.4 L156.0 116.3 L158.0 109.1 L160.0 100.0 L162.0 91.5 L164.0 85.7 L166.0 81.7 L168.0 79.6 L170.0 79.3 L172.0 80.7 L174.0 83.4 L176.0 87.2 L178.0 91.4 L180.0 95.5 L182.0 98.6" fill="none" stroke="#F5B841" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><circle cx="76" cy="106" r="4.5" fill="#F5B841"/><circle cx="124" cy="106" r="4.5" fill="#F5B841"/></svg><div class="wm">ΦΩΤΟΝΙΟ <b>QUIZ</b></div></div>
+ <div class="hero" id="hero"></div>
+ <h1>Κατέβασε το <b>Φωτόνιο</b><br>στο κινητό σου</h1>
+ <div class="sub" id="sub">Παίζεις κατευθείαν από την οθόνη σου, σαν εφαρμογή. Δωρεάν, χωρίς Play Store και App Store.</div>
+ <div id="box" style="width:100%"></div>
+ <div class="foot">@fotonio.physics</div>
+</div>
+<script>
+/* ---------- Το Φωτόνιο του παίκτη ανάλογα με τα φωτόνια (βαθμίδα ανά 10) ---------- */
+function tierHero(n){
+  const uid='u'+Math.random().toString(36).slice(2,7);
+  /* Κάθε δεκάδα ξεκλειδώνει κάτι καινούριο που φαίνεται καθαρά:
+     0 μισόκλειστα μάτια στο σκοτάδι · 10 ανοίγει τα μάτια, πρώτη σπίθα · 20 λαμπερό περίγραμμα, μάγουλα, χαιρετά
+     30 ακτίνες φωτός · 40 οι ακτίνες γυρίζουν, φωτεινή ουρά · 50 σπίθες, φωτοστέφανο, σηκώνει τα χέρια
+     60 φωτόνιο σε τροχιά · 70 πρώτη φλόγα · 80 χρυσές ακτίνες, μεγαλύτερη φλόγα · 90 διπλή αύρα · 100 πλήρης φλόγα «φως» */
+  const t=Math.min(10,Math.floor(n/10));
+  const T='#3FC1C9',A='#F5B841',N='#0F1B2D';
+  const body=['#0B1320','#132541','#18304F','#1C3A5E','#21446D','#264E7C','#2A588A','#2E6297','#326CA4','#3776B0','#3C80BC'][t];
+  const bright=[.5,.72,.84,.92,1,1,1,1,1,1,1][t];
+  const glow=[0,3,7,10,13,16,18,20,22,24,26][t];
+  let back='', crown='', front='';
+  // ακτίνες φωτός πίσω από το σώμα
+  if(t>=3){
+    const L=t>=8?32:t>=5?28:t>=4?24:16, c=t>=8?'#FFD36B':A, cnt=t>=8?16:12;
+    let r='';for(let i=0;i<cnt;i++){const a=i*360/cnt*Math.PI/180;r+=`<line x1="${(150+76*Math.sin(a)).toFixed(1)}" y1="${(115-76*Math.cos(a)).toFixed(1)}" x2="${(150+(76+L)*Math.sin(a)).toFixed(1)}" y2="${(115-(76+L)*Math.cos(a)).toFixed(1)}" stroke="${c}" stroke-width="${t>=8?5:4}" stroke-linecap="round" opacity="${t>=8?.85:.6}"/>`;}
+    back+=`<g class="${t>=4?'spin':''}">${r}</g>`;
+  }
+  // φωτοστέφανο / αύρα
+  if(t>=5) back+=`<circle class="halo" cx="150" cy="115" r="${t>=9?84:78}" fill="none" stroke="${A}" stroke-width="3" opacity=".7" stroke-dasharray="${t>=9?'':'6 8'}"/>`;
+  if(t>=9) back+=`<circle class="halo" cx="150" cy="115" r="96" fill="none" stroke="${T}" stroke-width="2.5" opacity=".6" style="animation-delay:-1.2s"/>`;
+  // πρώτη σπίθα (10–49)
+  if(t>=1&&t<5) front+=`<path class="twinkle" d="M206 52 l4 10 10 4 -10 4 -4 10 -4 -10 -10 -4 10 -4z" fill="#FFF3D1"/>`;
+  // σπίθες που ανεβαίνουν (50+)
+  if(t>=5){
+    const ns=t>=7?5:t>=6?4:3;
+    const sp=[[-26,40,'#FFF3D1',3.4,-.2],[22,44,A,3.2,-1.0],[-6,34,T,3,-.6],[34,52,'#FFF3D1',2.8,-1.4],[-38,54,A,3,-.9]];
+    for(let i=0;i<ns;i++){const [dx,y,c,r,d]=sp[i];front+=`<circle class="spark" cx="${150+dx}" cy="${y}" r="${r}" fill="${c}" style="animation-delay:${d}s"/>`;}
+  }
+  // φωτόνια σε τροχιά (60+)
+  if(t>=6){const no=t>=10?3:t>=7?2:1;for(let i=0;i<no;i++)front+=`<g class="orbit" style="animation-delay:${-i*1.3}s"><circle cx="150" cy="${115-90}" r="6" fill="${i%2?T:A}"/><circle cx="150" cy="${115-90}" r="11" fill="${i%2?T:A}" opacity=".25"/></g>`;}
+  // φλόγα (70+)
+  if(n>=70){
+    /* μία ενιαία φλόγα σαν το 🔥: κεντρική ψηλή γλώσσα με δύο μικρότερες στα πλάγια, στρώσεις χρώματος από μέσα προς τα έξω */
+    const k2=n>=100?Math.min(1.15,1+(n-100)/400):n>=90?.88:n>=80?.76:.62;
+    const H=96*k2+22, W=90*Math.min(1.05,.68+k2*.32);
+    const P=(x,y)=>`${(x*W).toFixed(1)} ${(-y*H).toFixed(1)}`;
+    const outer=`M${P(0,0)} C${P(-.62,0)} ${P(-.78,.36)} ${P(-.56,.62)} C${P(-.5,.5)} ${P(-.42,.46)} ${P(-.36,.5)} C${P(-.36,.66)} ${P(-.2,.82)} ${P(.02,1)} C${P(0,.86)} ${P(.12,.78)} ${P(.22,.74)} C${P(.24,.66)} ${P(.3,.62)} ${P(.44,.64)} C${P(.4,.58)} ${P(.7,.4)} ${P(.62,.22)} C${P(.56,.06)} ${P(.32,0)} ${P(0,0)}Z`;
+    const drop=(sx,sy)=>`M${P(0,0)} C${P(-.5*sx,0)} ${P(-.55*sx,.4*sy)} ${P(-.08*sx,.98*sy)} C${P(-.04*sx,.7*sy)} ${P(.18*sx,.62*sy)} ${P(.3*sx,.48*sy)} C${P(.5*sx,.3*sy)} ${P(.42*sx,0)} ${P(0,0)}Z`;
+    crown+=`<defs><linearGradient id="fo${uid}" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#F05A1A"/><stop offset=".6" stop-color="#F28A1E"/><stop offset="1" stop-color="${A}"/></linearGradient>
+      <filter id="glo${uid}" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="8"/></filter></defs>
+    <g transform="translate(150 96)">
+      <path d="${outer}" fill="${A}" opacity=".35" filter="url(#glo${uid})"/>
+      <g class="flame">
+        <path d="${outer}" fill="url(#fo${uid})"/>
+        <g transform="translate(0 ${(-H*.2).toFixed(1)})"><path class="fl b" d="${drop(.72,.62)}" fill="${A}"/>
+        <path class="fl c" d="${drop(.42,.36)}" fill="#FFE9A6"/></g>
+      </g>
+    </g>`;
+    }
+  // στάση σώματος και πρόσωπο
+  const sleepy=t===0;
+  const armR=t>=5?`<path d="M206 106 Q228 88 222 62" fill="none" stroke="${T}" stroke-width="7" stroke-linecap="round"/><circle cx="222" cy="58" r="7" fill="${T}"/>`
+           :t>=2?`<path d="M208 114 L236 100" fill="none" stroke="${T}" stroke-width="7" stroke-linecap="round"/><circle cx="238" cy="99" r="6.5" fill="${T}"/>`
+           :`<path d="M198 152 Q192 172 172 160" fill="none" stroke="${T}" stroke-width="7" stroke-linecap="round"/><circle cx="168" cy="157" r="6.5" fill="${T}"/>`;
+  const armL=t>=5?`<path d="M92 128 Q70 112 76 86" fill="none" stroke="${T}" stroke-width="7" stroke-linecap="round"/><circle cx="76" cy="82" r="7" fill="${T}"/>`
+           :`<path d="M92 128 Q80 142 86 156" fill="none" stroke="${T}" stroke-width="7" stroke-linecap="round"/>`;
+  const eyes=sleepy
+    ?`<ellipse cx="132" cy="102" rx="12" ry="7" fill="#fff" opacity=".8"/><ellipse cx="168" cy="102" rx="12" ry="7" fill="#fff" opacity=".8"/><circle cx="133" cy="104" r="4" fill="${N}"/><circle cx="169" cy="104" r="4" fill="${N}"/><path d="M119 99 Q132 93 145 99 M155 99 Q168 93 181 99" stroke="${body}" stroke-width="5" fill="none"/>`
+    :`<ellipse cx="132" cy="100" rx="12" ry="14" fill="#fff"/><ellipse cx="168" cy="100" rx="12" ry="14" fill="#fff"/><circle cx="134" cy="100" r="6" fill="${N}"/><circle cx="170" cy="100" r="6" fill="${N}"/><circle cx="137" cy="96" r="2" fill="#fff"/><circle cx="173" cy="96" r="2" fill="#fff"/>`;
+  const mouth=t===0?`<path d="M142 130 Q150 128 158 130" fill="none" stroke="${A}" stroke-width="4" stroke-linecap="round" opacity=".8"/>`
+            :t<2?`<path d="M140 126 Q150 136 160 126" fill="none" stroke="${A}" stroke-width="5" stroke-linecap="round"/>`
+            :`<path d="M134 122 Q150 146 166 122 Z" fill="${A}"/>`;
+  const cheeks=t>=2?`<circle cx="118" cy="122" r="7" fill="${A}" opacity=".35"/><circle cx="182" cy="122" r="7" fill="${A}" opacity=".35"/>`:'';
+  const tail=t>=4?A:'#C9973A', tw=t>=4?6:4.5;
+  const ring=t>=2?`drop-shadow(0 0 ${t>=6?8:5}px ${T})`:'';
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="-10 ${t>=7?-40:t>=3?-12:12} 270 ${t>=7?278:t>=3?250:212}" role="img" aria-label="Το Φωτόνιο με ${n} φωτόνια">
+  <g class="float" style="filter:brightness(${bright}) drop-shadow(0 0 ${glow}px rgba(245,184,65,${(0.1+0.06*t).toFixed(2)}))">
+  ${back}
+  ${crown}
+  <path d="M2.0 111.0 L5.0 111.0 L8.0 112.6 L11.0 115.6 L14.0 119.1 L17.0 122.0 L20.0 123.0 L23.0 121.6 L26.0 117.6 L29.0 112.2 L32.0 106.9 L35.0 103.5 L38.0 103.5 L41.0 107.1 L44.0 113.7 L47.0 121.4 L50.0 127.9 L53.0 130.9 L56.0 129.1 L59.0 122.7 L62.0 113.3 L65.0 103.8 L68.0 97.0 L71.0 95.3 L74.0 99.7 L77.0 109.1 L80.0 121.1 L83.0 131.9 L86.0 138.1 L87.5 138.8" fill="none" stroke="${tail}" stroke-width="${tw}" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="36" cy="112.6" r="3.2" fill="${A}"/><circle cx="70" cy="111" r="3.2" fill="${A}"/>
+  <circle cx="150" cy="115" r="62" fill="${body}" stroke="${T}" stroke-width="7" style="filter:${ring}"/>
+  ${armR}${armL}${eyes}${cheeks}${mouth}
+  ${front}
+  </g></svg>`;
+}
+
+document.getElementById('hero').innerHTML=tierHero(45);
+var UA=navigator.userAgent||'';
+var IOS=/iPhone|iPad|iPod/.test(UA)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+var AND=/Android/.test(UA);
+var INAPP=/Instagram|FBAN|FBAV|FB_IAB|TikTok|musical_ly|Snapchat|Messenger|Line\//i.test(UA);
+var IOS_OTHER=IOS&&/CriOS|FxiOS|EdgiOS/.test(UA);
+var HOME=location.origin+'/';
+var SHARE='<span class="shi"><svg width="15" height="18" viewBox="0 0 48 56" fill="none" stroke="#EEF2F8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 22H8v30h32V22h-8"/><path d="M24 36V4"/><path d="M14 13l10-10 10 10"/></svg></span>';
+var BIP=null, box=document.getElementById('box');
+function standalone(){try{return matchMedia('(display-mode: standalone)').matches||navigator.standalone===true}catch(e){return false}}
+function steps(a){return '<div class="steps">'+a.map(function(t,i){return '<div class="st"><span class="k">'+(i+1)+'</span><span>'+t+'</span></div>'}).join('')+'</div>'}
+function arrow(pos){var d=document.createElement('div');d.className='arrow '+pos;d.textContent=pos==='bc'?'↓':'↑';document.body.appendChild(d)}
+function done(){box.innerHTML='<div class="ok">✅ Έτοιμο! Βρες το εικονίδιο <b style="color:#F5B841">Φωτόνιο</b> στην οθόνη σου.</div><a class="sec" href="/">Ή παίξε τώρα εδώ</a>'}
+if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js').catch(function(){});
+window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();BIP=e;if(AND&&!INAPP)androidReady()});
+window.addEventListener('appinstalled',done);
+function androidReady(){
+  box.innerHTML='<button class="big" id="go">📲 Εγκατάσταση</button><div class="note">Πάτα το κουμπί και μετά «Εγκατάσταση» στο παράθυρο που θα βγει.</div><a class="sec" href="/">Παίξε χωρίς εγκατάσταση</a>';
+  document.getElementById('go').onclick=function(){if(!BIP){androidManual();return}var p=BIP;BIP=null;p.prompt();p.userChoice.then(function(r){if(r&&r.outcome==='accepted')done();else androidManual()})};
+}
+function androidManual(){
+  box.innerHTML=steps(['Πάτα <em>⋮</em> πάνω δεξιά','Πάτα <em>«Εγκατάσταση εφαρμογής»</em> ή <em>«Προσθήκη στην αρχική οθόνη»</em>'])+'<div class="note">Αν δεν το βλέπεις, ίσως το Φωτόνιο είναι ήδη εγκατεστημένο: κοίτα στην οθόνη σου.</div><a class="sec" href="/">Παίξε χωρίς εγκατάσταση</a>';arrow('tr');
+}
+if(standalone()){location.replace('/')}
+else if(INAPP&&AND){
+  box.innerHTML='<a class="big" id="go" href="intent://'+location.host+location.pathname+'#Intent;scheme=https;package=com.android.chrome;end">📲 Άνοιγμα στον Chrome</a>'+
+   '<div class="note">Η εγκατάσταση γίνεται από τον Chrome. Αν δεν ανοίξει:</div>'+steps(['Πάτα <em>⋮</em> πάνω δεξιά','Πάτα <em>«Άνοιγμα στο Chrome»</em>']);
+  arrow('tr');
+  setTimeout(function(){location.href=document.getElementById('go').href},400);
+}
+else if(INAPP&&IOS){
+  box.innerHTML='<a class="big" href="x-safari-'+location.href.split('#')[0]+'">📲 Άνοιγμα στο Safari</a>'+
+   '<div class="note">Η εγκατάσταση στο iPhone γίνεται από το Safari. Αν δεν ανοίξει:</div>'+steps(['Πάτα <em>⋯</em> πάνω δεξιά','Πάτα <em>«Άνοιγμα σε εξωτερικό πρόγραμμα περιήγησης»</em>']);
+  arrow('tr');
+}
+else if(IOS){
+  document.getElementById('sub').textContent='Δύο πατήματα και το έχεις στην οθόνη σου, σαν εφαρμογή.';
+  box.innerHTML=steps(['Πάτα '+SHARE+' <em>Κοινοποίηση</em>'+(IOS_OTHER?' πάνω δεξιά':' κάτω στη μέση'),'Κατέβα λίγο και πάτα <em>«Προσθήκη στην οθόνη Αφετηρίας»</em>, μετά <em>«Προσθήκη»</em>'])+'<a class="sec" href="/">Παίξε χωρίς εγκατάσταση</a>';
+  if(!IOS_OTHER)arrow('bc');else arrow('tr');
+}
+else if(AND){
+  box.innerHTML='<button class="big" disabled>Φόρτωση…</button>';
+  setTimeout(function(){if(!BIP)androidManual()},2500);
+}
+else{
+  box.innerHTML='<div class="note" style="font-size:15.5px">Άνοιξε αυτή τη σελίδα από το <b>κινητό</b> σου για να κατεβάσεις το Φωτόνιο:<br><b style="color:#3FC1C9">fotonio-physics.github.io/katevase.html</b></div><a class="sec" href="/">Παίξε τώρα</a>';
+}
+</script>
+</body></html>

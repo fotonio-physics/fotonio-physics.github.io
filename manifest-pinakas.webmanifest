@@ -9,13 +9,13 @@
  "lang": "el",
  "icons": [
   {
-   "src": "/icon-dash-192.png",
+   "src": "/icon2-dash-192.png",
    "sizes": "192x192",
    "type": "image/png",
    "purpose": "any maskable"
   },
   {
-   "src": "/icon-dash-512.png",
+   "src": "/icon2-dash-512.png",
    "sizes": "512x512",
    "type": "image/png",
    "purpose": "any maskable"
