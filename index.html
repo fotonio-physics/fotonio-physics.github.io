@@ -321,16 +321,28 @@ function pickRound(qs, history, rnd, chapters, cls) {
     qs = qs.concat(shuffleArr(extra, rnd).slice(0, ROUND[type] - have));
   });
   var st = questionState(history);
+  // Ρεβάνς διακριτικά: μια λάθος ερώτηση ξαναβγαίνει μόνο αφού περάσουν 2 μέρες
+  // ή αφού ο μαθητής απαντήσει άλλες 40 ερωτήσεις (περίπου 4–5 γύροι). Το πολύ 1 ρεβάνς ανά γύρο.
+  var now = Date.now(), DAY = 864e5, WEEK = 7 * DAY;
+  var order = {}; history.forEach(function (h, i) { order[h.qid] = i; });
+  function cooled(id) { var s = st[id]; return now - s.t >= 2 * DAY || history.length - 1 - order[id] >= 40; }
   var out = [];
+  var retryType = null;
+  var cands = ['mc', 'tf'].filter(function (type) {
+    return qs.some(function (q) { return q.type === type && st[q.id] && st[q.id].last === 0 && cooled(q.id); });
+  });
+  if (cands.length && rnd() < 0.7) retryType = cands[Math.floor(rnd() * cands.length)];
   ['mc', 'tf'].forEach(function (type) {
     var need = ROUND[type];
     var pool = qs.filter(function (q) { return q.type === type; });
     var fresh = shuffleArr(pool.filter(function (q) { return !st[q.id]; }), rnd);
-    var retry = shuffleArr(pool.filter(function (q) { return st[q.id] && st[q.id].last === 0; }), rnd)
+    var wrong = pool.filter(function (q) { return st[q.id] && st[q.id].last === 0; });
+    var retry = shuffleArr(wrong.filter(function (q) { return cooled(q.id); }), rnd)
+      .sort(function (a, b) { return st[a.id].t - st[b.id].t; });
+    var retryLate = shuffleArr(wrong.filter(function (q) { return !cooled(q.id); }), rnd)
       .sort(function (a, b) { return st[a.id].t - st[b.id].t; });
     var review = shuffleArr(pool.filter(function (q) { return st[q.id] && st[q.id].last === 1; }), rnd)
       .sort(function (a, b) { return st[a.id].t - st[b.id].t; });
-    var retrySlots = type === 'mc' ? 1 : 2;
     var pick = [];
     function take(list, n, kind) {
       while (n > 0 && list.length && pick.length < need) {
@@ -339,19 +351,19 @@ function pickRound(qs, history, rnd, chapters, cls) {
         pick.push({ q: q, kind: kind }); n--;
       }
     }
-    // «δύσκολες της τάξης»: 1 ΠΕ + 1 Σ/Λ ανά γύρο, όσες ο μαθητής δεν έχει δει ή δεν τις είχε σωστές
-    // την τελευταία φορά ή τις είχε σωστές πριν από πάνω από 7 μέρες. Οι πιο δύσκολες έχουν προτεραιότητα.
-    var now = Date.now(), WEEK = 7 * 864e5;
+    // «δύσκολες της τάξης»: όσες ο μαθητής δεν έχει δει, ή τις είχε λάθος και έχουν «ξεκουραστεί»,
+    // ή τις είχε σωστές πριν από πάνω από 7 μέρες
     var hard = shuffleArr(pool.filter(function (q) {
       if (!isHard(cls, q.id)) return false;
       var s = st[q.id];
-      return !s || s.last === 0 || now - s.t > WEEK;
+      return !s || (s.last === 0 && cooled(q.id)) || (s.last === 1 && now - s.t > WEEK);
     }), rnd).sort(function (a, b) { return cls[b.id].err - cls[a.id].err; });
-    take(retry, Math.min(retrySlots, need), 'retry');
+    if (type === retryType) take(retry, 1, 'retry');
     take(hard, 1, 'hard');
-    take(fresh, need, 'new');
-    take(retry, need, 'retry');
+    take(fresh, need, 'new');          // πρώτα καινούριες
+    take(retry, need, 'retry');        // μόνο αν τελείωσαν οι καινούριες
     take(review, need, 'review');
+    take(retryLate, need, 'retry');    // τελευταία λύση
     shuffleArr(pick, rnd).forEach(function (p) { out.push(p); });
   });
   return out;
@@ -702,9 +714,9 @@ function ask(){
     opts=`<div class="tf"><button class="opt" data-k="1">Σωστό</button><button class="opt" data-k="0">Λάθος</button></div>`;
   }
   const pct=Math.round(S.i/S.qs.length*100);
-  const kind=q.kind==='retry'?'<span class="tag amb">Ρεβάνς!</span>':q.kind==='hard'?'<span class="tag hard">Δυσκολεύει την τάξη</span>':q.kind==='review'?'<span class="tag ghost">Επανάληψη</span>':'';
+  const kind=q.kind==='hard'?'<span class="tag hard">Δυσκολεύει την τάξη</span>':q.kind==='review'?'<span class="tag ghost">Επανάληψη</span>':'';
   const pts=q.type==='mc'?'5 πόντοι':'1 πόντος';
-  const say=q.kind==='retry'?'Αυτή σε είχε νικήσει. Πάρε την εκδίκησή σου!':q.kind==='hard'?'Αυτή τη χάνουν πολλοί στην τάξη. Δείξε τους πώς γίνεται!':(q.type==='mc'?'Διάλεξε την επιλογή που συμπληρώνει σωστά την πρόταση.':'Σωστό ή Λάθος;');
+  const say=q.kind==='hard'?'Αυτή τη χάνουν πολλοί στην τάξη. Δείξε τους πώς γίνεται!':(q.type==='mc'?'Διάλεξε την επιλογή που συμπληρώνει σωστά την πρόταση.':'Σωστό ή Λάθος;');
   app.innerHTML=`
   <div class="top"><div class="brand">${LOGO}<span>Φωτόνιο</span> Quiz</div>
     <div class="chip"><b id="sc">${S.score}</b>/25</div><div class="chip">🔥 <b id="st">${S.streak}</b></div></div>
@@ -744,10 +756,11 @@ function pick(k){
   saving=saving.then(()=>API.answer(...args)).catch(()=>API.answer(...args)).catch(()=>{S.lost=true});
   document.getElementById('sc').textContent=S.score; document.getElementById('st').textContent=S.streak;
   document.getElementById('mascot').innerHTML=mascot(ok?'cheer':'sad');
-  document.getElementById('say').textContent=ok?(OKS[S.i%OKS.length]+` +${gain}`+(S.streak>2?` · Σερί ${S.streak}!`:'')):BADS[S.i%BADS.length];
+  const rv=q.kind==='retry';
+  document.getElementById('say').textContent=ok&&rv?`Ρεβάνς κερδισμένη! Αυτή σε είχε νικήσει παλιότερα. +${gain}`:ok?(OKS[S.i%OKS.length]+` +${gain}`+(S.streak>2?` · Σερί ${S.streak}!`:'')):BADS[S.i%BADS.length];
   const last=S.i===S.qs.length-1;
   document.getElementById('after').innerHTML=`
-    <div class="fb ${ok?'ok':'no'}"><strong>${ok?'Σωστό':'Λάθος'}</strong>${m(esc(q.ex))}</div>
+    <div class="fb ${ok?'ok':'no'}"><strong>${ok?(rv?'Σωστό · ρεβάνς κερδισμένη 💪':'Σωστό'):'Λάθος'}</strong>${m(esc(q.ex))}</div>
     <div id="obj"><button class="link objbtn" id="objopen">✋ Διαφωνώ με την απάντηση</button></div>
     <div style="height:10px"></div><button class="btn" id="nx">${last?'Δες το σκορ σου':'Επόμενη'}</button>`;
   const nx=document.getElementById('nx');
@@ -794,7 +807,7 @@ async function finish(){
     ${segBar(p.level.t===10?10:p.level.into,gained>0&&!tierUp)}
     <div class="next" style="margin-top:6px">${nextLine(p.level)}</div>
     <div style="height:14px"></div>
-    <ul class="log">${S.log.map(x=>`<li><span class="d ${x.ok?'g':'r'}"></span>${x.type==='mc'?'Πολλαπλής':'Σωστό/Λάθος'}<em>${esc(x.ch)}${x.kind==='retry'?' · ρεβάνς':''}</em></li>`).join('')}</ul>
+    <ul class="log">${S.log.map(x=>`<li><span class="d ${x.ok?'g':'r'}"></span>${x.type==='mc'?'Πολλαπλής':'Σωστό/Λάθος'}<em>${esc(x.ch)}${x.kind==='retry'&&x.ok?' · ρεβάνς ✓':''}</em></li>`).join('')}</ul>
     <div style="height:14px"></div>
     <button class="btn" id="again">Κι άλλος γύρος</button>
     <button class="btn ghost" id="home">Το φωτόνιό μου</button>
