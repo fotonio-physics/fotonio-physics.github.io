@@ -107,6 +107,26 @@ button{font:inherit;color:inherit;cursor:pointer;background:none;border:0}
 .weak{margin-top:8px;font-size:13px;color:var(--soft)}
 .weak b{color:var(--redb)}
 .empty{color:var(--dim);font-size:13.5px;padding:8px 2px}
+.acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.ab{border:1px solid var(--bor);border-radius:999px;padding:6px 13px;font-size:12.5px;font-weight:700;color:var(--ban);background:var(--bg)}
+.ab.t{color:var(--teal)} .ab:disabled{opacity:.5}
+.idrow{display:flex;gap:8px;margin-top:4px}
+.ov{position:fixed;inset:0;background:rgba(6,12,22,.86);z-index:20;overflow:auto;padding:14px;display:flex;align-items:flex-start;justify-content:center}
+.ed{background:var(--card);border:1px solid var(--bor);border-radius:18px;padding:16px;width:100%;max-width:640px;margin:auto}
+.ed h2{margin:0 0 2px;font-size:18px} .ed .sub{color:var(--mut);font-size:12.5px;margin-bottom:10px}
+.ed label{display:block;font-size:12.5px;font-weight:700;color:var(--mut);margin:12px 0 4px}
+.ed textarea,.ed select{width:100%;background:var(--bg);color:var(--txt);border:1px solid var(--bor);border-radius:10px;padding:9px 11px;font:inherit;font-size:14.5px;line-height:1.4}
+.ed textarea{resize:vertical;min-height:44px}
+.ed .or{display:grid;grid-template-columns:30px 1fr;gap:8px;align-items:start;margin-bottom:6px}
+.ed .or b{width:28px;height:28px;border-radius:50%;background:var(--teal);color:var(--bg);display:grid;place-items:center;font-size:13px;margin-top:7px}
+.ed .or.r textarea{border-color:var(--grnb);box-shadow:0 0 0 1px var(--grnb)}
+.ed .ck{display:flex;align-items:center;gap:10px;margin-top:14px;font-size:14px;color:var(--soft)}
+.ed .ck input{width:20px;height:20px;accent-color:var(--ban)}
+.ed .bts{display:flex;gap:10px;margin-top:16px}
+.ed .bts button{flex:1;border-radius:12px;padding:12px;font-weight:800}
+.ed .sv{background:var(--ban);color:var(--bg)} .ed .cn{border:1px solid var(--bor)}
+.ed .msg{min-height:1.4em;margin-top:10px;font-size:13.5px;color:var(--ban)}
+.ed .hint{font-size:12px;color:var(--dim);margin-top:4px}
 
 /* ερωτήσεις / ενστάσεις */
 .q{padding:10px 0;border-bottom:1px solid var(--bor);display:grid;grid-template-columns:54px 1fr;gap:12px}
@@ -322,13 +342,60 @@ function newbies(){
 }
 function hard(){
   return `<div class="card"><h2>Οι πιο δύσκολες ερωτήσεις</h2><div class="sub">% λάθος (με τουλάχιστον 3 απαντήσεις)</div>
-    ${D.hard.length?D.hard.map(h=>`<div class="q"><div class="e">${Math.round(h.err*100)}%<small>${h.n} απ.</small></div><div class="t">${esc(h.txt)}<span class="m">${esc(h.id)} · ${esc(h.ch)} · ${esc(h.sub)}${h.on?'':'<span class="off">ανενεργή</span>'}</span></div></div>`).join(''):'<div class="empty">Χρειάζονται περισσότερες απαντήσεις.</div>'}</div>`;
+    ${D.hard.length?D.hard.map(h=>`<div class="q"><div class="e">${Math.round(h.err*100)}%<small>${h.n} απ.</small></div><div class="t">${esc(h.txt)}<span class="m">${esc(h.id)} · ${esc(h.ch)} · ${esc(h.sub)}${h.on?'':'<span class="off">ανενεργή</span>'}</span>${CAN?`<div class="acts"><button class="ab" data-edit="${esc(h.id)}">Διόρθωση ερώτησης</button></div>`:''}</div></div>`).join(''):'<div class="empty">Χρειάζονται περισσότερες απαντήσεις.</div>'}</div>`;
 }
 function objs(){
-  return `<div class="card"><h2>Ενστάσεις</h2><div class="sub">Οι πιο πρόσφατες · ελέγχονται στο φύλλο «Ενστάσεις»</div>
-    ${D.objs.length?D.objs.map(o=>`<div class="ob"><div class="h"><b>${esc(o.nick)}</b><span>${ago(o.t)}</span><span>${esc(o.qid)}</span><span class="pill ${o.done?'d':'o'}">${o.done?'ελέγχθηκε':'ανοιχτή'}</span></div><div class="w">${esc(o.why)}</div>${o.txt?`<div class="x">«${esc(o.txt)}»</div>`:''}</div>`).join(''):'<div class="empty">Καμία ένσταση ακόμα.</div>'}</div>`;
+  return `<div class="card"><h2>Ενστάσεις</h2><div class="sub">${CAN?'Πρώτα οι ανοιχτές. Διόρθωσε την ερώτηση ή σημείωσε ότι την έλεγξες.':'Οι πιο πρόσφατες · ελέγχονται στο φύλλο «Ενστάσεις»'}</div>
+    ${D.objs.length?D.objs.map(o=>`<div class="ob"><div class="h"><b>${esc(o.nick)}</b><span>${ago(o.t)}</span><span>${esc(o.qid)}</span><span class="pill ${o.done?'d':'o'}">${o.done?'ελέγχθηκε':'ανοιχτή'}</span></div><div class="w">${esc(o.why)}</div>${o.txt?`<div class="x">«${esc(o.txt)}»</div>`:''}${o.q?`<div class="x">${esc(o.q)}</div>`:''}${o.mine||o.right?`<div class="x">Απάντησε: <b>${esc(o.mine||'—')}</b> · Το quiz θεωρεί σωστό: <b>${esc(o.right||'—')}</b></div>`:''}${o.done&&o.note?`<div class="x">Σημείωση: ${esc(o.note)}</div>`:''}${CAN?`<div class="acts"><button class="ab" data-edit="${esc(o.qid)}">Διόρθωση ερώτησης</button>${o.done?'':`<button class="ab t" data-res="${o.row}" data-qid="${esc(o.qid)}">Το έλεγξα</button>`}</div>`:''}</div>`).join(''):'<div class="empty">Καμία ένσταση ακόμα.</div>'}</div>`;
 }
 
+function finder(){
+  return CAN?`<div class="card"><h2>Διόρθωση ερώτησης</h2><div class="sub">Γράψε το id της ερώτησης (π.χ. ta07) για να αλλάξεις κείμενο, επιλογές, σωστή απάντηση ή εξήγηση.</div>
+    <div class="idrow"><input class="srch" id="qid" autocomplete="off" autocapitalize="off" placeholder="id ερώτησης"><button class="rf" id="qgo">Άνοιγμα</button></div></div>`:'';
+}
+/* ---------- Επεξεργασία ερώτησης ---------- */
+const CAN=typeof apiCall==='function';
+const EMSG={auth:'Λάθος κωδικός πίνακα.',locked:'Ο πίνακας κλειδώθηκε για μία ώρα (πολλοί λάθος κωδικοί).',bad:'Συμπλήρωσε σωστά όλα τα πεδία.',gone:'Δεν βρέθηκε. Ίσως άλλαξε το φύλλο.',big:'Το κείμενο είναι πολύ μεγάλο.'};
+const emsg=e=>EMSG[e&&e.message]||'Δεν αποθηκεύτηκε. Έλεγξε τη σύνδεση και δοκίμασε ξανά.';
+function closeEd(){const o=document.getElementById('ov');if(o)o.remove()}
+function openEd(id){
+  id=String(id||'').trim(); if(!id)return;
+  closeEd();
+  const ov=document.createElement('div');ov.className='ov';ov.id='ov';
+  ov.innerHTML='<div class="ed"><h2>Ερώτηση '+esc(id)+'</h2><div class="msg">Φόρτωση…</div><div class="bts"><button class="cn" id="ecn">Κλείσιμο</button></div></div>';
+  document.body.appendChild(ov);document.getElementById('ecn').onclick=closeEd;
+  apiCall('dashQ',[KEY,id]).then(q=>{
+    const G=['α','β','γ','δ'],mc=q.type==='mc';
+    ov.innerHTML=`<div class="ed"><h2>Ερώτηση ${esc(q.id)}</h2><div class="sub">${esc(q.ch)} · ${esc(q.sub)} · ${mc?'Πολλαπλής επιλογής':'Σωστό/Λάθος'}${q.src?' · '+esc(q.src):''}</div>
+      <label for="eq">Κείμενο ερώτησης</label><textarea id="eq" rows="5">${esc(q.q)}</textarea>
+      ${q.img?'<div class="hint">Η ερώτηση έχει και εικόνα. Η εικόνα δεν αλλάζει από εδώ.</div>':''}
+      ${mc?`<label>Επιλογές (η πράσινη είναι η σωστή)</label>${G.map((g,i)=>`<div class="or${q.ans===g?' r':''}"><b>${g}</b><textarea id="eo${i}" rows="2">${esc(q.o[i])}</textarea></div>`).join('')}
+        <label for="ea">Σωστή απάντηση</label><select id="ea">${G.map(g=>`<option${q.ans===g?' selected':''}>${g}</option>`).join('')}</select>`
+        :`<label for="ea">Σωστή απάντηση</label><select id="ea"><option value="Σ"${/^Σ/i.test(q.ans)?' selected':''}>Σωστό</option><option value="Λ"${/^Σ/i.test(q.ans)?'':' selected'}>Λάθος</option></select>`}
+      <label for="ex">Εξήγηση</label><textarea id="ex" rows="4">${esc(q.ex)}</textarea>
+      <div class="hint">Κλάσμα: {αριθμητής/παρονομαστής}, π.χ. {1/2}. Τα υπόλοιπα σύμβολα μένουν όπως τα βλέπεις.</div>
+      <label class="ck"><input type="checkbox" id="eon"${q.on?' checked':''}> Ενεργή (βγαίνει στο παιχνίδι)</label>
+      <div class="msg" id="em"></div>
+      <div class="bts"><button class="cn" id="ecn">Άκυρο</button><button class="sv" id="esv">Αποθήκευση</button></div></div>`;
+    document.getElementById('ecn').onclick=closeEd;
+    const ea=document.getElementById('ea');
+    if(mc)ea.onchange=()=>ov.querySelectorAll('.or').forEach((r,i)=>r.classList.toggle('r',G[i]===ea.value));
+    document.getElementById('esv').onclick=()=>{
+      const b=document.getElementById('esv'),em=document.getElementById('em');
+      const d={q:document.getElementById('eq').value,ans:ea.value,ex:document.getElementById('ex').value,on:document.getElementById('eon').checked};
+      if(mc)d.o=[0,1,2,3].map(i=>document.getElementById('eo'+i).value);
+      if(!d.q.trim()||(mc&&d.o.some(x=>!x.trim()))){em.textContent=EMSG.bad;return}
+      b.disabled=true;em.textContent='Αποθήκευση…';
+      apiCall('dashSaveQ',[KEY,q.id,d],1).then(()=>{em.textContent='Αποθηκεύτηκε. Η αλλαγή ισχύει ήδη στο παιχνίδι.';setTimeout(()=>{closeEd();load(true)},900)})
+        .catch(e=>{b.disabled=false;em.textContent=emsg(e)});
+    };
+  }).catch(e=>{const m=ov.querySelector('.msg');if(m)m.textContent=e&&e.message==='gone'?'Δεν υπάρχει ερώτηση με αυτό το id.':e&&e.message==='bad'?'Το id δεν είναι σωστό.':emsg(e)});
+}
+function resolveObj(b){
+  b.disabled=true;b.textContent='Αποθήκευση…';
+  apiCall('dashResolve',[KEY,+b.dataset.res,b.dataset.qid,'Ελέγχθηκε '+new Date().toLocaleDateString('el-GR')],1).then(()=>load(true))
+    .catch(e=>{b.disabled=false;b.textContent=emsg(e)});
+}
 function render(){
   const y=window.scrollY;
   document.getElementById('app').innerHTML=`
@@ -337,9 +404,12 @@ function render(){
   ${kpis()}
   <div class="grid2">${activity()}${chapters()}</div>
   ${players()}
-  <div class="grid2">${hard()}<div style="display:flex;flex-direction:column;gap:16px">${newbies()}${objs()}</div></div>`;
+  <div class="grid2">${hard()}<div style="display:flex;flex-direction:column;gap:16px">${objs()}${finder()}${newbies()}</div></div>`;
   window.scrollTo(0,y);
   document.getElementById('rf').onclick=()=>load(true);
+  document.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>openEd(b.dataset.edit));
+  document.querySelectorAll('[data-res]').forEach(b=>b.onclick=()=>resolveObj(b));
+  const qg=document.getElementById('qgo');if(qg){const go=()=>openEd(document.getElementById('qid').value);qg.onclick=go;document.getElementById('qid').onkeydown=e=>{if(e.key==='Enter')go()}}
   document.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{sortBy=b.dataset.s;render()});
   document.getElementById('act').onclick=()=>{onlyActive=!onlyActive;render()};
   const qi=document.getElementById('q');qi.oninput=()=>{q=qi.value;const pos=qi.selectionStart;render();const n=document.getElementById('q');n.focus();n.setSelectionRange(pos,pos)};
