@@ -110,6 +110,7 @@ sub,sup{line-height:0;font-size:.72em}
 .opt.ok{background:var(--grn);border-color:var(--grnb);color:var(--grnt)}
 .opt.no{background:var(--red);border-color:var(--redb);color:var(--redt)}
 .opt:disabled{cursor:default}
+.opt.sel{border-color:var(--ban);box-shadow:0 0 0 2px rgba(245,184,65,.25)}
 .tf{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .tf .opt{justify-content:center;align-items:center;font-weight:700;font-size:17px;padding:16px}
 
@@ -405,9 +406,9 @@ function apiCall(fn,args,tries){
     .catch(e=>{if(!e.server&&tries>1)return new Promise(r=>setTimeout(r,900)).then(()=>apiCall(fn,args,tries-1));throw e});
 }
 
-const API={login:(n,p,c)=>apiCall('login',[n,p,!!c]), newRound:(n,p,c)=>apiCall('newRound',[n,p,c||[]]),
-  answer:(n,p,r,q,c,k)=>apiCall('answer',[n,p,r,q,c,k||'']), report:(n,p,r,q,why,t)=>apiCall('report',[n,p,r,q,why,t||'']),
-  finish:(n,p,r,c)=>apiCall('finish',[n,p,r,c||[]]), top3:()=>apiCall('top3',[]).then(j=>JSON.parse(j))};
+const API={login:(n,p,c)=>apiCall('login',[n,p,!!c]), newRound:(n,p,c)=>apiCall('newRound',[n,p,c||[],2]),
+  answer:(n,p,r,q,c)=>apiCall('answer',[n,p,r,q,c]), report:(n,p,r,q,why,t)=>apiCall('report',[n,p,r,q,why,t||'']),
+  finish:(n,p,r)=>apiCall('finish',[n,p,r]), top3:()=>apiCall('top3',[]).then(j=>JSON.parse(j))};
 
 
 /* ---------- Λογότυπο και ανθρωπάκι Φωτόνιο (από το project Φωτόνιο) ---------- */
@@ -532,7 +533,6 @@ function saveLogin(d){try{d?localStorage.setItem(KEY,JSON.stringify(d)):localSto
 const app=document.getElementById('app');
 let U=null;   // {nick,pin,profile}
 let S=null;   // γύρος
-let saving=Promise.resolve();
 
 /* ---------- Είσοδος ---------- */
 
@@ -566,14 +566,14 @@ function fitTitle(){
 }
 window.addEventListener('resize',fitTitle);
 try{document.fonts&&document.fonts.ready.then(fitTitle)}catch(e){}
-const ERR={nick:'Το ψευδώνυμο θέλει 2–16 γράμματα ή αριθμούς.',pin:'Το PIN είναι 4 ψηφία.',wrongpin:'Λάθος PIN για αυτό το ψευδώνυμο. Αν είναι καινούριος παίκτης, διάλεξε άλλο ψευδώνυμο.'};
+const ERR={locked:'Πολλές λάθος προσπάθειες. Το ψευδώνυμο κλειδώθηκε για 15 λεπτά.',busy:'Πολλές εγγραφές αυτή τη στιγμή. Δοκίμασε ξανά σε λίγο.',nick:'Το ψευδώνυμο θέλει 2–16 γράμματα ή αριθμούς.',pin:'Το PIN είναι 4 ψηφία.',wrongpin:'Λάθος PIN για αυτό το ψευδώνυμο. Αν είναι καινούριος παίκτης, διάλεξε άλλο ψευδώνυμο.'};
 async function doLogin(create){
   const nick=document.getElementById('nick').value.trim(), pin=document.getElementById('pin').value.trim();
   const rem=document.getElementById('rem').checked, e=document.getElementById('e'), go=document.getElementById('go');
   e.innerHTML=''; go.disabled=true; go.textContent='Μια στιγμή…';
   try{
     const r=await API.login(nick,pin,create);
-    if(r.err){e.innerHTML=`<div class="err">${ERR[r.err]}</div>`;}
+    if(r.err){e.innerHTML=`<div class="err">${ERR[r.err]||'Κάτι πήγε στραβά. Δοκίμασε ξανά.'}</div>`;}
     else if(r.needCreate){
       document.getElementById('say').textContent=`Πρώτη φορά εδώ, ${nick}; Θα φτιάξω νέο παίκτη. Θυμήσου το PIN σου!`;
       document.getElementById('mascot').innerHTML=mascot('cheer');
@@ -698,16 +698,19 @@ async function startRound(){
     const ch=getCh(); if(!ch.length){lobby('back');return;}
     const r=await API.newRound(U.nick,U.pin,ch);
     if(!r.questions||!r.questions.length)throw new Error('empty');
+    if(r.questions.some(q=>'a' in q))throw new Error('server');   // ο server δεν έχει ενημερωθεί ακόμα
     S={round:r.round,qs:r.questions,i:0,score:0,streak:0,maxStreak:0,log:[]};
     ask();
-  }catch(e){b.disabled=false;b.textContent='Δοκίμασε ξανά';}
+  }catch(e){
+    if(e&&e.message==='old'){b.textContent='Ενημέρωση…';location.replace(location.pathname+'?v='+Date.now());return;}
+    b.disabled=false;b.textContent=e&&e.message==='server'?'Γίνεται ενημέρωση, δοκίμασε σε λίγο':'Δοκίμασε ξανά';}
 }
 
 function ask(){
   const q=S.qs[S.i]; S.answered=false;
   let opts;
   if(q.type==='mc'){
-    {const L=q.o.map((t,k)=>({t,k,ok:k===q.a}));S.opts=q.o.every(t=>/\([αβγδ]\)/.test(t))?L:shuffle(L);}
+    {const L=q.o.map((t,k)=>({t,k}));S.opts=q.o.every(t=>/\([αβγδ]\)/.test(t))?L:shuffle(L);}
     const L=['α','β','γ','δ'];
     opts=`<div class="opts">`+S.opts.map((o,k)=>`<button class="opt" data-k="${k}"><span class="l">${L[k]}</span><span>${m(esc(o.t))}</span></button>`).join('')+`</div>`;
   }else{
@@ -736,24 +739,31 @@ function ask(){
 
 const OKS=["Μπράβο!","Σωστά!","Έτσι μπράβο!","Ακριβώς!"];
 const BADS=["Όχι αυτή τη φορά.","Κοντά, δες την εξήγηση.","Θα την ξαναβρείς για ρεβάνς."];
-function pick(k){
+async function pick(k){
   if(S.answered)return; S.answered=true;
   const q=S.qs[S.i];
-  let ok, chosen;
   const btns=[...app.querySelectorAll('.opt')];
-  if(q.type==='mc'){
-    ok=S.opts[k].ok; chosen=S.opts[k].k;
-    btns.forEach((b,i)=>{b.disabled=true; if(S.opts[i].ok)b.classList.add('ok'); else if(i===k)b.classList.add('no');});
-  }else{
-    chosen=k===1; ok=chosen===q.a;
-    btns.forEach(b=>{b.disabled=true; const v=b.dataset.k==='1'; if(v===q.a)b.classList.add('ok'); else if(+b.dataset.k===k)b.classList.add('no');});
+  const chosen=q.type==='mc'?S.opts[k].k:(k===1);
+  btns.forEach((b,i)=>{b.disabled=true; if(q.type==='mc'?i===k:+b.dataset.k===k)b.classList.add('sel');});
+  const sayEl=document.getElementById('say'), was=sayEl.textContent; sayEl.textContent='Ελέγχω την απάντησή σου…';
+  // η σωστή απάντηση και η εξήγηση έρχονται από τον server μόνο αφού απαντήσεις
+  let r;
+  try{r=await API.answer(U.nick,U.pin,S.round,q.id,chosen);}
+  catch(e){
+    if(e&&e.message==='round'){sayEl.textContent='Ο γύρος έληξε. Ξεκίνα έναν καινούριο.';
+      document.getElementById('after').innerHTML='<div style="height:10px"></div><button class="btn" id="bk">Πίσω στην αρχή</button>';
+      document.getElementById('bk').onclick=()=>lobby('back');return;}
+    S.answered=false; btns.forEach(b=>{b.disabled=false;b.classList.remove('sel')});
+    sayEl.textContent=e&&e.message==='slow'?'Πιο σιγά! Περίμενε λίγο και πάτα ξανά.':'Δεν υπάρχει σύνδεση. Πάτα ξανά την απάντησή σου.';return;
   }
+  const ok=!!r.ok;
+  btns.forEach((b,i)=>{b.classList.remove('sel');
+    const mine=q.type==='mc'?i===k:+b.dataset.k===k, right=q.type==='mc'?S.opts[i].k===r.a:(b.dataset.k==='1')===r.a;
+    if(right)b.classList.add('ok'); else if(mine)b.classList.add('no');});
+  q.ex=String(r.ex||''); if(r.rv)q.kind='retry';
   const gain=ok?(q.type==='mc'?5:1):0;
   if(ok){S.streak++;S.maxStreak=Math.max(S.maxStreak,S.streak);S.score+=gain}else S.streak=0;
   S.log.push({id:q.id,ok,ch:q.ch,type:q.type,kind:q.kind});
-  // αποθήκευση με τη σειρά (στο παρασκήνιο)
-  const args=[U.nick,U.pin,S.round,q.id,chosen,q.kind||''];
-  saving=saving.then(()=>API.answer(...args)).catch(()=>API.answer(...args)).catch(()=>{S.lost=true});
   document.getElementById('sc').textContent=S.score; document.getElementById('st').textContent=S.streak;
   document.getElementById('mascot').innerHTML=mascot(ok?'cheer':'sad');
   const rv=q.kind==='retry';
@@ -780,7 +790,7 @@ function objection(q){
   document.getElementById('objsend').onclick=async()=>{
     const why=(box.querySelector('input[name=why]:checked')||{}).value||'misc', t=document.getElementById('objtxt').value.trim().slice(0,300);
     const b=document.getElementById('objsend'); b.disabled=true; b.textContent='Στέλνω…';
-    try{await saving; await API.report(U.nick,U.pin,S.round,q.id,why,t);
+    try{await API.report(U.nick,U.pin,S.round,q.id,why,t);
       box.innerHTML=`<p class="objok">Ευχαριστώ! Η ένστασή σου στάλθηκε και ο καθηγητής θα την ελέγξει. Το σκορ σου δεν αλλάζει.</p>`;}
     catch(e){b.disabled=false;b.textContent='Δοκίμασε ξανά';}
   };
@@ -790,7 +800,7 @@ async function finish(){
   app.innerHTML=`<div class="mascot-row"><div id="mascot">${mascot('idle')}</div><div class="bubble">Μετράω τους πόντους σου…</div></div>`;
   const before=U.profile;
   let res=null;
-  try{await saving; res=await API.finish(U.nick,U.pin,S.round,getCh()); U.profile=res.profile;}catch(e){}
+  try{res=await API.finish(U.nick,U.pin,S.round); U.profile=res.profile;}catch(e){}
   const score=res?res.score:S.score;
   const mcOk=S.log.filter(x=>x.ok&&x.type==='mc').length, tfOk=S.log.filter(x=>x.ok&&x.type==='tf').length;
   const p=U.profile, gained=res?p.photons-before.photons:0, tierUp=gained>0&&p.level.t>before.level.t;
