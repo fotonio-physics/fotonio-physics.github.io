@@ -35,6 +35,12 @@ button{font:inherit;color:inherit;cursor:pointer;background:none;border:0}
 @media(min-width:720px){.kpis{grid-template-columns:repeat(3,1fr)}}
 @media(min-width:1000px){.kpis{grid-template-columns:repeat(6,1fr)}}
 .kpi{background:var(--card);border:1px solid var(--bor);border-radius:16px;padding:14px 14px 12px}
+.kpi.live{grid-column:1/-1;border-color:rgba(63,193,201,.55);display:grid;grid-template-columns:auto 1fr;column-gap:16px;align-items:center}
+.kpi.live .l{grid-column:1/-1;display:flex;align-items:center;gap:8px}
+.kpi.live .v{color:var(--teal);font-size:40px}
+.kpi.live .s{margin-top:0}
+.kpi.live .dot{width:10px;height:10px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 0 rgba(63,193,201,.6)}
+@media (prefers-reduced-motion:no-preference){.kpi.live .dot{animation:livep 1.8s ease-out infinite}@keyframes livep{to{box-shadow:0 0 0 9px rgba(63,193,201,0)}}}
 .kpi .l{color:var(--mut);font-size:12.5px;font-weight:600;letter-spacing:.02em}
 .kpi .v{font-size:30px;font-weight:800;line-height:1.1;margin-top:4px;font-variant-numeric:tabular-nums}
 .kpi .v.gold{color:var(--ban)}
@@ -277,7 +283,8 @@ function kpis(){
     ['Φωτόνια τάξης',ph,'gold',`${P.filter(p=>p.ph>=10).length} μαθητές από Σπίθα και πάνω`],
     ['Σωστές απαντήσεις',n?pct(ok,n)+'%':'—','',`${ok} από ${n} · ${D.qActive} ενεργές ερωτήσεις`],
     ['Ενστάσεις',D.objOpen,D.objOpen?'gold':'',D.objOpen?'περιμένουν έλεγχο':`όλες ελεγμένες (${D.objTotal})`]];
-  return `<div class="kpis">${tiles.map(t=>`<div class="kpi"><div class="l">${t[0]}</div><div class="v ${t[2]}">${t[1]}</div><div class="s">${t[3]}</div></div>`).join('')}</div>`;
+  const live=D.online==null?'':`<div class="kpi live"><div class="l"><span class="dot"></span>Παίζουν τώρα</div><div class="v" id="onl">${D.online}</div><div class="s">κίνηση στα τελευταία 3 λεπτά · μέγιστο σήμερα: <b id="onlpk">${D.peak}</b></div></div>`;
+  return `<div class="kpis">${live}${tiles.map(t=>`<div class="kpi"><div class="l">${t[0]}</div><div class="v ${t[2]}">${t[1]}</div><div class="s">${t[3]}</div></div>`).join('')}</div>`;
 }
 
 function activity(){
@@ -442,15 +449,19 @@ document.addEventListener('pointerover',showTip);document.addEventListener('poin
 document.addEventListener('scroll',()=>tip.style.display='none',{passive:true});
 setInterval(()=>{const a=document.getElementById('ago');if(a&&lastLoad){const m=Math.round((Date.now()-lastLoad)/60000);a.textContent=m<1?'ενημερώθηκε τώρα':'ενημερώθηκε πριν '+m+'΄'}},20000);
 setInterval(()=>{if(!document.hidden)load()},120000);
+/* «Παίζουν τώρα»: ελαφριά ενημέρωση κάθε 20΄΄ (μόνο ο μετρητής, όχι όλος ο πίνακας) */
+setInterval(()=>{if(document.hidden||!CAN||!D||!KEY)return;
+  apiCall('dashLive',[KEY],1).then(x=>{D.online=x.online;D.peak=x.peak;const a=document.getElementById('onl'),b=document.getElementById('onlpk');if(a)a.textContent=x.online;if(b)b.textContent=x.peak}).catch(()=>{})},20000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&Date.now()-lastLoad>60000)load()});
 /* Σύνδεση με το Apps Script (το Sheet του καθηγητή) μέσω απλού αιτήματος, χωρίς πλαίσιο της Google */
 const API_URL='https://script.google.com/macros/s/AKfycbwoioQnP3Akcq6fvg0NuGGhjRryhF-g139khGRPJM-QkYMISVRggAGnQIqcJBrbmU-M6A/exec';
-function apiCall(fn,args,tries){
-  tries=tries==null?2:tries;
+function apiCall(fn,args,tries,n){
+  tries=tries==null?3:tries; n=n||0;
   return fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({fn:fn,args:args}),redirect:'follow',credentials:'omit',cache:'no-store'})
     .then(r=>{if(!r.ok)throw new Error('http '+r.status);return r.json()})
-    .then(j=>{if(!j.ok){const e=new Error(j.err||'error');e.server=true;throw e}return j.r})
-    .catch(e=>{if(!e.server&&tries>1)return new Promise(r=>setTimeout(r,900)).then(()=>apiCall(fn,args,tries-1));throw e});
+    .then(j=>{if(!j.ok){const e=new Error(j.err||'error');e.server=j.err!=='error';throw e}return j.r})
+    // αποτυχία δικτύου ή «πολλοί μαζί» στον server: ξαναδοκιμάζει μόνο του, με μικρή τυχαία αναμονή για να μη χτυπούν όλοι μαζί
+    .catch(e=>{if(!e.server&&tries>1)return new Promise(r=>setTimeout(r,700+n*900+Math.random()*900)).then(()=>apiCall(fn,args,tries-1,n+1));throw e});
 }
 
 function getKey_(){let k='';try{if(location.hash.length>1){k=decodeURIComponent(location.hash.slice(1));localStorage.setItem('fotonio_dash_key',k);history.replaceState(null,'',location.pathname)}else k=localStorage.getItem('fotonio_dash_key')||''}catch(e){}return k}
