@@ -89,6 +89,7 @@ button{font:inherit;color:inherit;cursor:pointer;background:none;border:0}
 .nk{font-weight:800;font-size:15.5px;display:flex;align-items:center;gap:6px}
 .nk .nm2{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .new{flex:0 0 auto}
+.new.tst{background:none;border:1px solid var(--bor);color:var(--mut)}
 .new{font-size:10.5px;font-weight:800;letter-spacing:.06em;color:#0B2427;background:var(--teal);border-radius:999px;padding:1px 7px}
 .meta{color:var(--mut);font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .meta .tier{color:var(--ban);font-weight:700}
@@ -262,7 +263,7 @@ function load(manual){
 }
 
 function kpis(){
-  const P=D.players,now=D.now;
+  const P=D.players.filter(p=>!p.test),now=D.now;   // ο δοκιμαστικός παίκτης δεν μετρά στην τάξη
   const played=P.filter(p=>p.rounds>0);
   const act=P.filter(p=>p.last&&now-p.last<=WEEK);
   const nw=P.filter(p=>p.reg&&now-p.reg<=WEEK);
@@ -273,7 +274,7 @@ function kpis(){
     ['Μαθητές',P.length,'',`<b>+${nw.length}</b> νέοι την εβδομάδα`],
     ['Έπαιξαν τις 7 μέρες',act.length,'',`από ${played.length} που έχουν παίξει`],
     ['Γύροι τις 7 μέρες',r7,'',`<b>${rt}</b> σήμερα`],
-    ['Φωτόνια τάξης',ph,'gold',`${D.players.filter(p=>p.ph>=10).length} μαθητές από Σπίθα και πάνω`],
+    ['Φωτόνια τάξης',ph,'gold',`${P.filter(p=>p.ph>=10).length} μαθητές από Σπίθα και πάνω`],
     ['Σωστές απαντήσεις',n?pct(ok,n)+'%':'—','',`${ok} από ${n} · ${D.qActive} ενεργές ερωτήσεις`],
     ['Ενστάσεις',D.objOpen,D.objOpen?'gold':'',D.objOpen?'περιμένουν έλεγχο':`όλες ελεγμένες (${D.objTotal})`]];
   return `<div class="kpis">${tiles.map(t=>`<div class="kpi"><div class="l">${t[0]}</div><div class="v ${t[2]}">${t[1]}</div><div class="s">${t[3]}</div></div>`).join('')}</div>`;
@@ -318,8 +319,8 @@ function player(p,i,v){
       <div class="meta" style="margin-top:6px">Εγγραφή: ${p.reg?new Date(p.reg).toLocaleDateString('el-GR'):'—'} · ${p.wk} γύροι την εβδομάδα</div>
     </div><div>${chs.length?chs.map(x=>`<div class="hb" data-tip="${esc(x.c)}: ${Math.round(x.p*100)}% σωστές σε ${x.n}"><div class="nm">${esc(x.c)}</div><div class="trk"><i style="width:${Math.round(x.p*100)}%"></i></div><div class="pc">${Math.round(x.p*100)}%<small>${x.n}</small></div></div>`).join(''):'<div class="empty">Δεν έχει απαντήσεις ακόμα.</div>'}</div></div>`;
   return `<div class="p ${openSet.has(p.nick)?'open':''}" data-n="${esc(p.nick)}"><button aria-expanded="${openSet.has(p.nick)}">
-    <div class="rk ${i<3&&sortBy==='ph'&&v.ph>0?'g':''}">${i+1}</div><div class="hero">${tierHero(p.ph)}</div>
-    <div class="info"><div class="nk"><span class="nm2">${esc(p.nick)}</span>${isNew?'<span class="new">ΝΕΟΣ</span>':''}</div><div class="meta"><span class="tier">${p.tier}</span> · ${ago(p.seen)}</div></div>
+    <div class="rk ${!p.test&&i<3&&sortBy==='ph'&&v.ph>0?'g':''}">${p.test?'–':i+1}</div><div class="hero">${tierHero(p.ph)}</div>
+    <div class="info"><div class="nk"><span class="nm2">${esc(p.nick)}</span>${p.test?'<span class="new tst">ΔΟΚΙΜΗ · δεν μετρά</span>':isNew?'<span class="new">ΝΕΟΣ</span>':''}</div><div class="meta"><span class="tier">${p.tier}</span> · ${ago(p.seen)}</div></div>
     <div class="nums"><div><b class="gold">${period==='all'?v.ph:'+'+v.ph}</b><span>φωτόνια</span></div><div><b>${v.rounds}</b><span>γύροι</span></div><div><b>${f1(v.avg)}</b><span>μέσο /25</span></div><div><b>${ok==null?'—':ok+'%'}</b><span>σωστές</span></div></div>
   </button>${det}</div>`;
 }
@@ -335,9 +336,10 @@ function players(){
     ok:(a,b)=>(b.v.n?b.v.ok/b.v.n:-1)-(a.v.n?a.v.ok/a.v.n:-1),seen:(a,b)=>b.p.seen-a.p.seen};
   let L=D.players.map(p=>({p,v:pv(p)}));
   if(period!=='all')L=L.filter(x=>x.v.rounds>0||x.v.n>0);
-  const cnt=L.length,rds=L.reduce((s,x)=>s+x.v.rounds,0);
+  const cnt=L.filter(x=>!x.p.test).length,rds=L.reduce((s,x)=>s+(x.p.test?0:x.v.rounds),0);
   if(q)L=L.filter(x=>x.p.nick.toLowerCase().includes(q.toLowerCase()));
   L.sort(S[sortBy]);
+  L=L.filter(x=>!x.p.test).concat(L.filter(x=>x.p.test));   // ο δοκιμαστικός παίκτης τελευταίος, χωρίς θέση
   const B=[['ph','Φωτόνια'],['rounds','Γύροι'],['avg','Μέσο σκορ'],['ok','% σωστές'],['seen','Πρόσφατοι']];
   const T=[['d','Σήμερα'],['w','7 μέρες'],['all','Όλα']];
   const when=period==='d'?'Σήμερα':'Τις τελευταίες 7 μέρες';
@@ -351,7 +353,7 @@ function players(){
 }
 
 function newbies(){
-  const N=D.players.filter(p=>p.reg&&D.now-p.reg<=WEEK).sort((a,b)=>b.reg-a.reg);
+  const N=D.players.filter(p=>!p.test&&p.reg&&D.now-p.reg<=WEEK).sort((a,b)=>b.reg-a.reg);
   return `<div class="card"><h2>Νέοι αυτή την εβδομάδα</h2><div class="sub">${N.length} ${N.length===1?'νέος μαθητής':'νέοι μαθητές'}</div>
     ${N.length?`<div class="newl">${N.map(p=>`<span>${esc(p.nick)} <small>${ago(p.reg)}</small></span>`).join('')}</div>`:'<div class="empty">Κανένας νέος τις τελευταίες 7 μέρες.</div>'}</div>`;
 }
