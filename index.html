@@ -269,6 +269,52 @@ textarea#cpt{width:100%;height:90px;background:var(--bg);color:var(--soft);borde
 .podme{margin-top:12px;text-align:center;font-size:13.5px;color:var(--soft)}
 .podme b{color:var(--ban)}
 
+
+/* ---------- Χάρτης κατάκτησης: παράσημα σε τροχιά, πτυσσόμενες κάρτες ---------- */
+.orbw{position:relative;display:block;width:min(205px,58vw);margin:2px auto 0;background:none;border:0;padding:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.orb{position:relative;width:100%;aspect-ratio:1/1}
+.orb .ring{position:absolute;inset:2.5%;border-radius:50%;border:1.5px dashed rgba(63,193,201,.28)}
+.orb.gold .ring{border:2px solid rgba(245,184,65,.85);box-shadow:0 0 26px rgba(245,184,65,.45),inset 0 0 26px rgba(245,184,65,.25)}
+.orb .core{position:absolute;inset:14%;display:flex;align-items:center;justify-content:center}
+.orb .core svg{width:100%;height:100%}
+.orb .ems{position:absolute;inset:0}
+.em{position:absolute;width:17%;aspect-ratio:1/1;transform:translate(-50%,-50%);border-radius:50%;background:#132541;border:2px solid var(--ban);display:flex;align-items:center;justify-content:center;box-shadow:0 0 10px rgba(245,184,65,.35)}
+.em svg{width:66%;height:66%}
+@media (prefers-reduced-motion:no-preference){.orb.big .ems{animation:orbspin 90s linear infinite}.orb.big .em svg{animation:orbspin 90s linear infinite reverse}@keyframes orbspin{to{transform:rotate(360deg)}}}
+.orb.sm{width:64px}.orb.sm .ring{inset:1px;border-width:1px}.orb.sm .core{inset:13%}.orb.sm .em{width:23%;border-width:1px;box-shadow:none}
+.tapdot{display:inline-block;margin-top:-4px;background:var(--teal);color:#06202A;font-size:11.5px;font-weight:800;border-radius:999px;padding:3px 10px;box-shadow:0 0 0 4px rgba(63,193,201,.18);border:0;cursor:pointer}
+.mini3{display:flex;justify-content:center;flex-wrap:wrap;gap:4px 8px;font-size:12.5px;color:var(--mut);margin-top:2px}.mini3 b{color:var(--txt)}
+.fold{background:var(--card);border:1px solid var(--bor);border-radius:16px;overflow:hidden}
+.fh{display:flex;align-items:center;gap:10px;width:100%;padding:12px 14px;background:none;border:0;color:var(--txt);text-align:left;font:inherit;cursor:pointer}
+.fh .ic{font-size:18px;width:26px;text-align:center;flex:0 0 26px}
+.fh .tt{flex:1;min-width:0}.fh .tt b{display:block;font-size:15px}.fh .tt small{display:block;font-size:12.5px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fh .tt small em{font-style:normal;color:var(--ban);font-weight:700}
+.fh .ar{flex:0 0 30px;width:30px;height:30px;border-radius:50%;border:1px solid var(--bor);display:flex;align-items:center;justify-content:center;color:var(--teal);font-size:13px}
+.fold .fb{display:none;padding:0 14px 14px}.fold.open .fb{display:block}
+.fold .chsel p{margin:0 0 12px;font-size:13.5px;color:var(--soft)}
+.fold .podc{padding:0;border:0;background:none;box-shadow:none}
+.sunmini{display:flex;align-items:center;gap:10px;background:linear-gradient(90deg,rgba(245,184,65,.16),rgba(245,184,65,.04));border:1.5px solid rgba(245,184,65,.6);border-radius:14px;padding:10px 12px;font-size:13.5px;margin-top:4px}
+.sunmini>i{font-style:normal;color:var(--ban);font-size:18px}
+.sunmini b{color:var(--ban)}.sunmini .go{margin-left:auto;background:var(--ban);color:var(--bg);font-weight:800;border:0;border-radius:999px;padding:7px 14px;font-size:13px;flex:0 0 auto}
+.sheet.mapsh{max-height:92vh;overflow-y:auto;gap:8px;text-align:left}
+.mapsh h2,.mapsh .tot,.mapsh .leg{text-align:center}
+.mapsh .tot{color:var(--soft);font-size:14px}.mapsh .tot b{color:var(--ban);font-size:26px;display:block;line-height:1.15}
+.mapsh .leg{display:flex;justify-content:center;flex-wrap:wrap;gap:4px 12px;font-size:11.5px;color:var(--mut)}.mapsh .leg i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+.mr{display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:center;padding:7px 0;border-top:1px solid rgba(46,69,102,.6)}
+.mr .mi{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--bg);border:1.5px dashed var(--bor);opacity:.5}
+.mr .mi svg{width:21px;height:21px}
+.mr.done .mi{border:2px solid var(--ban);opacity:1;background:#132541;box-shadow:0 0 8px rgba(245,184,65,.35)}
+.mr .t{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:14px;font-weight:700}
+.mr .t span{font-size:12.5px;color:var(--mut);font-weight:600;white-space:nowrap}
+.mr.done .t span{color:var(--ban)}
+.tb{display:flex;height:9px;border-radius:5px;overflow:hidden;background:var(--bg);margin:5px 0 3px}
+.tb .k{background:#2F8F72}.tb .r{background:#F0525F}
+.mr .s{font-size:11.5px;color:var(--mut)}
+.newq{display:inline-block;margin-top:4px;font-size:10.5px;font-weight:800;color:#06202A;background:var(--teal);border-radius:999px;padding:1px 8px}
+.ovcard .bigem{width:110px;height:110px;border-radius:50%;background:#132541;border:3px solid var(--ban);display:flex;align-items:center;justify-content:center;box-shadow:0 0 30px rgba(245,184,65,.5);margin:6px 0}
+.ovcard .bigem svg{width:62px;height:62px}
+.ovcard .achorb{width:150px}
+.ps .ph{width:64px;height:64px}
 </style>
 <link rel="manifest" href="/manifest-quiz.webmanifest">
 <link rel="icon" href="/icon2-quiz-192.png">
@@ -415,6 +461,10 @@ function pickRound(qs, history, rnd, chapters, cls) {
   return out;
 }
 
+/* Χάρτης κατάκτησης: 7 κομμάτια της ύλης (τα Κύματα μαζί με τα Ηλεκτρομαγνητικά κύματα) */
+var GROUPS = [['kr', 'Κρούσεις', ['Κρούσεις']], ['ta', 'Ταλαντώσεις', ['Ταλαντώσεις']], ['ky', 'Κύματα & ΗΜ', ['Κύματα', 'Ηλεκτρομαγνητικά κύματα']],
+              ['st', 'Στερεό', ['Στερεό']], ['ma', 'Μαγνητικό πεδίο', ['Μαγνητικό πεδίο']], ['ep', 'Επαγωγή', ['Επαγωγή']], ['kv', 'Κβαντομηχανική', ['Κβαντομηχανική']]];
+function groupOf(ch) { for (var i = 0; i < GROUPS.length; i++) if (GROUPS[i][2].indexOf(ch) >= 0) return GROUPS[i][0]; return null; }
 function profileOf(qs, history, rounds) {
   var st = questionState(history);
   var ids = {}; qs.forEach(function (q) { ids[q.id] = 1; });
@@ -425,7 +475,10 @@ function profileOf(qs, history, rounds) {
   });
   var total = 0, perfect = 0, best = 0, photons = 0;
   rounds.forEach(function (r) { total += r.score; photons += photonsFor(r.score); if (r.score === 25) perfect++; if (r.score > best) best = r.score; });
-  return { questions: qs.length, seen: seen, mastered: mastered, retry: retry,
+  var map = {};                                       // ανά κομμάτι: [ερωτήσεις, κατακτημένες, για ρεβάνς]
+  GROUPS.forEach(function (g) { map[g[0]] = [0, 0, 0]; });
+  qs.forEach(function (q) { var g = groupOf(q.ch); if (!g) return; var m = map[g]; m[0]++; var s = st[q.id]; if (s) { if (s.last === 1) m[1]++; else m[2]++; } });
+  return { map: map, questions: qs.length, seen: seen, mastered: mastered, retry: retry,
            fresh: qs.length - seen, rounds: rounds.length, total: total, perfect: perfect, best: best,
            photons: photons, level: levelOf(photons) };
 }
@@ -683,10 +736,7 @@ function sunHome(){                             // 2 και 4 · κάρτα στ
     <h2>Η πρόκληση ολοκληρώθηκε.</h2><p>Η επόμενη έρχεται την Κυριακή.</p>
     <div class="ans"><small>Σωστή απάντηση</small>${['α','β','γ','δ'][s.done.a]||''}) ${m(esc(s.done.right||''))}${s.done.ex?`<div class="exx">${m(esc(s.done.ex))}</div>`:''}</div>
     <div class="one">${igLink('ghost')}</div></div>`;
-  return `<div class="sun" id="suncard"><span class="lab">ΜΟΝΟ ΣΗΜΕΡΑ, ΚΥΡΙΑΚΗ</span><div class="star">✦</div>
-    <h2>Πρόκληση της εβδομάδας</h2><p>Απάντησε σωστά και γίνε Κυνηγός φωτονίων ως την επόμενη Κυριακή.</p>
-    <div class="warn">${WTRI}<span>Προσοχή: έχεις <b>μία προσπάθεια</b>. Αν δεν είσαι σίγουρος, διάβασε πρώτα την εξήγηση στο Instagram.</span></div>
-    <div class="two">${igLink('ghost')}<button class="btn" id="sungo">Δοκίμασε</button></div></div>`;
+  return `<div class="sunmini" id="suncard"><i aria-hidden="true">✦</i><span><b>Κυριακή του Φωτονίου</b><br>Η πρόκληση της εβδομάδας σε περιμένει</span><button class="go" id="sungo">Πάμε</button></div>`;
 }
 function sunTestBar(){
   return TESTSUN?`<div class="testbar"><b>Δοκιμή Κυριακής.</b> Βλέπεις ό,τι θα δουν οι μαθητές. Η απάντηση στην πρόκληση δεν καταγράφεται. ${esc(TNOTE)}
@@ -795,13 +845,89 @@ function photonCard(p,say,pop){
   return `<div class="pc pop ${L.t===10?'max':''}">
     <div class="pchead"><span class="nick">${esc(U.nick)}${hasBadge()?' <span class="hstar" title="Κυνηγός φωτονίων">✦</span>':''}</span><span class="tierchip">${L.t===10?'«Φως»':esc(L.name)}</span></div>
     ${say?`<div class="saytop">${say}</div>`:''}
-    <div class="hero">${tierHero(p.photons)}</div>
+    ${p.map?`<button class="orbw" id="mapgo" aria-label="Ο χάρτης μου: πόσες ερωτήσεις έχεις κατακτήσει ανά κεφάλαιο">${orbit(p.photons,achOf(p),'big')}</button>
+    <button class="tapdot" id="mapgo2">${achOf(p).length} / 7 κεφάλαια · πάτα με</button>`:`<div class="hero">${tierHero(p.photons)}</div>`}
     <div class="num">${p.photons}<small>${p.photons===1?'φωτόνιο':'φωτόνια'}</small></div>
     ${segBar(L.t===10?10:L.into,pop)}
     <div class="next">${nextLine(L)}</div>
+    <div class="mini3"><span><b>${p.rounds}</b> ${p.rounds===1?'γύρος':'γύροι'}</span>·<span>καλύτερο <b>${p.best}</b>/25</span>·<span><b>${p.retry}</b> για ρεβάνς</span></div>
   </div>`;
 }
 const PH=n=>`<div class="chip" title="φωτόνια">${LOGO}<b>${n}</b></div>`;
+
+
+/* ---------- Παράσημα κεφαλαίων (χάρτης κατάκτησης) ---------- */
+const EMW='#EEF2F8',EMG='#F5B841',EMT='#3FC1C9',EMR='#F0525F';
+const EM={
+ kr:`<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="13" r="5" fill="${EMT}"/><circle cx="17.5" cy="9.5" r="4" fill="${EMG}"/><path d="M1.5 10.5h2.5M1 14h2.6M2 17.5h2.4" stroke="${EMW}" stroke-width="1.4" stroke-linecap="round"/><path d="M12.4 10.6l1.3-.6" stroke="${EMW}" stroke-width="1.6" stroke-linecap="round"/></svg>`,
+ ta:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 2h16" stroke="${EMW}" stroke-width="1.8" stroke-linecap="round"/><path d="M12 2v2.5l-4 1.6 8 2.2-8 2.2 8 2.2-4 1.6V16" fill="none" stroke="${EMT}" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"/><rect x="7.5" y="16" width="9" height="6.5" rx="1.5" fill="${EMG}"/></svg>`,
+ ky:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1.5 12c2.6-7 5.2-7 7.8 0s5.2 7 7.8 0 3.4-4.6 5.4-3" fill="none" stroke="${EMT}" stroke-width="2.2" stroke-linecap="round"/><circle cx="9.3" cy="12" r="1.6" fill="${EMG}"/></svg>`,
+ st:`<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="11" r="8" fill="none" stroke="${EMG}" stroke-width="2.2"/><circle cx="12" cy="11" r="1.8" fill="${EMW}"/><path d="M12 3.5v15M4.5 11h15M6.7 5.7l10.6 10.6M17.3 5.7L6.7 16.3" stroke="${EMT}" stroke-width="1.2"/><path d="M2 22h20" stroke="${EMW}" stroke-width="1.5" stroke-linecap="round"/></svg>`,
+ ma:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4v9a7 7 0 0 0 14 0V4h-4.2v9a2.8 2.8 0 0 1-5.6 0V4z" fill="${EMR}"/><path d="M5 4h4.2v3H5zM14.8 4H19v3h-4.2z" fill="${EMW}"/><path d="M3 2.2c3 1 3 3.6 0 4.4M21 2.2c-3 1-3 3.6 0 4.4" fill="none" stroke="${EMT}" stroke-width="1.1"/></svg>`,
+ ep:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 14h2.5c1.2-6 3.5-6 3.5 0s2.3 6 3.5 0 2.3-6 3.5 0 2.3 6 3.5 0H21" fill="none" stroke="${EMT}" stroke-width="2" stroke-linecap="round"/><path d="M13.5 1.5l-3.2 5.2h3l-2.6 5" fill="none" stroke="${EMG}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+ kv:`<svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="12" rx="10" ry="4" fill="none" stroke="${EMT}" stroke-width="1.4"/><ellipse cx="12" cy="12" rx="10" ry="4" fill="none" stroke="${EMT}" stroke-width="1.4" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4" fill="none" stroke="${EMT}" stroke-width="1.4" transform="rotate(-60 12 12)"/><circle cx="12" cy="12" r="2.6" fill="${EMG}"/><circle cx="21.6" cy="12" r="1.3" fill="${EMW}"/></svg>`};
+/* για το μήνυμα του επιτεύγματος: [«Κατέκτησες …», «… μπαίνει τώρα σε τροχιά»] */
+const ACHT={kr:['τις Κρούσεις','Οι μπαλίτσες της κρούσης μπαίνουν'],ta:['τις Ταλαντώσεις','Το ελατήριο μπαίνει'],ky:['τα Κύματα','Το κύμα μπαίνει'],
+  st:['το Στερεό','Ο τροχός μπαίνει'],ma:['το Μαγνητικό πεδίο','Ο μαγνήτης μπαίνει'],ep:['την Επαγωγή','Το πηνίο μπαίνει'],kv:['την Κβαντομηχανική','Το άτομο μπαίνει']};
+const GKEYS=GROUPS.map(g=>g[0]);
+function achOf(p){                                // τα παράσημα του παίκτη (από τον server· αλλιώς από τον χάρτη)
+  if(p&&Array.isArray(p.ach))return p.ach.filter(k=>EM[k]);
+  if(p&&p.map)return GKEYS.filter(k=>p.map[k]&&p.map[k][0]>0&&p.map[k][1]===p.map[k][0]);
+  return [];
+}
+function orbit(ph,ach,cls){
+  const ems=GKEYS.map((k,i)=>{if(!ach.includes(k))return '';const a=-Math.PI/2+i*2*Math.PI/7;
+    return `<span class="em" style="left:${(50+42.5*Math.cos(a)).toFixed(2)}%;top:${(50+42.5*Math.sin(a)).toFixed(2)}%">${EM[k]}</span>`}).join('');
+  return `<div class="orb ${cls||''} ${ach.length===7?'gold':''}"><div class="ring"></div><div class="core">${tierHero(ph)}</div><div class="ems">${ems}</div></div>`;
+}
+function openMap(){
+  const p=U.profile; if(!p||!p.map)return;
+  const ach=achOf(p); let tk=0,tt=0;
+  const rows=GROUPS.map(g=>{const k=g[0],m=p.map[k]||[0,0,0],tot=m[0],ok=m[1],rv=m[2],un=Math.max(0,tot-ok-rv),done=ach.includes(k);tk+=ok;tt+=tot;
+    const pc=tot?Math.round(100*ok/tot):0;
+    return `<div class="mr ${done?'done':''}"><div class="mi">${EM[k]}</div><div><div class="t">${esc(g[1])}<span>${done?'✓ Κατακτήθηκε':pc+'%'}</span></div>
+      <div class="tb"><i class="k" style="width:${tot?(100*ok/tot).toFixed(1):0}%"></i><i class="r" style="width:${tot?(100*rv/tot).toFixed(1):0}%"></i></div>
+      <div class="s">${ok} σωστές · ${rv} για ρεβάνς · ${un} δεν τις έχεις δει${done&&un?`<br><span class="newq">+${un} ${un===1?'νέα ερώτηση':'νέες ερωτήσεις'}</span>`:''}</div></div></div>`}).join('');
+  const ov=document.createElement('div'); ov.className='ov sheetov'; ov.id='mapov';
+  ov.innerHTML=`<div class="sheet mapsh" role="dialog" aria-modal="true" aria-labelledby="maph"><div class="grab"></div><h2 id="maph">Ο χάρτης μου</h2>
+    <div class="tot"><b>${tk} / ${tt}</b>ερωτήσεις κατακτημένες · ${ach.length} από 7 κεφάλαια</div>
+    <div class="leg"><span><i style="background:#2F8F72"></i>σωστές</span><span><i style="background:#F0525F"></i>για ρεβάνς</span><span><i style="background:var(--bg);border:1px solid var(--bor)"></i>δεν τις έχεις δει</span></div>
+    ${rows}<button class="btn" id="mapx" style="margin-top:6px">Κλείσιμο</button></div>`;
+  document.body.appendChild(ov);
+  const close=()=>{ov.remove();document.removeEventListener('keydown',esc_)}, esc_=e=>{if(e.key==='Escape')close()};
+  ov.onclick=e=>{if(e.target===ov)close()}; document.getElementById('mapx').onclick=close; document.addEventListener('keydown',esc_);
+  document.getElementById('mapx').focus({preventScroll:true});
+}
+/* Νέο επίτευγμα κεφαλαίου: ένα παράθυρο για κάθε κομμάτι που κατέκτησε μόλις τώρα */
+function achQueue(list,p){
+  list=(list||[]).filter(k=>EM[k]); if(!list.length)return;
+  const k=list[0], g=GROUPS.find(x=>x[0]===k), all=achOf(p), n=all.length, tot=(p.map&&p.map[k])?p.map[k][0]:0;
+  const ov=document.createElement('div'); ov.className='ov'; ov.setAttribute('role','dialog'); ov.setAttribute('aria-label','Νέο επίτευγμα');
+  ov.innerHTML=`<div class="ovcard pop"><div class="pill">ΝΕΟ ΕΠΙΤΕΥΓΜΑ</div>
+    <h2 style="color:var(--ban)">Κατέκτησες ${esc(ACHT[k][0])}!</h2>
+    <div class="bigem">${EM[k]}</div>
+    <p class="lead">Απάντησες σωστά και τις <b>${tot}</b> ερωτήσεις του κεφαλαίου «${esc(g[1])}».</p>
+    <p class="lead">${ACHT[k][1]} τώρα σε τροχιά γύρω από το φωτόνιό σου.</p>
+    <div class="achorb">${orbit(p.photons,all)}</div>
+    <p class="note">${n===7?'Και τα 7 κεφάλαια! Το φωτόνιό σου απέκτησε τη χρυσή τροχιά της «Θεωρίας των Πάντων».':`${n} από 7 · Με όλα τα κεφάλαια: «Θεωρία των Πάντων»`}</p>
+    <button class="btn" id="achok">Τέλεια!</button></div>`;
+  document.body.appendChild(ov);
+  const b=ov.querySelector('#achok'); b.focus();
+  b.onclick=()=>{ov.remove();achQueue(list.slice(1),p)};
+}
+/* Πτυσσόμενες κάρτες της αρχικής: η συσκευή θυμάται αν τις άφησε ανοιχτές */
+const FOLDK='fotonio_quiz_fold';
+function foldGet(id,def){try{const o=JSON.parse(localStorage.getItem(FOLDK)||'{}');return id in o?!!o[id]:def}catch(e){return def}}
+function foldSet(id,v){try{const o=JSON.parse(localStorage.getItem(FOLDK)||'{}');o[id]=v?1:0;localStorage.setItem(FOLDK,JSON.stringify(o))}catch(e){}}
+function fold(id,ic,title,sub,body,open){
+  return `<div class="fold ${open?'open':''}" id="${id}"><button class="fh" data-fold="${id}" aria-expanded="${!!open}" aria-controls="${id}-b"><span class="ic" aria-hidden="true">${ic}</span><span class="tt"><b>${title}</b><small id="${id}-s">${sub}</small></span><span class="ar" aria-hidden="true">${open?'▾':'▸'}</span></button><div class="fb" id="${id}-b">${body}</div></div>`;
+}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-fold]');if(!b)return;const f=document.getElementById(b.dataset.fold);if(!f)return;
+  const o=!f.classList.contains('open');f.classList.toggle('open',o);b.setAttribute('aria-expanded',o);b.querySelector('.ar').textContent=o?'▾':'▸';foldSet(b.dataset.fold,o)});
+function chSum(){
+  const sel=getCh(), names=SECTIONS.filter(g=>g.secs.some(x=>sel.includes(g.ch+'|'+x))).map(g=>g.ch);
+  return names.length?`<em>${names.length}</em> · ${esc(names.join(', '))}`:'<em>Καμία ακόμα</em> · πάτα για να διαλέξεις';
+}
 
 /* ---------- Κεφάλαια που διάλεξε ο μαθητής (μνήμη συσκευής, ανά ψευδώνυμο) ---------- */
 const chKey=()=>'fotonio_quiz_ch_'+String(U.nick).toLowerCase();
@@ -809,11 +935,12 @@ function getCh(){try{return cleanChapters(JSON.parse(localStorage.getItem(chKey(
 function setCh(a){try{localStorage.setItem(chKey(),JSON.stringify(a))}catch(e){}}
 function chCard(){
   const sel=getCh();
-  return `<div class="card chsel"><h2>Από ποια κεφάλαια;</h2><p>Πάτα ένα κεφάλαιο και μετά κράτησε μόνο τις ενότητες που έχετε κάνει στο σχολείο. Μπορείς να τα αλλάζεις όποτε θέλεις.</p>
+  const body=`<div class="chsel"><p>Πάτα ένα κεφάλαιο και μετά κράτησε μόνο τις ενότητες που έχετε κάνει στο σχολείο. Μπορείς να τα αλλάζεις όποτε θέλεις.</p>
     ${SECTIONS.map(g=>{const n=g.secs.filter(x=>sel.includes(g.ch+'|'+x)).length;
       return `<div class="chg ${n?'open':''}"><button class="chh ${n===g.secs.length?'on':n?'part':''}" data-ch="${esc(g.ch)}"><span>${esc(g.ch)}</span><small>${n?n+'/'+g.secs.length:''}</small></button>
       ${g.secs.length>1?`<div class="chps">${g.secs.map(x=>{const k=g.ch+'|'+x;return `<button class="chp ${sel.includes(k)?'on':''}" data-k="${esc(k)}" aria-pressed="${sel.includes(k)}">${esc(x)}</button>`}).join('')}</div>`:''}</div>`}).join('')}
     <button class="link" id="chall">${sel.length===ALLK.length?'Καμία επιλογή':'Όλη η ύλη'}</button></div>`;
+  return fold('chfold','📚','Επιλεγμένα κεφάλαια',chSum(),body,!sel.length||foldGet('chfold',false));   // χωρίς ύλη: ανοιχτή
 }
 const ALLK=SECTIONS.flatMap(g=>g.secs.map(x=>g.ch+'|'+x));
 function wireCh(){
@@ -824,7 +951,8 @@ function wireCh(){
       b.querySelector('small').textContent=n&&g.secs.length>1?n+'/'+g.secs.length:'';b.parentNode.classList.toggle('open',n>0)});
     const pb=document.getElementById('play');
     if(pb){pb.disabled=!sel.length;pb.textContent=sel.length?(U.profile.rounds?'Νέος γύρος':'Πάμε για τον πρώτο γύρο'):'Διάλεξε τουλάχιστον μία ενότητα';}
-    const a=document.getElementById('chall'); if(a)a.textContent=sel.length===ALLK.length?'Καμία επιλογή':'Όλη η ύλη';};
+    const a=document.getElementById('chall'); if(a)a.textContent=sel.length===ALLK.length?'Καμία επιλογή':'Όλη η ύλη';
+    const cs=document.getElementById('chfold-s'); if(cs)cs.innerHTML=chSum();};
   document.querySelectorAll('.chp').forEach(b=>b.onclick=()=>{let a=getCh();const k=b.dataset.k;
     a=a.includes(k)?a.filter(x=>x!==k):a.concat(k);setCh(cleanChapters(a));paint();});
   document.querySelectorAll('.chh').forEach(b=>b.onclick=()=>{const g=SECTIONS.find(x=>x.ch===b.dataset.ch),ks=g.secs.map(x=>g.ch+'|'+x);
@@ -840,16 +968,17 @@ let TOP=null;
 function podium(){
   const T=TOP||[],me=U&&U.nick,my=U?U.profile.photons:0;
   const slot=(i)=>{const x=T[i];const r='r'+(i+1);
-    if(!x)return `<div class="ps ${r} emp"><div class="ph">${tierHero(0)}</div><div class="nm">κενή θέση</div><div class="ct">—</div><div class="st">${i+1}</div></div>`;
+    if(!x)return `<div class="ps ${r} emp"><div class="ph">${orbit(0,[],'sm')}</div><div class="nm">κενή θέση</div><div class="ct">—</div><div class="st">${i+1}</div></div>`;
     const isMe=me&&x.nick.toLowerCase()===me.toLowerCase();
-    return `<div class="ps ${r} ${isMe?'me':''}"><div class="ph">${tierHero(x.ph)}</div><div class="nm">${esc(x.nick)}${x.s||(isMe&&hasBadge())?' <span class="hstar" title="Κυνηγός φωτονίων">✦</span>':''}</div><div class="ct">${x.ph} ${x.ph===1?'φωτόνιο':'φωτόνια'}</div><div class="st">${i+1}</div></div>`};
+    const xa=isMe&&U.profile?achOf(U.profile):String(x.a||'').split(',').filter(k=>EM[k]);
+    return `<div class="ps ${r} ${isMe?'me':''}"><div class="ph">${orbit(x.ph,xa,'sm')}</div><div class="nm">${esc(x.nick)}${x.s||(isMe&&hasBadge())?' <span class="hstar" title="Κυνηγός φωτονίων">✦</span>':''}</div><div class="ct">${x.ph} ${x.ph===1?'φωτόνιο':'φωτόνια'}</div><div class="st">${i+1}</div></div>`};
   let line='';
   if(TOP){const inTop=T.some(x=>me&&x.nick.toLowerCase()===me.toLowerCase());
     if(inTop)line=T[0]&&T[0].nick.toLowerCase()===me.toLowerCase()?'Είσαι στην κορυφή! Κράτα τη θέση σου.':'Είσαι στο βάθρο! Η κορυφή είναι κοντά.';
     else if(T.length<3)line='Υπάρχει ελεύθερη θέση στο βάθρο: κέρδισε <b>1 φωτόνιο</b> και ανεβαίνεις.';
     else{const need=T[2].ph-my+1;line=`Σου λείπουν <b>${need} ${need===1?'φωτόνιο':'φωτόνια'}</b> για το βάθρο.`}}
-  return `<div class="card podc" id="podium"><div class="podh"><h2>Το βάθρο του Φωτονίου</h2><span>Top 3 σε φωτόνια</span></div>
-    <div class="pod">${slot(1)}${slot(0)}${slot(2)}</div>${line?`<div class="podme">${line}</div>`:''}</div>`;
+  const body=`<div class="podc"><div class="pod">${slot(1)}${slot(0)}${slot(2)}</div></div>`;
+  return fold('podium','🏆','Το βάθρο του Φωτονίου',line?line.replace(/<b>/g,'<em>').replace(/<\/b>/g,'</em>'):'Top 3 σε φωτόνια',body,foldGet('podium',false));
 }
 function loadTop(){API.top3().then(t=>{TOP=t||[];const el=document.getElementById('podium');if(el)el.outerHTML=podium()}).catch(()=>{});}
 
@@ -866,22 +995,15 @@ function lobby(how){
   ${sunTestBar()}
   ${sunHome()}
   ${photonCard(p,say)}
-  ${podium()}
-  <div class="card">
-    <div class="stats" style="margin:0 0 12px">
-      <div class="stat"><b>${p.rounds}</b><span>γύροι</span></div>
-      <div class="stat"><b>${p.best}</b><span>καλύτερο /25</span></div>
-      <div class="stat"><b>${p.retry}</b><span>για ρεβάνς</span></div>
-    </div>
-    <div class="lvl"><span>Κατακτημένες ερωτήσεις</span><span><b>${p.mastered}</b> / ${p.questions}</span></div>
-    <div class="bar teal"><i style="width:${disc}%"></i></div>
-  </div>
   ${chCard()}
   <button class="btn" id="play">${p.rounds?'Νέος γύρος':'Πάμε για τον πρώτο γύρο'}</button>
+  ${podium()}
   <button class="btn ghost" id="share" style="margin-top:0">Μοιράσου το φωτόνιό σου</button>
   ${window.DEMO&&p.level.t<10?'<button class="link" id="demo10">Δοκιμή: φτάσε 1 φωτόνιο πριν από τη νέα βαθμίδα</button>':''}
   <button class="link" id="out">Αλλαγή παίκτη · Έξοδος</button>`;
   document.getElementById('play').onclick=startRound; wireCh(); loadTop(); sunWire();
+  ['mapgo','mapgo2'].forEach(id=>{const b=document.getElementById(id);if(b)b.onclick=openMap});
+  if(p.newAch&&p.newAch.length){const nw=p.newAch;p.newAch=[];setTimeout(()=>achQueue(nw,p),600);}   // π.χ. κεφάλαιο που είχε ήδη ολοκληρώσει
   document.getElementById('share').onclick=()=>share(false);
   document.getElementById('out').onclick=()=>{saveLogin(null);U=null;login()};
   const d=document.getElementById('demo10'); if(d)d.onclick=async()=>{U.profile=await API.demoAdd(U.nick,Math.max(1,9-U.profile.level.into));lobby('back')};
@@ -1028,11 +1150,13 @@ async function finish(){
   ${res?'':'<p class="note">Δεν υπήρχε σύνδεση: ο γύρος ίσως δεν αποθηκεύτηκε.</p>'}`;
   document.getElementById('again').onclick=()=>{app.innerHTML='<button class="btn" id="play" disabled>Ετοιμάζω τον γύρο…</button>';startRound()};
   document.getElementById('home').onclick=()=>lobby('back');
-  if(tierUp)setTimeout(()=>achievement(p),700);
+  const nw=(p.newAch||[]).slice(); p.newAch=[];
+  const after=()=>{if(nw.length)achQueue(nw,p)};
+  if(tierUp)setTimeout(()=>achievement(p,after),700); else if(nw.length)setTimeout(after,700);
 }
 
 /* ---------- Νέα βαθμίδα ---------- */
-function achievement(p){
+function achievement(p,then){
   const L=p.level, ov=document.createElement('div');
   ov.className='ov'; ov.setAttribute('role','dialog'); ov.setAttribute('aria-label','Νέα βαθμίδα');
   ov.innerHTML=`<div class="ovcard pop">
@@ -1046,7 +1170,7 @@ function achievement(p){
     <button class="btn ghost" id="ovok">Συνέχεια</button>
   </div>`;
   document.body.appendChild(ov);
-  ov.querySelector('#ovok').onclick=()=>ov.remove();
+  ov.querySelector('#ovok').onclick=()=>{ov.remove();if(then)then()};
   ov.querySelector('#ovshare').onclick=()=>{ov.remove();share(true)};
   ov.querySelector('#ovok').focus();
 }
