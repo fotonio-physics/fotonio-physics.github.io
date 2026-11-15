@@ -1199,7 +1199,7 @@ async function finish(){
     <div style="height:14px"></div>
     ${(x=>x?x+'<div style="height:14px"></div>':'')(sunResult())}
     <button class="btn" id="again">Κι άλλος γύρος</button>
-    <button class="btn ghost" id="home">Το φωτόνιό μου</button>
+    <button class="btn ghost" id="home">← Πίσω στην αρχική</button>
   </div>
   ${res?'':'<p class="note">Δεν υπήρχε σύνδεση: ο γύρος ίσως δεν αποθηκεύτηκε.</p>'}`;
   document.getElementById('again').onclick=()=>{app.innerHTML='<button class="btn" id="play" disabled>Ετοιμάζω τον γύρο…</button>';startRound()};
