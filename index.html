@@ -398,6 +398,11 @@ textarea#cpt{width:100%;height:90px;background:var(--bg);color:var(--soft);borde
 .h2res div{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;font-weight:700;font-size:14px}
 .h2res div span:first-child{text-align:right}.h2res div span:last-child{text-align:left}
 .h2res b{font-size:22px;color:var(--ban);font-variant-numeric:tabular-nums}
+.dch button{background:transparent;border:1.5px solid var(--bor);color:var(--mut);border-radius:999px;padding:6px 12px;font-size:13.5px;font-weight:700}
+.dch button.on{background:rgba(63,193,201,.16);border-color:var(--teal);color:var(--txt)}
+.dch button.on::before{content:'✓ ';color:var(--teal)}
+.dch button.part{border-style:dashed}
+.dchn{font-size:12.5px!important;color:var(--mut)!important;margin-top:-4px!important}
 .rv{display:flex;flex-direction:column;gap:10px}
 .rv .it{border:1px solid var(--bor);border-radius:12px;padding:10px 12px;font-size:14px;line-height:1.7;text-align:left}
 .rv .it .h{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:var(--mut);font-weight:700}
@@ -1425,20 +1430,34 @@ function duelWire(){
 
 /* 1 · νέα πρόκληση (ή ρεβάνς). Δίκαιη σειρά: πρώτα βρίσκεται αντίπαλος και μετά ανοίγουν οι ερωτήσεις */
 function duelIntro(vs,opp,keys){
-  const ks=keys||getCh(), g=grpOf(ks);
+  /* τα κεφάλαια της μονομαχίας αλλάζουν εδώ, χωρίς να πειράζεται η επιλογή του ατομικού γύρου */
+  const init=(keys&&keys.length?keys:getCh()).filter(k=>ALLK.includes(k)), sel={};
+  CHUI.forEach(G=>{const mine=G.it.map(x=>x.k).filter(k=>init.includes(k));if(mine.length)sel[G.ch]=mine;});
+  const ks=()=>CHUI.flatMap(G=>sel[G.ch]||[]);
   app.innerHTML=`${TOPBAR()}
   <div class="dcard pop"><div class="pill2">${vs?'ΡΕΒΑΝΣ':'ΜΟΝΟΜΑΧΙΑ'}</div>
     <h2>${vs?`Ρεβάνς με ${esc(opp)}`:'Προκάλεσε έναν φίλο ⚔️'}</h2>
-    <p><b>5 ερωτήσεις</b> (3 πολλαπλής επιλογής, 2 Σωστό/Λάθος) από:</p>${chipsOf(g)}
+    <p><b>5 ερωτήσεις</b> (3 πολλαπλής επιλογής, 2 Σωστό/Λάθος) από:</p>
+    <div class="chips dch">${CHUI.map(G=>`<button data-g="${esc(G.ch)}" aria-pressed="false">${esc(G.ch)}</button>`).join('')}</div>
+    <p class="dchn" id="dchn"></p>
     <p>${vs?`Η πρόκληση εμφανίζεται κατευθείαν στην αρχική του. Παίζετε τις ίδιες ερωτήσεις, ο καθένας όποτε θέλει.`
       :`Πρώτα στέλνεις τον σύνδεσμο. Οι ερωτήσεις ανοίγουν <b>μόλις τη δεχτεί ο φίλος σου</b>, ώστε κανείς να μην τις δει πριν από τον άλλον.`}</p>
     <p>⏱️ <b>30 δευτερόλεπτα</b> για κάθε ερώτηση. Νικά όποιος βρει τις περισσότερες· αν έρθετε ίσοι, ο πιο γρήγορος.</p>
     <p style="font-size:12.5px;color:var(--mut)">Η μονομαχία δεν δίνει ούτε παίρνει φωτόνια.</p>
     <div id="de"></div>
     <button class="btn" id="dgo">${vs?'Στείλε τη ρεβάνς ⚔️':'Φτιάξε την πρόκληση ⚔️'}</button><button class="btn ghost" id="dbk">Πίσω</button></div>`;
+  const go=document.getElementById('dgo'), label=go.textContent;
+  const paint=()=>{document.querySelectorAll('.dch button').forEach(b=>{const G=CHUI.find(x=>x.ch===b.dataset.g),n=(sel[G.ch]||[]).length;
+      b.classList.toggle('on',n>0);b.classList.toggle('part',n>0&&n<G.it.length);b.setAttribute('aria-pressed',n>0)});
+    const n=Object.keys(sel).length; go.disabled=!n; go.textContent=n?label:'Διάλεξε τουλάχιστον ένα κεφάλαιο';
+    const part=CHUI.filter(G=>sel[G.ch]&&sel[G.ch].length<G.it.length).map(G=>G.ch);
+    document.getElementById('dchn').textContent=n?(part.length?`Από ${part.join(', ')} μόνο οι ενότητες που έχεις διαλέξει. Πάτα για να βγει ή να μπει.`:'Πάτα ένα κεφάλαιο για να το βγάλεις ή να το βάλεις.'):'Πάτα τα κεφάλαια που θέλεις.';};
+  document.querySelectorAll('.dch button').forEach(b=>b.onclick=()=>{const G=CHUI.find(x=>x.ch===b.dataset.g);
+    if(sel[G.ch])delete sel[G.ch];else sel[G.ch]=G.it.map(x=>x.k);paint();});
+  paint();
   document.getElementById('dbk').onclick=()=>lobby('back');
-  document.getElementById('dgo').onclick=async e=>{const b=e.currentTarget,t=b.textContent;b.disabled=true;b.textContent='Μια στιγμή…';
-    try{const r=await DUAPI.nw(ks,vs);openDuel(r.code)}
+  go.onclick=async e=>{const b=e.currentTarget,t=label;if(!ks().length)return;b.disabled=true;b.textContent='Μια στιγμή…';
+    try{const r=await DUAPI.nw(ks(),vs);openDuel(r.code)}
     catch(er){b.disabled=false;b.textContent=t;
       if(er&&er.message==='old'){location.replace(location.pathname+'?v='+Date.now());return}
       document.getElementById('de').innerHTML=`<div class="err">${DERR[er&&er.message]||'Δεν υπάρχει σύνδεση. Δοκίμασε ξανά.'}</div>`;}};
