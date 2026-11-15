@@ -452,7 +452,7 @@ function apiCall(fn,args,tries,n){
     .catch(e=>{if(!e.server&&tries>1)return new Promise(r=>setTimeout(r,700+n*900+Math.random()*900)).then(()=>apiCall(fn,args,tries-1,n+1));throw e});
 }
 
-const API={login:(n,p,c)=>apiCall('login',[n,p,!!c]), newRound:(n,p,c)=>apiCall('newRound',[n,p,c||[],2]),
+const API={login:(n,p,c,s)=>apiCall('login',[n,p,!!c,String(s||'')]), newRound:(n,p,c)=>apiCall('newRound',[n,p,c||[],2]),
   answer:(n,p,r,q,c)=>apiCall('answer',[n,p,r,q,c]), report:(n,p,r,q,why,t)=>apiCall('report',[n,p,r,q,why,t||'']),
   finish:(n,p,r)=>apiCall('finish',[n,p,r]), top3:()=>apiCall('top3',[]).then(j=>JSON.parse(j))};
 
@@ -574,6 +574,8 @@ function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor
 const KEY='fotonio_quiz_login';
 function loadLogin(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return {}}}
 function saveLogin(d){try{d?localStorage.setItem(KEY,JSON.stringify(d)):localStorage.removeItem(KEY)}catch(e){}}
+/* Από πού ήρθε ο μαθητής (?src=ig κ.λπ.): κρατιέται στη συσκευή και στέλνεται μόνο όταν φτιάχνεται νέος λογαριασμός */
+const SRC=(()=>{try{const v=new URLSearchParams(location.search).get('src');if(v&&/^[A-Za-z0-9_-]{1,20}$/.test(v))localStorage.setItem('fotonio_src',v.toLowerCase());return localStorage.getItem('fotonio_src')||''}catch(e){return ''}})();
 
 /* ---------- Κατάσταση ---------- */
 const app=document.getElementById('app');
@@ -618,7 +620,7 @@ async function doLogin(create){
   const rem=document.getElementById('rem').checked, e=document.getElementById('e'), go=document.getElementById('go');
   e.innerHTML=''; go.disabled=true; go.textContent='Μια στιγμή…';
   try{
-    const r=await API.login(nick,pin,create);
+    const r=await API.login(nick,pin,create,create?SRC:'');
     if(r.err){e.innerHTML=`<div class="err">${ERR[r.err]||'Κάτι πήγε στραβά. Δοκίμασε ξανά.'}</div>`;}
     else if(r.needCreate){
       document.getElementById('say').textContent=`Πρώτη φορά εδώ, ${nick}; Θα φτιάξω νέο παίκτη. Θυμήσου το PIN σου!`;

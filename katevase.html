@@ -145,6 +145,7 @@ var IOS=/iPhone|iPad|iPod/.test(UA)||(navigator.platform==='MacIntel'&&navigator
 var AND=/Android/.test(UA);
 var INAPP=/Instagram|FBAN|FBAV|FB_IAB|TikTok|musical_ly|Snapchat|Messenger|Line\//i.test(UA);
 var IOS_OTHER=IOS&&/CriOS|FxiOS|EdgiOS/.test(UA);
+try{var SRC0=new URLSearchParams(location.search).get('src');if(SRC0&&/^[A-Za-z0-9_-]{1,20}$/.test(SRC0))localStorage.setItem('fotonio_src',SRC0.toLowerCase())}catch(e){}   // από πού ήρθε (π.χ. ?src=ig)
 var HOME=location.origin+'/';
 var SHARE='<span class="shi"><svg width="15" height="18" viewBox="0 0 48 56" fill="none" stroke="#EEF2F8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 22H8v30h32V22h-8"/><path d="M24 36V4"/><path d="M14 13l10-10 10 10"/></svg></span>';
 var BIP=null, box=document.getElementById('box');
@@ -157,13 +158,19 @@ var IOSV=+(UA.match(/Version\/(\d+)/)||[])[1]||0, IOS_NEW=IOSV>=26;
 function arrow(pos){var d=document.createElement('div');d.className='arrow '+pos;d.textContent=(pos==='bc'||pos==='br')?'↓':'↑';document.body.appendChild(d)}
 function done(){box.innerHTML='<div class="ok">✅ Έτοιμο! Βρες το εικονίδιο <b style="color:#F5B841">Φωτόνιο</b> στην οθόνη σου.</div><a class="sec" href="/">Ή παίξε τώρα εδώ</a>'}
 if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js').catch(function(){});
-window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();BIP=e;if(AND&&!INAPP)androidReady()});
+window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();BIP=e;if(!INAPP&&!IOS)androidReady()});
 window.addEventListener('appinstalled',done);
-function androidReady(){
+function androidReady(){if(INSTALLED)return;
   box.innerHTML='<button class="big" id="go">📲 Εγκατάσταση</button>'+steps([['Πάτα το κίτρινο κουμπί <em>«Εγκατάσταση»</em> εδώ πάνω'],['Στο παράθυρο που θα βγει, πάτα <em>«Εγκατάσταση»</em>'],['Έτοιμο! Βρες το στην οθόνη σου',APPI]])+'<a class="sec" href="/">Παίξε χωρίς εγκατάσταση</a>';
   document.getElementById('go').onclick=function(){if(!BIP){androidManual();return}var p=BIP;BIP=null;p.prompt();p.userChoice.then(function(r){if(r&&r.outcome==='accepted')done();else androidManual()})};
 }
-function androidManual(){
+var INSTALLED=false;
+function installedView(){INSTALLED=true;
+  box.innerHTML='<div class="ok">✅ Το Φωτόνιο είναι ήδη στο κινητό σου!</div>'+steps([['Βρες το εικονίδιο στην οθόνη σου και πάτα το',APPI]])+'<a class="sec" href="/">Ή παίξε εδώ, στον browser</a>';
+  var a=document.querySelector('.arrow');if(a)a.remove();
+}
+function checkInstalled(){try{if(navigator.getInstalledRelatedApps)navigator.getInstalledRelatedApps().then(function(r){if(r&&r.length&&!BIP)installedView()}).catch(function(){})}catch(e){}}
+function androidManual(){if(INSTALLED)return;
   box.innerHTML=steps([
     ['Πάτα τις <em>3 τελείες</em> πάνω δεξιά, εκεί που δείχνει το βελάκι','<span class="mc">⋮</span>'],
     ['Στη λίστα που ανοίγει, πάτα αυτό:','<span class="md">'+INST+' Εγκατάσταση και δημιουργία συντόμευσης</span>','Σε κάποια κινητά γράφει «Εγκατάσταση εφαρμογής» ή «Προσθήκη στην αρχική οθόνη».'],
@@ -173,7 +180,7 @@ function androidManual(){
 }
 if(standalone()){location.replace('/')}
 else if(INAPP&&AND){
-  box.innerHTML='<a class="big" id="go" href="intent://'+location.host+location.pathname+'#Intent;scheme=https;package=com.android.chrome;end">📲 Άνοιγμα στον Chrome</a>'+
+  box.innerHTML='<a class="big" id="go" href="intent://'+location.host+location.pathname+location.search+'#Intent;scheme=https;package=com.android.chrome;end">📲 Άνοιγμα στον Chrome</a>'+
    '<div class="note">Πάτα το κίτρινο κουμπί: θα ανοίξει ο Chrome και εκεί θα δεις τα επόμενα βήματα. Αν δεν ανοίξει:</div>'+steps([['Πάτα τις <em>3 τελείες</em> πάνω δεξιά','<span class="mc">⋮</span>'],['Πάτα <em>«Άνοιγμα στο Chrome»</em>']]);
   arrow('tr');
   setTimeout(function(){location.href=document.getElementById('go').href},400);
@@ -195,7 +202,11 @@ else if(IOS){
   arrow(IOS_OTHER?'tr':IOS_NEW?'br':'bc');
 }
 else if(AND){
-  box.innerHTML='<button class="big" disabled>Φόρτωση…</button>';
+  box.innerHTML='<button class="big" disabled>Φόρτωση…</button>';checkInstalled();
+  setTimeout(function(){if(!BIP)androidManual()},2500);
+}
+else if(navigator.maxTouchPoints>0){
+  box.innerHTML='<button class="big" disabled>Φόρτωση…</button>';checkInstalled();
   setTimeout(function(){if(!BIP)androidManual()},2500);
 }
 else{
