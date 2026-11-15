@@ -338,6 +338,7 @@ textarea#cpt{width:100%;height:90px;background:var(--bg);color:var(--soft);borde
 .ovcard .achorb{width:150px}
 .ps .ph{width:64px;height:64px}
 .copy{margin:18px 0 6px;text-align:center;font-size:11.5px;color:var(--dim,#6F84A0);letter-spacing:.02em}
+.tag.pan{background:rgba(245,184,65,.14);color:var(--ban);border:1px solid rgba(245,184,65,.6)}
 </style>
 <link rel="manifest" href="/manifest-quiz.webmanifest">
 <link rel="icon" href="/icon2-quiz-192.png">
@@ -642,6 +643,10 @@ function tierHero(n){
 
 
 /* ---------- Μαθηματική γραφή: {α/β} -> κλάσμα ---------- */
+/* «Πανελλήνιες 2024» / «Επαναληπτικές Πανελλήνιες 2024» για ερωτήσεις από πραγματικά θέματα (στήλη «Πηγή» του φύλλου) */
+function panTag(src){const s=String(src||'').trim();let x=s.match(/^Επαναληπτικ\S*\s+(?:Πανελ\S*\s+)?(\d{4})/i);
+  if(x)return `<span class="tag pan">Επαναληπτικές Πανελλήνιες ${x[1]}</span>`;
+  x=s.match(/^Πανελ(?:λαδικές|λήνιες)\s+(\d{4})/i);return x?`<span class="tag pan">Πανελλήνιες ${x[1]}</span>`:'';}
 function m(s){return s.replace(/\{((?:[^{}\/]|[_^]\{[^{}]*\})+)\/((?:[^{}]|[_^]\{[^{}]*\})+)\}/g,'<span class="fr"><span>$1</span><span>$2</span></span>').replace(/_\{([^}]+)\}/g,'<sub>$1</sub>').replace(/\^\{([^}]+)\}/g,'<sup>$1</sup>').replace(/([^\s\u20D7])\u20D7([\u2080-\u2089]*)/g,'<span style="white-space:nowrap"><span class="vec">$1</span>$2</span>')
   /* τετραγωνική ρίζα με γραμμή από πάνω: √(…) και √2 */
   .replace(/√\(([^()]*)\)/g,(_,x)=>`<span class="sq${x.includes('class="fr"')?' sqf':''}" role="img" aria-label="ρίζα"><svg class="sqr" viewBox="0 0 10 100" preserveAspectRatio="none" aria-hidden="true"><path d="M0.5 60L3 53L5.4 100L10 0" vector-effect="non-scaling-stroke"/></svg><span class="sqb">${x}</span></span>`)
@@ -1093,7 +1098,7 @@ function ask(){
   <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="${S.qs.length}" aria-valuenow="${S.i}"><i style="width:${pct}%"></i></div>
   <div class="mascot-row"><div id="mascot">${mascot('idle')}</div><div class="bubble" id="say">${say}</div></div>
   <div class="card pop">
-    <div class="meta"><span class="tags"><span class="tag">${esc(q.ch)}</span>${kind}</span><span>${pts}</span></div>
+    <div class="meta"><span class="tags"><span class="tag">${esc(q.ch)}</span>${panTag(q.src)}${kind}</span><span>${pts}</span></div>
     <p class="q">${m(esc(q.q))}</p>
     ${q.img&&/^data:image\/png;base64,[A-Za-z0-9+/=]+$/.test(q.img)?`<div class="fig"><img src="${q.img}" alt="Σχήμα της ερώτησης"></div>`:''}
     ${opts}
