@@ -727,8 +727,17 @@ function sunResult(){                           // 1 · οθόνη αποτελ�
   return `<div class="sun"><span class="lab">ΣΗΜΕΡΑ, ΚΥΡΙΑΚΗ</span><h2>Η πιο δύσκολη ερώτηση της εβδομάδας</h2>
     <p>Διάβασε την εξήγηση και δοκίμασε την πρόκληση.</p><div class="one">${igLink()}</div></div>`;
 }
+let sunBig=false;                                // «Λύση»: ο παίκτης ζήτησε να ξαναδεί τη μεγάλη κάρτα
 function sunHome(){                             // 2 και 4 · κάρτα στην κορυφή της αρχικής
   const s=U&&U.sun; if(!s||!s.on)return '';
+  if(s.done&&!sunBig){                          // μετά την πρώτη φορά, η ολοκληρωμένη πρόκληση γίνεται μια μικρή γραμμή
+    const k='fotonio_sun_home_'+String(U.nick).toLowerCase()+'_'+(s.date||'');
+    let first=true; try{first=!localStorage.getItem(k);localStorage.setItem(k,'1')}catch(e){}
+    if(!first)return s.done.ok
+      ?`<div class="sunmini" id="suncard"><i aria-hidden="true">✦</i><span><b>Κυνηγός φωτονίων</b><br>Έλυσες σωστά την πρόκληση · το σήμα μένει ως το Σάββατο</span></div>`
+      :`<div class="sunmini" id="suncard"><i aria-hidden="true">✦</i><span><b>Η πρόκληση ολοκληρώθηκε</b><br>Η επόμενη έρχεται την Κυριακή</span><button class="go" id="sunsol">Λύση</button></div>`;
+  }
+  sunBig=false;
   if(s.done&&s.done.ok)return `<div class="sun" id="suncard"><span class="okpill">Σωστά</span><div class="star big">✦</div>
     <h2 class="gold">Κυνηγός φωτονίων</h2><p>Το σήμα μένει δίπλα στο ψευδώνυμό σου ως την επόμενη Κυριακή.</p>
     <div class="me">${esc(U.nick)} <i>✦</i></div></div>`;
@@ -744,7 +753,8 @@ function sunTestBar(){
 }
 function sunWire(){
   const g=document.getElementById('sungo'); if(g)g.onclick=sunConfirm;
-  const r=document.getElementById('sunreset'); if(r)r.onclick=()=>{U.sun.done=null;U.sun.badge=false;lobby('back')};
+  const sl=document.getElementById('sunsol'); if(sl)sl.onclick=()=>{sunBig=true;lobby('back')};
+  const r=document.getElementById('sunreset'); if(r)r.onclick=()=>{U.sun.done=null;U.sun.badge=false;try{Object.keys(localStorage).filter(x=>x.indexOf('fotonio_sun_home_')===0).forEach(x=>localStorage.removeItem(x))}catch(e){}lobby('back')};
   const x=document.getElementById('sunexit'); if(x)x.onclick=()=>{location.href=location.pathname};
 }
 function sunConfirm(){                          // 3 · επιβεβαίωση πριν ξεκινήσει
