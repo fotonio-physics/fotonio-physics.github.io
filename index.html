@@ -406,6 +406,21 @@ textarea#cpt{width:100%;height:90px;background:var(--bg);color:var(--soft);borde
 .dwr{display:flex;gap:8px;align-items:stretch}.dwr .dli{flex:1;min-width:0}
 .ddel{flex:0 0 auto;width:44px;background:var(--red);border:1.5px solid var(--redb);border-radius:12px;color:var(--redb);font-weight:800;font-size:20px;line-height:1;padding:0}
 .ddel:disabled{opacity:.5}
+.dwho{display:flex;flex-direction:column;gap:8px}
+.opt2{display:flex;gap:12px;align-items:center;background:var(--bg);border:1.5px solid var(--bor);border-radius:14px;padding:12px;text-align:left;width:100%;color:var(--txt)}
+.opt2.on{border-color:var(--teal);background:rgba(63,193,201,.10)}
+.opt2 .i{font-size:22px;flex:0 0 auto}.opt2 b{display:block;font-size:15px}.opt2 small{color:var(--mut);font-size:12.5px;line-height:1.35;display:block}
+#dpl:empty{display:none}#dpl{display:flex;flex-direction:column;gap:8px}
+.srch2{display:flex;gap:8px}.srch2 input{flex:1;min-width:0;background:var(--bg);color:var(--txt);border:1.5px solid var(--teal);border-radius:12px;padding:11px 12px;font:inherit}
+.srch2 .btn{width:auto;padding:11px 16px}
+.who{display:flex;flex-direction:column;gap:6px}
+.who .r{display:flex;align-items:center;gap:10px;background:var(--bg);border:1px solid var(--bor);border-radius:12px;padding:8px 10px;font-size:14px;text-align:left}
+.who .r .n{flex:1;min-width:0;font-weight:700;overflow-wrap:anywhere}.who .r .n small{display:block;font-weight:500;color:var(--mut);font-size:12px}
+.who .r button,.dtg .link{border:1.5px solid var(--teal);background:none;color:var(--teal);border-radius:999px;padding:5px 11px;font-weight:800;font-size:12.5px;text-decoration:none;flex:0 0 auto}
+.dtg{display:flex;align-items:center;gap:10px;justify-content:center;background:rgba(63,193,201,.10);border:1.5px solid var(--teal);border-radius:12px;padding:10px;font-size:15px}
+.dtg b{color:var(--ban)}
+.pdu{display:block;margin:4px auto 0;border:1.5px solid var(--teal);background:none;color:var(--teal);border-radius:999px;padding:2px 10px;font-size:13px;line-height:1.4}
+.dli.no{opacity:.8}
 .rv{display:flex;flex-direction:column;gap:10px}
 .rv .it{border:1px solid var(--bor);border-radius:12px;padding:10px 12px;font-size:14px;line-height:1.7;text-align:left}
 .rv .it .h{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:var(--mut);font-weight:700}
@@ -1041,6 +1056,7 @@ function foldSet(id,v){try{const o=JSON.parse(localStorage.getItem(FOLDK)||'{}')
 function fold(id,ic,title,sub,body,open){
   return `<div class="fold ${open?'open':''}" id="${id}"><button class="fh" data-fold="${id}" aria-expanded="${!!open}" aria-controls="${id}-b"><span class="ic" aria-hidden="true">${ic}</span><span class="tt"><b>${title}</b><small id="${id}-s">${sub}</small></span><span class="ar" aria-hidden="true">${open?'▾':'▸'}</span></button><div class="fb" id="${id}-b">${body}</div></div>`;
 }
+document.addEventListener('click',e=>{const t=e.target.closest('[data-tg]');if(t&&U){e.preventDefault();duelIntro(null,null,null,t.dataset.tg);return}});
 document.addEventListener('click',e=>{const b=e.target.closest('[data-fold]');if(!b)return;const f=document.getElementById(b.dataset.fold);if(!f)return;
   const o=!f.classList.contains('open');f.classList.toggle('open',o);b.setAttribute('aria-expanded',o);b.querySelector('.ar').textContent=o?'▾':'▸';foldSet(b.dataset.fold,o)});
 function chSum(){
@@ -1094,7 +1110,7 @@ function podium(){
     if(!x)return `<div class="ps ${r} emp"><div class="ph">${orbit(0,[],'sm')}</div><div class="nm">κενή θέση</div><div class="ct">—</div><div class="st">${i+1}</div></div>`;
     const isMe=me&&x.nick.toLowerCase()===me.toLowerCase();
     const xa=isMe&&U.profile?achOf(U.profile):String(x.a||'').split(',').filter(k=>EM[k]);
-    return `<div class="ps ${r} ${isMe?'me':''}"><div class="ph">${orbit(x.ph,xa,'sm')}</div><div class="nm">${esc(x.nick)}${x.s||(isMe&&hasBadge())?' <span class="hstar" title="Κυνηγός φωτονίων">✦</span>':''}</div><div class="ct">${x.ph} ${x.ph===1?'φωτόνιο':'φωτόνια'}</div><div class="st">${i+1}</div></div>`};
+    return `<div class="ps ${r} ${isMe?'me':''}"><div class="ph">${orbit(x.ph,xa,'sm')}</div><div class="nm">${esc(x.nick)}${x.s||(isMe&&hasBadge())?' <span class="hstar" title="Κυνηγός φωτονίων">✦</span>':''}</div><div class="ct">${x.ph} ${x.ph===1?'φωτόνιο':'φωτόνια'}</div>${!isMe&&DUAPI?`<button class="pdu" data-tg="${esc(x.nick)}" aria-label="Πρόκληση σε ${esc(x.nick)}">⚔️</button>`:''}<div class="st">${i+1}</div></div>`};
   let line='';
   if(TOP){const inTop=T.some(x=>me&&x.nick.toLowerCase()===me.toLowerCase());
     if(inTop)line=T[0]&&T[0].nick.toLowerCase()===me.toLowerCase()?'<b>Είσαι στην κορυφή!</b> Κράτα τη θέση σου 👑':'<b>Είσαι στο βάθρο!</b> Η κορυφή είναι κοντά 👀';
@@ -1382,23 +1398,25 @@ async function share(isAch){
 /* ---------- Μονομαχία με φίλο (ασύγχρονη, με σύνδεσμο) ----------
    Δεν δίνει ούτε παίρνει φωτόνια. Ο server ελέγχει απαντήσεις και χρόνο. */
 const DUAPI=typeof apiCall==='function'?{
-  nw:(ch,vs)=>apiCall('duelNew',[U.nick,U.pin,ch||[],2,vs||''],1),
+  nw:(ch,vs,tg)=>apiCall('duelNew',[U.nick,U.pin,ch||[],2,vs||'',tg||''],1),
+  find:t=>apiCall('duelFind',[U.nick,U.pin,t]), decline:c=>apiCall('duelDecline',[U.nick,U.pin,c],1),
   info:c=>apiCall('duelInfo',[U.nick,U.pin,c]),
-  start:c=>apiCall('duelStart',[U.nick,U.pin,c],1),
+  start:(c,v)=>apiCall('duelStart',[U.nick,U.pin,c,v||''],1),
   ans:(c,i,ch,ms)=>apiCall('duelAnswer',[U.nick,U.pin,c,i,ch,ms],1),
   list:()=>apiCall('duelList',[U.nick,U.pin]),
-  sent:c=>apiCall('duelSent',[U.nick,U.pin,c]), cancel:c=>apiCall('duelCancel',[U.nick,U.pin,c],1)}:null;
+  sent:(c,ch)=>apiCall('duelSent',[U.nick,U.pin,c,ch||'']), cancel:c=>apiCall('duelCancel',[U.nick,U.pin,c],1)}:null;
 const DKEY='fotonio_duel';
 /* ?m=ΚΩΔΙΚΟΣ: κρατιέται ώσπου να μπει ο παίκτης και φεύγει από τη γραμμή διευθύνσεων */
 (()=>{try{const u=new URL(location.href),v=(u.searchParams.get('m')||'').toUpperCase();
-  if(/^[A-Z2-9]{5}$/.test(v)){localStorage.setItem(DKEY,JSON.stringify({c:v,t:Date.now()}));u.searchParams.delete('m');history.replaceState(null,'',u.pathname+(u.search||'')+u.hash);}}catch(e){}})();
-function duelPending(){try{const o=JSON.parse(localStorage.getItem(DKEY)||'null');if(o&&Date.now()-o.t<8*864e5)return o.c;localStorage.removeItem(DKEY)}catch(e){}return ''}
+  if(/^[A-Z2-9]{5}$/.test(v)){const k=(u.searchParams.get('k')||'').toLowerCase();localStorage.setItem(DKEY,JSON.stringify({c:v,t:Date.now(),k:/^(vb|ig|ms|cp|sh)$/.test(k)?k:''}));u.searchParams.delete('m');u.searchParams.delete('k');history.replaceState(null,'',u.pathname+(u.search||'')+u.hash);}}catch(e){}})();
+let DVIA='',DLAST=null;   // από ποια πλατφόρμα ήρθε ο σύνδεσμος · η τελευταία λίστα μονομαχιών
+function duelPending(){try{const o=JSON.parse(localStorage.getItem(DKEY)||'null');if(o&&Date.now()-o.t<8*864e5){DVIA=o.k||'';return o.c}localStorage.removeItem(DKEY)}catch(e){}return ''}
 function duelClear(){try{localStorage.removeItem(DKEY)}catch(e){}}
 const fmtT=s=>{s=Number(s)||0;const m=Math.floor(s/60),r=s-m*60;return m?`${m}΄${String(Math.round(r)).padStart(2,'0')}΄΄`:`${(Math.round(r*10)/10).toString().replace('.',',')}΄΄`};
 const chipsOf=a=>`<div class="chips">${(a&&a.length?a:['Όλα τα κεφάλαια']).map(x=>`<span>${esc(x)}</span>`).join('')}</div>`;
 const grpOf=keys=>{const o=[];(keys||[]).forEach(k=>{let g=String(k).split('|')[0];if(g==='Ηλεκτρομαγνητικά κύματα')g='Κύματα';if(!o.includes(g))o.push(g)});return o};
 const TOPBAR=()=>`<div class="top"><div class="brand">${LOGO}<span>Φωτόνιο</span> Quiz</div>${PH(U.profile.photons)}</div>`;
-const DERR={wait:'Ο φίλος σου δεν έχει τελειώσει ακόμα τις δικές του ερωτήσεις. Άνοιξε ξανά τον σύνδεσμο σε λίγο.',taken:'Αυτή τη μονομαχία την έχει ήδη δεχτεί άλλος παίκτης.',gone:'Αυτή η μονομαχία δεν υπάρχει πια (ισχύει 7 μέρες).',slow:'Πιο σιγά! Περίμενε λίγο και δοκίμασε ξανά.',limit:'Έφτασες το όριο μονομαχιών για σήμερα. Τα λέμε αύριο!'};
+const DERR={nouser:'Δεν υπάρχει παίκτης με αυτό το ψευδώνυμο. Έλεγξε ότι το γράφεις ακριβώς.',self:'Δεν μπορείς να προκαλέσεις τον εαυτό σου 🙂',max:'Έχεις ήδη 3 προκλήσεις που περιμένουν απάντηση. Περίμενε να παίξουν ή ακύρωσε κάποια.',dup:'Έχεις ήδη μια πρόκληση σε εξέλιξη με αυτόν τον παίκτη.',wait:'Ο φίλος σου δεν έχει τελειώσει ακόμα τις δικές του ερωτήσεις. Άνοιξε ξανά τον σύνδεσμο σε λίγο.',taken:'Αυτή τη μονομαχία την έχει ήδη δεχτεί άλλος παίκτης.',gone:'Αυτή η μονομαχία δεν υπάρχει πια (ισχύει 7 μέρες).',slow:'Πιο σιγά! Περίμενε λίγο και δοκίμασε ξανά.',limit:'Έφτασες το όριο μονομαχιών για σήμερα. Τα λέμε αύριο!'};
 function duelMsg(t){app.innerHTML=`${TOPBAR()}<div class="dcard pop"><div class="pill2">ΜΟΝΟΜΑΧΙΑ</div><p>${t}</p><button class="btn" id="dh">Αρχική</button></div>`;document.getElementById('dh').onclick=()=>lobby('back');window.scrollTo({top:0});}
 function duelBusy(t){app.innerHTML=`${TOPBAR()}<div class="mascot-row"><div id="mascot">${mascot('idle')}</div><div class="bubble">${t}</div></div>`;}
 
@@ -1409,74 +1427,102 @@ function duelFoldSlot(){return DUAPI?'<div id="dvs"></div>':''}
 function duelWire(){
   const b=document.getElementById('duel'); if(!b)return;
   b.onclick=()=>duelIntro();
-  DUAPI.list().then(L=>{const el=document.getElementById('duels'),fs=document.getElementById('dvs'); if(!el||!L)return;
+  DUAPI.list().then(L=>{DLAST=L;const el=document.getElementById('duels'),fs=document.getElementById('dvs'); if(!el||!L)return;
     const r=L.rec||{w:0,l:0,d:0}, n=r.w+r.l+r.d;
     const W=x=>`${x.w} ${x.w===1?'νίκη':'νίκες'}`, Lo=x=>`${x.l} ${x.l===1?'ήττα':'ήττες'}`, D=x=>x.d?` · ${x.d} ${x.d===1?'ισοπαλία':'ισοπαλίες'}`:'';
     const ws=x=>x.left<=1?'λήγει σήμερα':`λήγει σε ${x.left} μέρες`, chs=x=>esc(!x.ch.length||x.ch.length>=7?'Όλη η ύλη':x.ch.join(', '));
-    const act=L.act||[], now=act.filter(x=>x.what!=='wait'), wait=act.filter(x=>x.what==='wait');
-    const items=now.map(x=>x.what==='turn'?`<button class="dli turn" data-du="${x.code}"><span class="ic">⚔️</span><span class="tx">${x.mine?`Μονομαχία με <b>${esc(x.opp)}</b>: σειρά σου!`:`<b>${esc(x.opp)}</b> σε προκαλεί!`}<small>${chs(x)} · ${ws(x)}</small></span><span class="go">Παίξε ›</span></button>`
+    let n_=0; const act=L.act||[], now=act.filter(x=>x.what==='turn'||x.what==='resume'), wait=act.filter(x=>x.what==='wait'||x.what==='no');
+    const X=(x,row)=>x.x?`<div class="dwr">${row}<button class="ddel" data-${x.x==='decline'?'dec':'del'}="${x.code}" aria-label="${x.x==='decline'?'Απόρριψη':'Διαγραφή'}">✕</button></div>`:row;
+    const items=now.map(x=>x.what==='turn'?X(x,`<button class="dli turn" data-du="${x.code}"><span class="ic">⚔️</span><span class="tx">${x.mine?`Μονομαχία με <b>${esc(x.opp)}</b>: σειρά σου!`:`<b>${esc(x.opp)}</b> σε προκαλεί!`}<small>${chs(x)} · ${ws(x)}</small></span><span class="go">Παίξε ›</span></button>`)
       :`<button class="dli" data-du="${x.code}"><span class="ic">⏸️</span><span class="tx">Δεν τελείωσες τη μονομαχία${x.opp?` με <b>${esc(x.opp)}</b>`:''}<small>${ws(x)}</small></span><span class="go">Συνέχισε ›</span></button>`);
     el.outerHTML=`<div id="duels" class="dlist">${items.join('')}</div>`;
     if(fs&&(n||wait.length)){
       const vsRows=(L.vs||[]).map(v=>`<div class="h2r"><span class="nm">${esc(v.opp)}</span><span class="sc"><b class="${v.w>v.l?'up':v.w<v.l?'dn':''}">${v.w} – ${v.l}</b>${v.d?`<small>+${v.d} ισοπ.</small>`:''}</span>${v.code?`<button class="h2go" data-rv="${v.code}" data-op="${esc(v.opp)}" aria-label="Ρεβάνς με ${esc(v.opp)}">⚔️ Ρεβάνς</button>`:''}</div>`).join('');
-      const waitRows=wait.map(x=>{const row=`<button class="dli" data-du="${x.code}"><span class="ic">⏳</span><span class="tx">${x.opp?`Περιμένεις <b>${esc(x.opp)}</b> να παίξει`:'Περιμένεις αντίπαλο'}<small>${chs(x)} · ${ws(x)}</small></span><span class="go">${x.opp?'Δες ›':'Στείλε ›'}</span></button>`;
+      const waitRows=wait.map(x=>{if(x.what==='no')return `<div class="dli no"><span class="ic">🚫</span><span class="tx"><b>${esc(x.opp)}</b> δεν δέχτηκε την πρόκληση<small>${chs(x)}</small></span></div>`;
+        const row=`<button class="dli" data-du="${x.code}"><span class="ic">⏳</span><span class="tx">${x.opp?`Περιμένεις <b>${esc(x.opp)}</b> να παίξει`:'Περιμένεις αντίπαλο'}<small>${chs(x)} · ${ws(x)}</small></span><span class="go">${x.opp?'Δες ›':'Στείλε ›'}</span></button>`;
         return x.opp?row:`<div class="dwr">${row}<button class="ddel" data-del="${x.code}" aria-label="Διαγραφή πρόκλησης">✕</button></div>`}).join('');
       const finRows=(L.fin||[]).map(x=>`<button class="dli ${x.res}" data-du="${x.code}"><span class="ic">${x.res==='w'?'🏆':x.res==='l'?'⚔️':'🤝'}</span><span class="tx">${x.res==='w'?'Νίκη':x.res==='l'?'Ήττα':'Ισοπαλία'} με <b>${esc(x.opp)}</b></span><span class="go">${x.my} – ${x.op}</span></button>`).join('');
       const body=(vsRows?`<p class="h2t">Το σκορ σου απέναντι σε κάθε αντίπαλο (νίκες – ήττες)</p><div class="h2">${vsRows}</div>`:'')
         +(finRows?`<p class="h2t">${(L.fin||[]).length>1?'Τα '+(L.fin||[]).length+' τελευταία αποτελέσματα':'Τελευταίο αποτέλεσμα'}</p><div class="dlist">${finRows}</div>`:'')
         +(waitRows?`<p class="h2t">Σε αναμονή</p><div class="dlist">${waitRows}</div>`:'');
-      const sub=(n?`<em>${W(r)}</em> · ${Lo(r)}${D(r)}`:'<em>Καμία ακόμα</em>')+(wait.length?` · ${wait.length} σε αναμονή`:'');
+      const sub=(n?`<em>${W(r)}</em> · ${Lo(r)}${D(r)}`:'<em>Καμία ακόμα</em>')+((n_=wait.filter(x=>x.what!=='no').length)?` · ${n_} σε αναμονή`:'');
       fs.outerHTML=`<div id="dvs">${fold('dvsfold','⚔️','Οι μονομαχίες μου',sub,body,foldGet('dvsfold',false))}</div>`;
     }
     else if(fs)fs.outerHTML='<div id="dvs"></div>';
     document.querySelectorAll('[data-du]').forEach(x=>x.onclick=()=>openDuel(x.dataset.du));
     document.querySelectorAll('[data-rv]').forEach(x=>x.onclick=()=>duelIntro(x.dataset.rv,x.dataset.op));
     document.querySelectorAll('[data-del]').forEach(x=>x.onclick=()=>duelDel(x));
+    document.querySelectorAll('[data-dec]').forEach(x=>x.onclick=()=>duelDel(x,true));
   }).catch(()=>{});
 }
 
 
 /* διαγραφή πρόκλησης που δεν την έχει δεχτεί κανείς (δεύτερο πάτημα για επιβεβαίωση) */
-async function duelDel(x){
+async function duelDel(x,dec){
   x.disabled=true;
-  try{await DUAPI.cancel(x.dataset.del);const w=x.closest('.dwr');if(w)w.remove();duelWire()}
+  try{await (dec?DUAPI.decline(x.dataset.dec):DUAPI.cancel(x.dataset.del));const w=x.closest('.dwr');if(w)w.remove();duelWire()}
   catch(e){x.disabled=false}
 }
 
 /* 1 · νέα πρόκληση (ή ρεβάνς). Δίκαιη σειρά: πρώτα βρίσκεται αντίπαλος και μετά ανοίγουν οι ερωτήσεις */
-function duelIntro(vs,opp,keys){
+function duelIntro(vs,opp,keys,target){
   /* τα κεφάλαια της μονομαχίας αλλάζουν εδώ, χωρίς να πειράζεται η επιλογή του ατομικού γύρου */
   let init=(keys&&keys.length?keys:getCh()).filter(k=>ALLK.includes(k)); if(!init.length)init=ALLK.slice();   // καμία επιλογή: όλη η ύλη
   const sel={};
   CHUI.forEach(G=>{const mine=G.it.map(x=>x.k).filter(k=>init.includes(k));if(mine.length)sel[G.ch]=mine;});
   const ks=()=>CHUI.flatMap(G=>sel[G.ch]||[]);
+  let mode=vs?'rv':target?'pl':'link', tg=target||'';
+  const me=String(U.nick).toLowerCase();
+  const sugg=()=>{const L=[];const add=(n,s)=>{if(n&&n.toLowerCase()!==me&&!L.some(x=>x.n.toLowerCase()===n.toLowerCase()))L.push({n,s})};
+    (TOP||[]).forEach((x,i)=>add(x.nick,['🥇','🥈','🥉'][i]+' '+x.ph+' φωτόνια'));
+    ((DLAST&&DLAST.vs)||[]).slice(0,4).forEach(v=>add(v.opp,`Εσύ ${v.w} – ${v.l}`));return L};
   app.innerHTML=`${TOPBAR()}
   <div class="dcard pop"><div class="pill2">${vs?'ΡΕΒΑΝΣ':'ΜΟΝΟΜΑΧΙΑ'}</div>
-    <h2>${vs?`Ρεβάνς με ${esc(opp)}`:'Προκάλεσε έναν φίλο ⚔️'}</h2>
+    <h2>${vs?`Ρεβάνς με ${esc(opp)}`:'Με ποιον θα παίξεις; ⚔️'}</h2>
+    ${vs?'':`<div class="dwho"><button class="opt2" data-md="link"><span class="i">🔗</span><span><b>Στείλε σύνδεσμο σε φίλο</b><small>Viber, Instagram, Messenger. Και για φίλους που δεν έχουν παίξει ποτέ.</small></span></button>
+      <button class="opt2" data-md="pl"><span class="i">⚔️</span><span><b>Προκάλεσε παίκτη του Φωτονίου</b><small>Η πρόκληση εμφανίζεται κατευθείαν στην αρχική του.</small></span></button></div>
+    <div id="dpl"></div>`}
     <p><b>5 ερωτήσεις</b> (3 πολλαπλής επιλογής, 2 Σωστό/Λάθος) από:</p>
     <div class="chips dch">${CHUI.map(G=>`<button data-g="${esc(G.ch)}" aria-pressed="false">${esc(G.ch)}</button>`).join('')}</div>
     <p class="dchn" id="dchn"></p>
-    <p>${vs?`Η πρόκληση εμφανίζεται κατευθείαν στην αρχική του. Παίζετε τις ίδιες ερωτήσεις, ο καθένας όποτε θέλει.`
-      :`Πρώτα στέλνεις τον σύνδεσμο. Οι ερωτήσεις ανοίγουν <b>μόλις τη δεχτεί ο φίλος σου</b>, ώστε κανείς να μην τις δει πριν από τον άλλον.`}</p>
+    <p id="dtx"></p>
     <p>⏱️ <b>30 δευτερόλεπτα</b> για κάθε ερώτηση. Νικά όποιος βρει τις περισσότερες· αν έρθετε ίσοι, ο πιο γρήγορος.</p>
     <p style="font-size:12.5px;color:var(--mut)">Η μονομαχία δεν δίνει ούτε παίρνει φωτόνια.</p>
     <div id="de"></div>
-    <button class="btn" id="dgo">${vs?'Στείλε τη ρεβάνς ⚔️':'Φτιάξε την πρόκληση ⚔️'}</button><button class="btn ghost" id="dbk">Πίσω</button></div>`;
-  const go=document.getElementById('dgo'), label=go.textContent;
+    <button class="btn" id="dgo"></button><button class="btn ghost" id="dbk">Πίσω</button></div>`;
+  const go=document.getElementById('dgo'), de=document.getElementById('de');
+  const paintPl=()=>{const box=document.getElementById('dpl');if(!box)return;
+    document.querySelectorAll('[data-md]').forEach(b=>b.classList.toggle('on',b.dataset.md===mode));
+    if(mode!=='pl'){box.innerHTML='';return}
+    if(tg){box.innerHTML=`<div class="dtg">Αντίπαλος: <b>${esc(tg)}</b><button class="link" id="dtgx">Αλλαγή</button></div>`;
+      document.getElementById('dtgx').onclick=()=>{tg='';paint()};return}
+    const S=sugg();
+    box.innerHTML=`<form class="srch2" id="dsf" autocomplete="off"><input id="dsq" maxlength="16" placeholder="Ψευδώνυμο παίκτη" autocapitalize="off" spellcheck="false"><button class="btn" type="submit">Βρες</button></form>
+      <p class="dchn" id="dsm">Γράψε ακριβώς το ψευδώνυμο του παίκτη.</p>
+      ${S.length?`<div class="who">${S.map(x=>`<div class="r"><span class="n">${esc(x.n)}<small>${esc(x.s)}</small></span><button data-pk="${esc(x.n)}">⚔️ Πρόκληση</button></div>`).join('')}</div>`:''}`;
+    box.querySelectorAll('[data-pk]').forEach(b=>b.onclick=()=>{tg=b.dataset.pk;paint()});
+    document.getElementById('dsf').onsubmit=async e=>{e.preventDefault();const q=document.getElementById('dsq').value.trim(),m=document.getElementById('dsm');if(!q)return;
+      m.textContent='Ψάχνω…';try{const r=await DUAPI.find(q);tg=r.nick;paint()}catch(er){m.textContent=DERR[er&&er.message]||'Δεν υπάρχει σύνδεση. Δοκίμασε ξανά.'}};};
   const paint=()=>{document.querySelectorAll('.dch button').forEach(b=>{const G=CHUI.find(x=>x.ch===b.dataset.g),n=(sel[G.ch]||[]).length;
       b.classList.toggle('on',n>0);b.classList.toggle('part',n>0&&n<G.it.length);b.setAttribute('aria-pressed',n>0)});
-    const n=Object.keys(sel).length; go.disabled=!n; go.textContent=n?label:'Διάλεξε τουλάχιστον ένα κεφάλαιο';
+    const n=Object.keys(sel).length;
     const part=CHUI.filter(G=>sel[G.ch]&&sel[G.ch].length<G.it.length).map(G=>G.ch);
-    document.getElementById('dchn').textContent=n?(part.length?`Από ${part.join(', ')} μόνο οι ενότητες που έχεις διαλέξει. Πάτα για να βγει ή να μπει.`:'Πάτα ένα κεφάλαιο για να το βγάλεις ή να το βάλεις.'):'Πάτα τα κεφάλαια που θέλεις.';};
+    document.getElementById('dchn').textContent=n?(part.length?`Από ${part.join(', ')} μόνο οι ενότητες που έχεις διαλέξει. Πάτα για να βγει ή να μπει.`:'Πάτα ένα κεφάλαιο για να το βγάλεις ή να το βάλεις.'):'Πάτα τα κεφάλαια που θέλεις.';
+    document.getElementById('dtx').innerHTML=mode==='link'?'Πρώτα στέλνεις τον σύνδεσμο. Οι ερωτήσεις ανοίγουν <b>μόλις τη δεχτεί ο φίλος σου</b>, ώστε κανείς να μην τις δει πριν από τον άλλον.'
+      :'Η πρόκληση εμφανίζεται κατευθείαν στην αρχική του. Παίζετε τις ίδιες ερωτήσεις, ο καθένας όποτε θέλει.';
+    go.disabled=!n||mode==='pl'&&!tg;
+    go.textContent=!n?'Διάλεξε τουλάχιστον ένα κεφάλαιο':mode==='rv'?'Στείλε τη ρεβάνς ⚔️':mode==='pl'?(tg?`Προκάλεσε ${tg} ⚔️`:'Διάλεξε αντίπαλο'):'Φτιάξε την πρόκληση ⚔️';
+    paintPl();};
   document.querySelectorAll('.dch button').forEach(b=>b.onclick=()=>{const G=CHUI.find(x=>x.ch===b.dataset.g);
     if(sel[G.ch])delete sel[G.ch];else sel[G.ch]=G.it.map(x=>x.k);paint();});
+  document.querySelectorAll('[data-md]').forEach(b=>b.onclick=()=>{mode=b.dataset.md;de.innerHTML='';paint()});
   paint();
   document.getElementById('dbk').onclick=()=>lobby('back');
-  go.onclick=async e=>{const b=e.currentTarget,t=label;if(!ks().length)return;b.disabled=true;b.textContent='Μια στιγμή…';
-    try{const r=await DUAPI.nw(ks(),vs);openDuel(r.code)}
-    catch(er){b.disabled=false;b.textContent=t;
+  go.onclick=async()=>{if(go.disabled)return;const t=go.textContent;go.disabled=true;go.textContent='Μια στιγμή…';
+    try{const r=await DUAPI.nw(ks(),mode==='rv'?vs:'',mode==='pl'?tg:'');openDuel(r.code)}
+    catch(er){go.disabled=false;go.textContent=t;
       if(er&&er.message==='old'){location.replace(location.pathname+'?v='+Date.now());return}
-      document.getElementById('de').innerHTML=`<div class="err">${DERR[er&&er.message]||'Δεν υπάρχει σύνδεση. Δοκίμασε ξανά.'}</div>`;}};
+      de.innerHTML=`<div class="err">${DERR[er&&er.message]||'Δεν υπάρχει σύνδεση. Δοκίμασε ξανά.'}</div>`;}};
   window.scrollTo({top:0});
 }
 
@@ -1486,7 +1532,7 @@ async function openDuel(code){
   let d;try{d=await DUAPI.info(code)}catch(e){duelMsg(DERR[e&&e.message]||'Δεν υπάρχει σύνδεση. Δοκίμασε ξανά σε λίγο.');return}
   duelClear();
   if(d.st==='done'&&d.me)return duelResult(d);
-  if(d.st==='exp')return duelMsg(d.cancel?'Αυτή η πρόκληση ακυρώθηκε από αυτόν που την έφτιαξε.':DERR.gone);
+  if(d.st==='exp')return duelMsg(d.declined?(d.me==='a'?`${esc(d.b)} δεν δέχτηκε αυτή την πρόκληση.`:'Απέρριψες αυτή την πρόκληση.'):d.cancel?'Αυτή η πρόκληση ακυρώθηκε από αυτόν που την έφτιαξε.':DERR.gone);
   if(d.me){
     if(d.myDone)return duelWait(d);
     if(d.st==='open')return duelShare(d);
@@ -1535,7 +1581,7 @@ function duelReady(d){
 }
 async function duelGo(b,code,label){
   b.disabled=true;b.textContent='Μια στιγμή…';
-  try{const r=await DUAPI.start(code);if(r.done)return openDuel(code);duelPlay(code,r.side,r.q,r.opp,r.lost?'Η ερώτηση που είχες ανοιχτή έληξε όσο έλειπες.':'')}
+  try{const r=await DUAPI.start(code,DVIA);DVIA='';if(r.done)return openDuel(code);duelPlay(code,r.side,r.q,r.opp,r.lost?'Η ερώτηση που είχες ανοιχτή έληξε όσο έλειπες.':'')}
   catch(er){if(er&&er.message==='done')return openDuel(code);b.disabled=false;b.textContent=label;document.getElementById('de').innerHTML=`<div class="err">${DERR[er&&er.message]||'Δεν υπάρχει σύνδεση. Δοκίμασε ξανά.'}</div>`;}
 }
 
@@ -1592,7 +1638,7 @@ async function duelPick(k){
 
 /* 4 · η πρόκληση είναι έτοιμη: στέλνει τον σύνδεσμο (χωρίς να έχει δει ερωτήσεις) */
 function duelShare(d){
-  const url=location.origin+'/?m='+d.code;
+  const url=location.origin+'/?m='+d.code, U_=k=>url+'&k='+k;   // κάθε κουμπί στέλνει σύνδεσμο με το σημάδι του (για τα στατιστικά)
   const text=`⚔️ Σε προκαλώ σε μονομαχία στο Φωτόνιο Quiz! 5 ερωτήσεις από: ${(d.ch.length?d.ch:['όλα τα κεφάλαια']).join(', ')}. Μπορείς να με νικήσεις;`;
   const CHAT='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3C6.6 3 3 6.6 3 11c0 2.4 1.1 4.5 3 6v4l3.6-2.1c.8.2 1.6.3 2.4.3 5.4 0 9-3.6 9-8.1S17.4 3 12 3Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>';
   const LINK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4.5 4.5 0 0 0 6.4 0l3.2-3.2a4.5 4.5 0 0 0-6.4-6.4L12 5.6M14 10a4.5 4.5 0 0 0-6.4 0l-3.2 3.2a4.5 4.5 0 0 0 6.4 6.4L12 18.4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
@@ -1610,20 +1656,20 @@ function duelShare(d){
     <p style="font-size:12px;color:var(--mut)">Ισχύει ${d.left<=1?'μέχρι σήμερα':d.left+' μέρες'} · μία πρόκληση, ένας αντίπαλος</p>
     <button class="link" id="dcx">Ακύρωση πρόκλησης</button></div>`;
   document.getElementById('dh').onclick=()=>lobby('back');
-  let sent=false; const mark=()=>{if(sent)return;sent=true;DUAPI.sent(d.code).catch(()=>{sent=false})};
-  ['dsh','svb','sms','sig','scp','dl'].forEach(id=>document.getElementById(id).addEventListener('click',mark));
+  const done_={}; const mark=ch=>{if(done_[ch])return;done_[ch]=1;DUAPI.sent(d.code,ch).catch(()=>{done_[ch]=0})};
+  [['dsh','sh'],['svb','vb'],['sms','ms'],['sig','ig'],['scp','cp'],['dl','cp']].forEach(([id,ch])=>document.getElementById(id).addEventListener('click',()=>mark(ch)));
   const cx=document.getElementById('dcx'); cx.onclick=async()=>{
     cx.disabled=true;cx.textContent='Ακύρωση…';try{await DUAPI.cancel(d.code);lobby('back')}catch(e){cx.disabled=false;cx.textContent=e&&e.message==='taken'?'Την έχει ήδη δεχτεί κάποιος':'Δεν υπάρχει σύνδεση. Δοκίμασε ξανά.'}};
   const msg=t=>{document.getElementById('dm').textContent=t};
-  const copy=async()=>{try{await navigator.clipboard.writeText(text+' '+url);return true}catch(e){}
-    try{const ta=document.createElement('textarea');ta.value=text+' '+url;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();const ok=document.execCommand('copy');ta.remove();return ok}catch(e){return false}};
-  const native=async()=>{if(!navigator.share)return false;try{await navigator.share({title:'Μονομαχία στο Φωτόνιο Quiz',text,url});return true}catch(e){return e&&e.name==='AbortError'}};
+  const copy=async(k)=>{const t_=text+' '+U_(k||'cp');try{await navigator.clipboard.writeText(t_);return true}catch(e){}
+    try{const ta=document.createElement('textarea');ta.value=t_;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();const ok=document.execCommand('copy');ta.remove();return ok}catch(e){return false}};
+  const native=async(k)=>{if(!navigator.share)return false;try{await navigator.share({title:'Μονομαχία στο Φωτόνιο Quiz',text,url:U_(k||'sh')});return true}catch(e){return e&&e.name==='AbortError'}};
   const app_=(href,name)=>{const t=Date.now();location.href=href;setTimeout(()=>{if(!document.hidden&&Date.now()-t<2500)msg(`Αν δεν άνοιξε το ${name}, πάτα «Αντιγραφή συνδέσμου» και επικόλλησέ τον στο μήνυμα.`)},1500)};
-  document.getElementById('dsh').onclick=async()=>{if(await native())return;msg((await copy())?'Ο σύνδεσμος αντιγράφηκε! Επικόλλησέ τον σε μήνυμα στον φίλο σου.':'Κράτα πατημένο τον σύνδεσμο πάνω για να τον αντιγράψεις.')};
-  document.getElementById('svb').onclick=()=>app_('viber://forward?text='+encodeURIComponent(text+' '+url),'Viber');
-  document.getElementById('sms').onclick=()=>app_('fb-messenger://share/?link='+encodeURIComponent(url),'Messenger');
-  document.getElementById('sig').onclick=async()=>{if(navigator.share){msg('Διάλεξε Instagram στη λίστα που ανοίγει.');if(await native())return}
-    const ok=await copy();msg(ok?'Ο σύνδεσμος αντιγράφηκε! Επικόλλησέ τον σε μήνυμα στο Instagram.':'Κράτα πατημένο τον σύνδεσμο πάνω για να τον αντιγράψεις.');if(ok)setTimeout(()=>{location.href='https://www.instagram.com/direct/inbox/'},900)};
+  document.getElementById('dsh').onclick=async()=>{if(await native())return;msg((await copy('sh'))?'Ο σύνδεσμος αντιγράφηκε! Επικόλλησέ τον σε μήνυμα στον φίλο σου.':'Κράτα πατημένο τον σύνδεσμο πάνω για να τον αντιγράψεις.')};
+  document.getElementById('svb').onclick=()=>app_('viber://forward?text='+encodeURIComponent(text+' '+U_('vb')),'Viber');
+  document.getElementById('sms').onclick=()=>app_('fb-messenger://share/?link='+encodeURIComponent(U_('ms')),'Messenger');
+  document.getElementById('sig').onclick=async()=>{if(navigator.share){msg('Διάλεξε Instagram στη λίστα που ανοίγει.');if(await native('ig'))return}
+    const ok=await copy('ig');msg(ok?'Ο σύνδεσμος αντιγράφηκε! Επικόλλησέ τον σε μήνυμα στο Instagram.':'Κράτα πατημένο τον σύνδεσμο πάνω για να τον αντιγράψεις.');if(ok)setTimeout(()=>{location.href='https://www.instagram.com/direct/inbox/'},900)};
   document.getElementById('scp').onclick=async e=>{const b=e.currentTarget;const ok=await copy();
     if(ok){b.innerHTML=LINK+'Αντιγράφηκε! ✓';msg('Επικόλλησέ τον όπου θέλεις: Viber, Instagram, Messenger, SMS…');setTimeout(()=>{b.innerHTML=LINK+'Αντιγραφή συνδέσμου'},2500)}
     else msg('Κράτα πατημένο τον σύνδεσμο πάνω για να τον αντιγράψεις.')};

@@ -238,6 +238,24 @@ button.kpi{font:inherit;color:inherit;text-align:left;cursor:pointer;width:100%}
 .newl small{color:var(--dim)}
 .err{background:#3A1A24;border:1px solid var(--redb);color:#FFD6DA;border-radius:14px;padding:14px}
 .load{color:var(--mut);text-align:center;padding:40px 0}
+
+.dvtg{display:flex;background:var(--bg);border:1px solid var(--bor);border-radius:999px;padding:3px;gap:3px;margin-bottom:12px;max-width:360px}
+.dvtg button{flex:1;border:0;background:none;color:var(--mut);font:inherit;font-weight:700;font-size:13px;border-radius:999px;padding:6px;cursor:pointer}
+.dvtg button.on{background:var(--ban);color:var(--bg)}
+.dvk{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}@media(min-width:720px){.dvk{grid-template-columns:repeat(4,1fr)}}
+.dvk div{background:var(--bg);border:1px solid var(--bor);border-radius:12px;padding:10px 8px;text-align:center}
+.dvk b{display:block;font-size:24px;color:var(--ban)}.dvk span{font-size:12px;color:var(--mut);line-height:1.25;display:block}
+.dvh{font-size:12px;color:var(--mut);font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin:16px 0 8px}
+.dvf,.dvp{display:flex;flex-direction:column;gap:6px}
+.dvf div{display:grid;grid-template-columns:110px 1fr 74px;gap:8px;align-items:center;font-size:13px}
+.dvf i{height:14px;border-radius:7px;background:var(--teal);display:block;min-width:3px}
+.dvf em,.dvp em{font-style:normal;text-align:right;color:var(--soft,#C9D3E0)}.dvf em small{color:var(--mut)}
+.dvp div{display:grid;grid-template-columns:100px 1fr 1fr 60px;gap:8px;align-items:center;font-size:13px}
+.dvp i{height:12px;border-radius:6px;display:block;min-width:3px}.dvp .s{background:var(--ban)}.dvp .a{background:var(--teal)}.dvp em{font-size:12px}
+.dvl{display:flex;gap:14px;font-size:12px;color:var(--mut);margin-bottom:8px}.dvl span::before{content:'';display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px;background:var(--c)}
+.dvr{display:grid;grid-template-columns:1fr 1fr;gap:8px}.dvr div{background:var(--bg);border:1px solid var(--bor);border-radius:12px;padding:10px;text-align:center}
+.dvr b{display:block;font-size:22px;color:var(--soft,#C9D3E0)}.dvr span{font-size:12px;color:var(--mut)}
+b.tl{color:var(--teal)}b.am{color:var(--ban)}
 </style>
 <link rel="manifest" href="/manifest-pinakas.webmanifest">
 <link rel="icon" href="/icon2-dash-192.png">
@@ -658,6 +676,35 @@ function goTo(id){                                  // μετάβαση σε κ�
   el.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
   el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash');
 }
+
+/* ---------- Μονομαχίες ---------- */
+let dvP='w';
+const VIAN={vb:'Viber',ig:'Instagram',ms:'Messenger',cp:'Αντιγραφή',sh:'Κοινοποίηση*'};
+function duels(){
+  const Z=D.duel&&D.duel[dvP]; if(!D.duel)return '';
+  const S=Z||{made:0}, p=(a,b)=>b?Math.round(100*a/b)+'%':'—';
+  const tg=`<div class="dvtg"><button data-dv="w" class="${dvP==='w'?'on':''}">7 μέρες</button><button data-dv="all" class="${dvP==='all'?'on':''}">Συνολικά</button></div>`;
+  if(!S.made)return sec('dvcard','⚔️ Μονομαχίες',tg+'<div class="sub">Δεν έχει γίνει ακόμα καμία μονομαχία'+(dvP==='w'?' αυτή την εβδομάδα':'')+'.</div>','καμία ακόμα');
+  const fun=[['Φτιάχτηκαν',S.made],['Στάλθηκαν*',S.sent],['Δέχτηκαν',S.acc],['Ολοκληρώθηκαν',S.done]];
+  const keys=Object.keys(VIAN), mx=Math.max(1,...keys.map(k=>Math.max(S.press[k]||0,S.via[k]||0)));
+  const R=S.ret||{}, rd=R.dn?Math.round(100*R.dr/R.dn):null, ro=R.on?Math.round(100*R.or/R.on):null;
+  const body=`${tg}
+    <div class="dvk"><div><b>${S.made}</b><span>μονομαχίες φτιάχτηκαν</span></div><div><b>${S.done}</b><span>ολοκληρώθηκαν (${p(S.done,S.made)})</span></div><div><b>${S.players}</b><span>μαθητές έπαιξαν</span></div><div><b>${S.newP}</b><span>νέοι παίκτες από μονομαχία</span></div></div>
+    <div class="dvh">Πορεία μιας πρόκλησης</div>
+    <div class="dvf">${fun.map(([l,v])=>`<div><span>${l}</span><i style="width:${Math.round(100*v/S.made)}%"></i><em>${v}${l==='Φτιάχτηκαν'?'':` <small>${p(v,S.made)}</small>`}</em></div>`).join('')}</div>
+    <div class="sub">* σύνδεσμος για τον οποίο πατήθηκε κουμπί αποστολής, ή πρόκληση μέσα από το παιχνίδι. Από όσες έγιναν δεκτές: <b class="tl">${S.link} με σύνδεσμο</b> · <b class="am">${S.game} μέσα από το παιχνίδι</b>${S.dec?` · ${S.dec} απορρίφθηκαν`:''}.</div>
+    <div class="dvh">Πού στάλθηκαν και από πού δέχτηκαν</div>
+    <div class="dvl"><span style="--c:var(--ban)">στάλθηκαν (πατήματα)</span><span style="--c:var(--teal)">δέχτηκαν από εκεί</span></div>
+    <div class="dvp">${keys.map(k=>`<div><span>${VIAN[k]}</span><i class="s" style="width:${Math.round(100*(S.press[k]||0)/mx)}%"></i><i class="a" style="width:${Math.round(100*(S.via[k]||0)/mx)}%"></i><em>${S.press[k]||0} · ${S.via[k]||0}</em></div>`).join('')}</div>
+    <div class="sub">* «Στείλε στον φίλο σου»: το κινητό δεν λέει ποια εφαρμογή διάλεξε ο μαθητής.</div>
+    ${rd!=null&&ro!=null?`<div class="dvh">Επιστρέφουν; (παίζουν σε 2+ διαφορετικές μέρες)</div>
+    <div class="dvr"><div><b class="tl">${rd}%</b><span>όσοι παίζουν μονομαχίες (${R.dr}/${R.dn})</span></div><div><b>${ro}%</b><span>οι υπόλοιποι (${R.or}/${R.on})</span></div></div>`:''}
+    ${S.top&&S.top.length?`<div class="dvh">Πιο ενεργοί μονομάχοι</div>
+    <table class="srt2"><thead><tr><th>Ψευδώνυμο</th><th class="n">Μονομαχίες</th><th class="n">Νίκες</th><th class="n">Μ.Ο. σωστών</th></tr></thead><tbody>
+    ${S.top.map(t=>`<tr><td>${esc(t.nick)}</td><td class="n">${t.n}</td><td class="n">${t.w}</td><td class="n">${String(t.avg).replace('.',',')} / 5</td></tr>`).join('')}</tbody></table>`:''}
+    <div class="sub">${S.avg!=null?`Μ.Ο. σωστών στις μονομαχίες: <b class="am">${String(S.avg).replace('.',',')} / 5</b>`:''}${S.topCh?` · πιο συχνό κεφάλαιο: ${esc(S.topCh)}`:''}</div>`;
+  return sec('dvcard','⚔️ Μονομαχίες',body,`${S.made} φτιάχτηκαν · ${S.done} ολοκληρώθηκαν · ${S.newP} νέοι παίκτες (${dvP==='w'?'7 μέρες':'συνολικά'})`);
+}
 function render(){
   const y=window.scrollY;
   document.getElementById('app').innerHTML=`
@@ -667,6 +714,7 @@ function render(){
   ${kpis()}
   <div class="grid2">${activity()}${chapters()}</div>
   ${hours()}
+  ${duels()}
   ${players()}
   <div class="grid2"><div style="display:flex;flex-direction:column;gap:16px">${weekHard()}${hard()}</div><div style="display:flex;flex-direction:column;gap:16px">${sunday()}${objs()}${sources()}${finder()}${newbies()}</div></div>`;
   window.scrollTo(0,y);
@@ -678,6 +726,7 @@ function render(){
   document.querySelectorAll('[data-secx]').forEach(b=>b.onclick=()=>{const id=b.dataset.secx;setSec(id,true);render();const c=document.getElementById(id);if(c)c.scrollIntoView({block:'start'})});
   document.querySelectorAll('[data-pick]').forEach(b=>b.onclick=()=>pickHard(b));
   document.querySelectorAll('[data-hn]').forEach(b=>b.onclick=()=>{hrsN=+b.dataset.hn;render()});
+  document.querySelectorAll('[data-dv]').forEach(b=>b.onclick=()=>{dvP=b.dataset.dv;render()});
   {const hd=document.getElementById('hrday');if(hd)hd.onchange=()=>{hrsDay=hd.value;render()}}
   {const a=document.getElementById('spadd');if(a)a.onclick=()=>setSpecial(false);const d=document.getElementById('spdel');if(d)d.onclick=()=>setSpecial(true)}
   {const t=document.getElementById('actg');if(t)t.onclick=()=>{onlyAct=!onlyAct;render()}}
