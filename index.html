@@ -403,6 +403,9 @@ textarea#cpt{width:100%;height:90px;background:var(--bg);color:var(--soft);borde
 .dch button.on::before{content:'✓ ';color:var(--teal)}
 .dch button.part{border-style:dashed}
 .dchn{font-size:12.5px!important;color:var(--mut)!important;margin-top:-4px!important}
+.dwr{display:flex;gap:8px;align-items:stretch}.dwr .dli{flex:1;min-width:0}
+.ddel{flex:0 0 auto;width:44px;background:var(--red);border:1.5px solid var(--redb);border-radius:12px;color:var(--redb);font-weight:800;font-size:20px;line-height:1;padding:0}
+.ddel:disabled{opacity:.5}
 .rv{display:flex;flex-direction:column;gap:10px}
 .rv .it{border:1px solid var(--bor);border-radius:12px;padding:10px 12px;font-size:14px;line-height:1.7;text-align:left}
 .rv .it .h{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:var(--mut);font-weight:700}
@@ -1383,7 +1386,8 @@ const DUAPI=typeof apiCall==='function'?{
   info:c=>apiCall('duelInfo',[U.nick,U.pin,c]),
   start:c=>apiCall('duelStart',[U.nick,U.pin,c],1),
   ans:(c,i,ch,ms)=>apiCall('duelAnswer',[U.nick,U.pin,c,i,ch,ms],1),
-  list:()=>apiCall('duelList',[U.nick,U.pin])}:null;
+  list:()=>apiCall('duelList',[U.nick,U.pin]),
+  sent:c=>apiCall('duelSent',[U.nick,U.pin,c]), cancel:c=>apiCall('duelCancel',[U.nick,U.pin,c],1)}:null;
 const DKEY='fotonio_duel';
 /* ?m=ΚΩΔΙΚΟΣ: κρατιέται ώσπου να μπει ο παίκτης και φεύγει από τη γραμμή διευθύνσεων */
 (()=>{try{const u=new URL(location.href),v=(u.searchParams.get('m')||'').toUpperCase();
@@ -1408,14 +1412,15 @@ function duelWire(){
   DUAPI.list().then(L=>{const el=document.getElementById('duels'),fs=document.getElementById('dvs'); if(!el||!L)return;
     const r=L.rec||{w:0,l:0,d:0}, n=r.w+r.l+r.d;
     const W=x=>`${x.w} ${x.w===1?'νίκη':'νίκες'}`, Lo=x=>`${x.l} ${x.l===1?'ήττα':'ήττες'}`, D=x=>x.d?` · ${x.d} ${x.d===1?'ισοπαλία':'ισοπαλίες'}`:'';
-    const ws=x=>x.left<=1?'λήγει σήμερα':`λήγει σε ${x.left} μέρες`, chs=x=>esc(x.ch.join(', ')||'Όλα τα κεφάλαια');
+    const ws=x=>x.left<=1?'λήγει σήμερα':`λήγει σε ${x.left} μέρες`, chs=x=>esc(!x.ch.length||x.ch.length>=7?'Όλη η ύλη':x.ch.join(', '));
     const act=L.act||[], now=act.filter(x=>x.what!=='wait'), wait=act.filter(x=>x.what==='wait');
     const items=now.map(x=>x.what==='turn'?`<button class="dli turn" data-du="${x.code}"><span class="ic">⚔️</span><span class="tx">${x.mine?`Μονομαχία με <b>${esc(x.opp)}</b>: σειρά σου!`:`<b>${esc(x.opp)}</b> σε προκαλεί!`}<small>${chs(x)} · ${ws(x)}</small></span><span class="go">Παίξε ›</span></button>`
       :`<button class="dli" data-du="${x.code}"><span class="ic">⏸️</span><span class="tx">Δεν τελείωσες τη μονομαχία${x.opp?` με <b>${esc(x.opp)}</b>`:''}<small>${ws(x)}</small></span><span class="go">Συνέχισε ›</span></button>`);
     el.outerHTML=`<div id="duels" class="dlist">${items.join('')}</div>`;
     if(fs&&(n||wait.length)){
       const vsRows=(L.vs||[]).map(v=>`<div class="h2r"><span class="nm">${esc(v.opp)}</span><span class="sc"><b class="${v.w>v.l?'up':v.w<v.l?'dn':''}">${v.w} – ${v.l}</b>${v.d?`<small>+${v.d} ισοπ.</small>`:''}</span>${v.code?`<button class="h2go" data-rv="${v.code}" data-op="${esc(v.opp)}" aria-label="Ρεβάνς με ${esc(v.opp)}">⚔️ Ρεβάνς</button>`:''}</div>`).join('');
-      const waitRows=wait.map(x=>`<button class="dli" data-du="${x.code}"><span class="ic">⏳</span><span class="tx">${x.opp?`Περιμένεις <b>${esc(x.opp)}</b> να παίξει`:'Περιμένεις αντίπαλο'}<small>${chs(x)} · ${ws(x)}</small></span><span class="go">${x.opp?'Δες ›':'Στείλε ›'}</span></button>`).join('');
+      const waitRows=wait.map(x=>{const row=`<button class="dli" data-du="${x.code}"><span class="ic">⏳</span><span class="tx">${x.opp?`Περιμένεις <b>${esc(x.opp)}</b> να παίξει`:'Περιμένεις αντίπαλο'}<small>${chs(x)} · ${ws(x)}</small></span><span class="go">${x.opp?'Δες ›':'Στείλε ›'}</span></button>`;
+        return x.opp?row:`<div class="dwr">${row}<button class="ddel" data-del="${x.code}" aria-label="Διαγραφή πρόκλησης">✕</button></div>`}).join('');
       const finRows=(L.fin||[]).map(x=>`<button class="dli ${x.res}" data-du="${x.code}"><span class="ic">${x.res==='w'?'🏆':x.res==='l'?'⚔️':'🤝'}</span><span class="tx">${x.res==='w'?'Νίκη':x.res==='l'?'Ήττα':'Ισοπαλία'} με <b>${esc(x.opp)}</b></span><span class="go">${x.my} – ${x.op}</span></button>`).join('');
       const body=(vsRows?`<p class="h2t">Το σκορ σου απέναντι σε κάθε αντίπαλο (νίκες – ήττες)</p><div class="h2">${vsRows}</div>`:'')
         +(finRows?`<p class="h2t">${(L.fin||[]).length>1?'Τα '+(L.fin||[]).length+' τελευταία αποτελέσματα':'Τελευταίο αποτέλεσμα'}</p><div class="dlist">${finRows}</div>`:'')
@@ -1423,15 +1428,26 @@ function duelWire(){
       const sub=(n?`<em>${W(r)}</em> · ${Lo(r)}${D(r)}`:'<em>Καμία ακόμα</em>')+(wait.length?` · ${wait.length} σε αναμονή`:'');
       fs.outerHTML=`<div id="dvs">${fold('dvsfold','⚔️','Οι μονομαχίες μου',sub,body,foldGet('dvsfold',false))}</div>`;
     }
+    else if(fs)fs.outerHTML='<div id="dvs"></div>';
     document.querySelectorAll('[data-du]').forEach(x=>x.onclick=()=>openDuel(x.dataset.du));
     document.querySelectorAll('[data-rv]').forEach(x=>x.onclick=()=>duelIntro(x.dataset.rv,x.dataset.op));
+    document.querySelectorAll('[data-del]').forEach(x=>x.onclick=()=>duelDel(x));
   }).catch(()=>{});
+}
+
+
+/* διαγραφή πρόκλησης που δεν την έχει δεχτεί κανείς (δεύτερο πάτημα για επιβεβαίωση) */
+async function duelDel(x){
+  x.disabled=true;
+  try{await DUAPI.cancel(x.dataset.del);const w=x.closest('.dwr');if(w)w.remove();duelWire()}
+  catch(e){x.disabled=false}
 }
 
 /* 1 · νέα πρόκληση (ή ρεβάνς). Δίκαιη σειρά: πρώτα βρίσκεται αντίπαλος και μετά ανοίγουν οι ερωτήσεις */
 function duelIntro(vs,opp,keys){
   /* τα κεφάλαια της μονομαχίας αλλάζουν εδώ, χωρίς να πειράζεται η επιλογή του ατομικού γύρου */
-  const init=(keys&&keys.length?keys:getCh()).filter(k=>ALLK.includes(k)), sel={};
+  let init=(keys&&keys.length?keys:getCh()).filter(k=>ALLK.includes(k)); if(!init.length)init=ALLK.slice();   // καμία επιλογή: όλη η ύλη
+  const sel={};
   CHUI.forEach(G=>{const mine=G.it.map(x=>x.k).filter(k=>init.includes(k));if(mine.length)sel[G.ch]=mine;});
   const ks=()=>CHUI.flatMap(G=>sel[G.ch]||[]);
   app.innerHTML=`${TOPBAR()}
@@ -1470,7 +1486,7 @@ async function openDuel(code){
   let d;try{d=await DUAPI.info(code)}catch(e){duelMsg(DERR[e&&e.message]||'Δεν υπάρχει σύνδεση. Δοκίμασε ξανά σε λίγο.');return}
   duelClear();
   if(d.st==='done'&&d.me)return duelResult(d);
-  if(d.st==='exp')return duelMsg(DERR.gone);
+  if(d.st==='exp')return duelMsg(d.cancel?'Αυτή η πρόκληση ακυρώθηκε από αυτόν που την έφτιαξε.':DERR.gone);
   if(d.me){
     if(d.myDone)return duelWait(d);
     if(d.st==='open')return duelShare(d);
@@ -1591,8 +1607,13 @@ function duelShare(d){
       <button id="scp" class="cp">${LINK}Αντιγραφή συνδέσμου</button></div>
     <p class="dmsg" id="dm"></p>
     <button class="btn ghost" id="dh">Αρχική</button>
-    <p style="font-size:12px;color:var(--mut)">Ισχύει ${d.left<=1?'μέχρι σήμερα':d.left+' μέρες'} · μία πρόκληση, ένας αντίπαλος</p></div>`;
+    <p style="font-size:12px;color:var(--mut)">Ισχύει ${d.left<=1?'μέχρι σήμερα':d.left+' μέρες'} · μία πρόκληση, ένας αντίπαλος</p>
+    <button class="link" id="dcx">Ακύρωση πρόκλησης</button></div>`;
   document.getElementById('dh').onclick=()=>lobby('back');
+  let sent=false; const mark=()=>{if(sent)return;sent=true;DUAPI.sent(d.code).catch(()=>{sent=false})};
+  ['dsh','svb','sms','sig','scp','dl'].forEach(id=>document.getElementById(id).addEventListener('click',mark));
+  const cx=document.getElementById('dcx'); cx.onclick=async()=>{
+    cx.disabled=true;cx.textContent='Ακύρωση…';try{await DUAPI.cancel(d.code);lobby('back')}catch(e){cx.disabled=false;cx.textContent=e&&e.message==='taken'?'Την έχει ήδη δεχτεί κάποιος':'Δεν υπάρχει σύνδεση. Δοκίμασε ξανά.'}};
   const msg=t=>{document.getElementById('dm').textContent=t};
   const copy=async()=>{try{await navigator.clipboard.writeText(text+' '+url);return true}catch(e){}
     try{const ta=document.createElement('textarea');ta.value=text+' '+url;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();const ok=document.execCommand('copy');ta.remove();return ok}catch(e){return false}};
