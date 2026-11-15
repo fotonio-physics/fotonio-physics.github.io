@@ -103,6 +103,14 @@ sub,sup{line-height:0;font-size:.72em}
 .vec::before{content:"\2192";position:absolute;left:50%;top:-.55em;transform:translateX(-50%);font-size:.72em;line-height:1;font-weight:400}
 .fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;font-size:.82em;line-height:1.05;margin:-.7em 2px -.6em}
 .fr>span{padding:0 2px}.fr>span:first-child{border-bottom:1.5px solid currentColor}
+/* ρίζα: ένα ενωμένο σύμβολο (το σημάδι σχεδιάζεται και ενώνεται με τη γραμμή από πάνω) */
+.sq{display:inline-flex;position:relative;align-items:stretch;white-space:nowrap;vertical-align:middle;line-height:1.2;margin:0 1px;padding-left:.55em}
+.sq .sqr{position:absolute;left:0;top:.75px;width:.55em;height:calc(100% - .75px);overflow:visible;fill:none;stroke:currentColor;stroke-width:1.5px;stroke-linejoin:round;stroke-linecap:round}
+.sq .sqb{border-top:1.5px solid currentColor;padding:.12em .12em 0 .1em;display:inline-flex;align-items:center}
+.sq.sqf{margin:-.3em 1px}
+.sq.sqf .sqb{padding-top:.18em}
+.sq.sqf .fr{margin:0 1px}
+.fr>span .sq{margin-top:.2em}
 .opts{display:flex;flex-direction:column;gap:10px}
 .opt{display:flex;gap:12px;align-items:flex-start;text-align:left;width:100%;background:var(--bg);border:1.5px solid var(--bor);border-radius:12px;padding:12px 14px;transition:border-color .15s,background .15s}
 .opt:hover:not(:disabled){border-color:var(--teal)}
@@ -129,6 +137,12 @@ sub,sup{line-height:0;font-size:.72em}
 .fb.ok{background:var(--grn);color:var(--grnt)}
 .fb.no{background:var(--red);color:var(--redt)}
 .fb strong{display:block;margin-bottom:2px}
+/* η εξήγηση κάτω από την ερώτηση: ουδέτερο πλαίσιο, το σωστό/λάθος το δείχνουν ήδη τα κουμπιά */
+.fbx{margin-top:16px;border-radius:12px;padding:12px 14px;font-size:15px;line-height:1.9;background:var(--bg);border:1px solid var(--bor);border-left:4px solid var(--teal);color:var(--soft)}
+.fbx strong{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:2px;color:var(--teal);font-size:13px;letter-spacing:.04em;line-height:1.5}
+.fb .rvw{background:rgba(255,255,255,.14)!important;color:inherit!important}
+.fb .fbt{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.fb .rvw,.fbx .rvw{font-size:12px;font-weight:800;color:var(--grnt);background:var(--grn);border-radius:999px;padding:1px 9px;letter-spacing:0}
 .btn{background:var(--ban);color:var(--bg);border:0;border-radius:12px;padding:14px 20px;font-weight:800;font-size:16px;width:100%}
 .btn:hover{filter:brightness(1.07)}
 .btn:disabled{opacity:.6;cursor:default}
@@ -296,6 +310,9 @@ textarea#cpt{width:100%;height:90px;background:var(--bg);color:var(--soft);borde
 .fh .ar{flex:0 0 30px;width:30px;height:30px;border-radius:50%;border:1px solid var(--bor);display:flex;align-items:center;justify-content:center;color:var(--teal);font-size:13px}
 .fold .fb{display:none;padding:0 14px 14px}.fold.open .fb{display:block}
 .fold .chsel p{margin:0 0 12px;font-size:13.5px;color:var(--soft)}
+.fold .chsel p.lead2{margin:0 0 4px;font-size:15px;font-weight:700;color:var(--txt)}
+.fold .chsel p.hint2{margin:0 0 12px;font-size:12.5px;color:var(--mut)}
+#podium .fh .tt small{white-space:normal;line-height:1.35}
 .fold .podc{padding:0;border:0;background:none;box-shadow:none}
 .sunmini{display:flex;align-items:center;gap:10px;background:linear-gradient(90deg,rgba(245,184,65,.16),rgba(245,184,65,.04));border:1.5px solid rgba(245,184,65,.6);border-radius:14px;padding:10px 12px;font-size:13.5px;margin-top:4px}
 .sunmini>i{font-style:normal;color:var(--ban);font-size:18px}
@@ -623,7 +640,10 @@ function tierHero(n){
 
 
 /* ---------- Μαθηματική γραφή: {α/β} -> κλάσμα ---------- */
-function m(s){return s.replace(/\{((?:[^{}\/]|[_^]\{[^{}]*\})+)\/((?:[^{}]|[_^]\{[^{}]*\})+)\}/g,'<span class="fr"><span>$1</span><span>$2</span></span>').replace(/_\{([^}]+)\}/g,'<sub>$1</sub>').replace(/\^\{([^}]+)\}/g,'<sup>$1</sup>').replace(/([^\s\u20D7])\u20D7([\u2080-\u2089]*)/g,'<span style="white-space:nowrap"><span class="vec">$1</span>$2</span>');}
+function m(s){return s.replace(/\{((?:[^{}\/]|[_^]\{[^{}]*\})+)\/((?:[^{}]|[_^]\{[^{}]*\})+)\}/g,'<span class="fr"><span>$1</span><span>$2</span></span>').replace(/_\{([^}]+)\}/g,'<sub>$1</sub>').replace(/\^\{([^}]+)\}/g,'<sup>$1</sup>').replace(/([^\s\u20D7])\u20D7([\u2080-\u2089]*)/g,'<span style="white-space:nowrap"><span class="vec">$1</span>$2</span>')
+  /* τετραγωνική ρίζα με γραμμή από πάνω: √(…) και √2 */
+  .replace(/√\(([^()]*)\)/g,(_,x)=>`<span class="sq${x.includes('class="fr"')?' sqf':''}" role="img" aria-label="ρίζα"><svg class="sqr" viewBox="0 0 10 100" preserveAspectRatio="none" aria-hidden="true"><path d="M0.5 60L3 53L5.4 100L10 0" vector-effect="non-scaling-stroke"/></svg><span class="sqb">${x}</span></span>`)
+  .replace(/√(\d+(?:[.,]\d+)?)/g,'<span class="sq"><svg class="sqr" viewBox="0 0 10 100" preserveAspectRatio="none" aria-hidden="true"><path d="M0.5 60L3 53L5.4 100L10 0" vector-effect="non-scaling-stroke"/></svg><span class="sqb">$1</span></span>');}
 const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 
@@ -814,7 +834,7 @@ function sunAsk(q){                             // η ερώτηση της πρ
     U.sun.done={ok:!!r.ok,a:r.a,right:r.right,ex:r.ex}; if(r.badge)U.sun.badge=true;
     document.getElementById('mascot').innerHTML=mascot(r.ok?'cheer':'sad');
     sayEl.textContent=r.dup?'Είχες ήδη απαντήσει. Μετράει η πρώτη σου απάντηση.':r.ok?'Σωστά! Έγινες Κυνηγός φωτονίων ✦':'Όχι αυτή τη φορά. Η επόμενη έρχεται την Κυριακή.';
-    document.getElementById('after').innerHTML=`<div class="fb ${r.ok?'ok':'no'}"><strong>${r.ok?'Σωστό':'Λάθος'}</strong>${m(esc(String(r.ex||'')))}</div>
+    document.getElementById('after').innerHTML=`<div class="fb ${r.ok?'ok':'no'}"><strong>Ενδεικτική αιτιολόγηση</strong>${m(esc(String(r.ex||'')))}</div>
       <div style="height:10px"></div><button class="btn" id="nx">Συνέχεια</button>`;
     document.getElementById('nx').onclick=()=>lobby('back');
   });
@@ -940,7 +960,7 @@ function fold(id,ic,title,sub,body,open){
 document.addEventListener('click',e=>{const b=e.target.closest('[data-fold]');if(!b)return;const f=document.getElementById(b.dataset.fold);if(!f)return;
   const o=!f.classList.contains('open');f.classList.toggle('open',o);b.setAttribute('aria-expanded',o);b.querySelector('.ar').textContent=o?'▾':'▸';foldSet(b.dataset.fold,o)});
 function chSum(){
-  const sel=getCh(), names=SECTIONS.filter(g=>g.secs.some(x=>sel.includes(g.ch+'|'+x))).map(g=>g.ch);
+  const sel=getCh(), names=CHUI.filter(g=>g.it.some(x=>sel.includes(x.k))).map(g=>g.ch);
   return names.length?`<em>${names.length}</em> · ${esc(names.join(', '))}`:'<em>Καμία ακόμα</em> · πάτα για να διαλέξεις';
 }
 
@@ -950,27 +970,31 @@ function getCh(){try{return cleanChapters(JSON.parse(localStorage.getItem(chKey(
 function setCh(a){try{localStorage.setItem(chKey(),JSON.stringify(a))}catch(e){}}
 function chCard(){
   const sel=getCh();
-  const body=`<div class="chsel"><p>Πάτα ένα κεφάλαιο και μετά κράτησε μόνο τις ενότητες που έχετε κάνει στο σχολείο. Μπορείς να τα αλλάζεις όποτε θέλεις.</p>
-    ${SECTIONS.map(g=>{const n=g.secs.filter(x=>sel.includes(g.ch+'|'+x)).length;
-      return `<div class="chg ${n?'open':''}"><button class="chh ${n===g.secs.length?'on':n?'part':''}" data-ch="${esc(g.ch)}"><span>${esc(g.ch)}</span><small>${n?n+'/'+g.secs.length:''}</small></button>
-      ${g.secs.length>1?`<div class="chps">${g.secs.map(x=>{const k=g.ch+'|'+x;return `<button class="chp ${sel.includes(k)?'on':''}" data-k="${esc(k)}" aria-pressed="${sel.includes(k)}">${esc(x)}</button>`}).join('')}</div>`:''}</div>`}).join('')}
-    <button class="link" id="chall">${sel.length===ALLK.length?'Καμία επιλογή':'Όλη η ύλη'}</button></div>`;
+  const body=`<div class="chsel"><p class="lead2">Διάλεξε σε ποια κεφάλαια θέλεις να παίξεις.</p><p class="hint2">Μέσα σε κάθε κεφάλαιο μπορείς να βγάλεις τις ενότητες που δεν θέλεις να παίξεις ακόμα.</p>
+    ${CHUI.map(g=>{const n=g.it.filter(x=>sel.includes(x.k)).length;
+      return `<div class="chg ${n?'open':''}"><button class="chh ${n===g.it.length?'on':n?'part':''}" data-ch="${esc(g.ch)}"><span>${esc(g.ch)}</span><small>${n&&g.it.length>1?n+'/'+g.it.length:''}</small></button>
+      ${g.it.length>1?`<div class="chps">${g.it.map(x=>`<button class="chp ${sel.includes(x.k)?'on':''}" data-k="${esc(x.k)}" aria-pressed="${sel.includes(x.k)}">${esc(x.l)}</button>`).join('')}</div>`:''}</div>`}).join('')}
+    <button class="link" id="chall">${sel.length===ALLK.length?'Καμία επιλογή':'Όλα τα κεφάλαια'}</button></div>`;
   return fold('chfold','📚','Επιλεγμένα κεφάλαια',chSum(),body,!sel.length||foldGet('chfold',false));   // χωρίς ύλη: ανοιχτή
 }
 const ALLK=SECTIONS.flatMap(g=>g.secs.map(x=>g.ch+'|'+x));
+/* Τα κεφάλαια όπως τα βλέπει ο μαθητής: 7, όσα και τα παράσημα. Τα Ηλεκτρομαγνητικά κύματα μπαίνουν ως ενότητα των Κυμάτων.
+   Τα κλειδιά των ενοτήτων μένουν ίδια, άρα οι επιλογές που έχουν ήδη γίνει ισχύουν όπως είναι. */
+const CHUI=(()=>{const L=[];SECTIONS.forEach(g=>{const it=g.secs.map(x=>({l:g.ch==='Ηλεκτρομαγνητικά κύματα'?'Ηλεκτρομαγνητικά κύματα':x,k:g.ch+'|'+x}));
+  const host=g.ch==='Ηλεκτρομαγνητικά κύματα'&&L.find(x=>x.ch==='Κύματα');if(host)host.it=host.it.concat(it);else L.push({ch:g.ch,it});});return L})();
 function wireCh(){
   const paint=()=>{const sel=getCh();
     document.querySelectorAll('.chp').forEach(b=>{const on=sel.includes(b.dataset.k);b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
-    document.querySelectorAll('.chh').forEach(b=>{const g=SECTIONS.find(x=>x.ch===b.dataset.ch),n=g.secs.filter(x=>sel.includes(g.ch+'|'+x)).length;
-      b.classList.toggle('on',n===g.secs.length);b.classList.toggle('part',n>0&&n<g.secs.length);b.setAttribute('aria-pressed',n===g.secs.length);
-      b.querySelector('small').textContent=n&&g.secs.length>1?n+'/'+g.secs.length:'';b.parentNode.classList.toggle('open',n>0)});
+    document.querySelectorAll('.chh').forEach(b=>{const g=CHUI.find(x=>x.ch===b.dataset.ch),n=g.it.filter(x=>sel.includes(x.k)).length;
+      b.classList.toggle('on',n===g.it.length);b.classList.toggle('part',n>0&&n<g.it.length);b.setAttribute('aria-pressed',n===g.it.length);
+      b.querySelector('small').textContent=n&&g.it.length>1?n+'/'+g.it.length:'';b.parentNode.classList.toggle('open',n>0)});
     const pb=document.getElementById('play');
     if(pb){pb.disabled=!sel.length;pb.textContent=sel.length?(U.profile.rounds?'Νέος γύρος':'Πάμε για τον πρώτο γύρο'):'Διάλεξε τουλάχιστον μία ενότητα';}
-    const a=document.getElementById('chall'); if(a)a.textContent=sel.length===ALLK.length?'Καμία επιλογή':'Όλη η ύλη';
+    const a=document.getElementById('chall'); if(a)a.textContent=sel.length===ALLK.length?'Καμία επιλογή':'Όλα τα κεφάλαια';
     const cs=document.getElementById('chfold-s'); if(cs)cs.innerHTML=chSum();};
   document.querySelectorAll('.chp').forEach(b=>b.onclick=()=>{let a=getCh();const k=b.dataset.k;
     a=a.includes(k)?a.filter(x=>x!==k):a.concat(k);setCh(cleanChapters(a));paint();});
-  document.querySelectorAll('.chh').forEach(b=>b.onclick=()=>{const g=SECTIONS.find(x=>x.ch===b.dataset.ch),ks=g.secs.map(x=>g.ch+'|'+x);
+  document.querySelectorAll('.chh').forEach(b=>b.onclick=()=>{const g=CHUI.find(x=>x.ch===b.dataset.ch),ks=g.it.map(x=>x.k);
     let a=getCh();const full=ks.every(k=>a.includes(k));a=full?a.filter(k=>!ks.includes(k)):a.concat(ks.filter(k=>!a.includes(k)));setCh(cleanChapters(a));paint();});
   document.getElementById('chall').onclick=()=>{setCh(getCh().length===ALLK.length?[]:ALLK.slice());paint();};
   paint();
@@ -989,9 +1013,13 @@ function podium(){
     return `<div class="ps ${r} ${isMe?'me':''}"><div class="ph">${orbit(x.ph,xa,'sm')}</div><div class="nm">${esc(x.nick)}${x.s||(isMe&&hasBadge())?' <span class="hstar" title="Κυνηγός φωτονίων">✦</span>':''}</div><div class="ct">${x.ph} ${x.ph===1?'φωτόνιο':'φωτόνια'}</div><div class="st">${i+1}</div></div>`};
   let line='';
   if(TOP){const inTop=T.some(x=>me&&x.nick.toLowerCase()===me.toLowerCase());
-    if(inTop)line=T[0]&&T[0].nick.toLowerCase()===me.toLowerCase()?'Είσαι στην κορυφή! Κράτα τη θέση σου.':'Είσαι στο βάθρο! Η κορυφή είναι κοντά.';
-    else if(T.length<3)line='Υπάρχει ελεύθερη θέση στο βάθρο: κέρδισε <b>1 φωτόνιο</b> και ανεβαίνεις.';
-    else{const need=T[2].ph-my+1;line=`Σου λείπουν <b>${need} ${need===1?'φωτόνιο':'φωτόνια'}</b> για το βάθρο.`}}
+    if(inTop)line=T[0]&&T[0].nick.toLowerCase()===me.toLowerCase()?'<b>Είσαι στην κορυφή!</b> Κράτα τη θέση σου 👑':'<b>Είσαι στο βάθρο!</b> Η κορυφή είναι κοντά 👀';
+    else if(T.length<3)line='<b>Ελεύθερη θέση</b> στο βάθρο! Ένα φωτόνιο και είναι δική σου ✨';
+    else{const need=Math.max(1,T[2].ph-my+1), g=Math.ceil(need/3);              // ένας τέλειος γύρος δίνει 3 φωτόνια
+      const NUM=['','Ένας','Δύο','Τρεις'];
+      line=need===1?'<b>1 φωτόνιο</b> και ανεβαίνεις στο βάθρο! Ένας γύρος ακόμα 💪'
+        :need<=9?`Μόλις <b>${need} φωτόνια</b> για το βάθρο! ${g===1?'Ένας τέλειος γύρος αρκεί':NUM[g]+' τέλειοι γύροι αρκούν'} 🔥`
+        :`<b>${need} φωτόνια</b> για να μπεις στο βάθρο. Κάθε γύρος σε φέρνει πιο κοντά! 🚀`}}
   const body=`<div class="podc"><div class="pod">${slot(1)}${slot(0)}${slot(2)}</div></div>`;
   return fold('podium','🏆','Το βάθρο του Φωτονίου',line?line.replace(/<b>/g,'<em>').replace(/<\/b>/g,'</em>'):'Top 3 σε φωτόνια',body,foldGet('podium',false));
 }
@@ -1109,7 +1137,7 @@ async function pick(k){
   document.getElementById('say').textContent=ok&&rv?`Ρεβάνς κερδισμένη! Αυτή σε είχε νικήσει παλιότερα. +${gain}`:ok?(OKS[S.i%OKS.length]+` +${gain}`+(S.streak>2?` · Σερί ${S.streak}!`:'')):BADS[S.i%BADS.length];
   const last=S.i===S.qs.length-1;
   document.getElementById('after').innerHTML=`
-    <div class="fb ${ok?'ok':'no'}"><strong>${ok?(rv?'Σωστό · ρεβάνς κερδισμένη 💪':'Σωστό'):'Λάθος'}</strong>${m(esc(q.ex))}</div>
+    <div class="fb ${ok?'ok':'no'}"><strong class="fbt">Ενδεικτική αιτιολόγηση${ok&&rv?'<span class="rvw">ρεβάνς κερδισμένη 💪</span>':''}</strong>${m(esc(q.ex))}</div>
     <div id="obj"><button class="link objbtn" id="objopen">✋ Διαφωνώ με την απάντηση</button></div>
     <div style="height:10px"></div><button class="btn" id="nx">${last?'Δες το σκορ σου':'Επόμενη'}</button>`;
   const nx=document.getElementById('nx');
