@@ -340,6 +340,70 @@ textarea#cpt{width:100%;height:90px;background:var(--bg);color:var(--soft);borde
 .copy{margin:18px 0 6px;text-align:center;font-size:11.5px;color:var(--dim,#6F84A0);letter-spacing:.02em}
 .tag.pan{background:rgba(245,184,65,.14);color:var(--ban);border:1px solid rgba(245,184,65,.6)}
 .btn.bk{display:flex;align-items:center;justify-content:center;gap:8px}.btn.bk svg{width:1.05em;height:1.05em;flex:0 0 auto}
+/* ---------- Μονομαχία ---------- */
+.duelbtn{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--teal);border:0;color:var(--bg);font-weight:800;font-size:16px;border-radius:12px;padding:14px 20px;width:100%;box-shadow:0 0 18px rgba(63,193,201,.22)}
+.duelbtn:hover{filter:brightness(1.07)}
+.dlist:empty,#dvs:empty{display:none}
+.fb .dli{background:var(--bg)}
+.fb .h2t{margin:12px 0 8px}.fb .h2t:first-child{margin-top:0}
+.duelbtn:disabled{opacity:.6}
+.drec{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;font-size:13px;color:var(--soft);margin-top:-6px}.drec b{color:var(--ban)}
+.dlist{display:flex;flex-direction:column;gap:8px}
+.dli{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--bor);border-radius:12px;padding:10px 12px;font-size:14px;text-align:left;width:100%;color:var(--txt)}
+.dli.turn{border-color:var(--teal);box-shadow:0 0 14px rgba(63,193,201,.18)}
+.dli .ic{flex:0 0 auto;font-size:18px}
+.dli .tx{flex:1;min-width:0;line-height:1.35}.dli .tx small{display:block;color:var(--mut);font-size:12px}
+.dli .go{flex:0 0 auto;font-weight:800;font-size:13px;color:var(--teal);white-space:nowrap}
+.dli.w .go{color:var(--grnt)}.dli.l .go{color:var(--redt)}
+.dcard{background:var(--card);border:1px solid var(--bor);border-radius:20px;padding:18px 16px;display:flex;flex-direction:column;gap:12px}
+.dcard h2{margin:0;font-size:21px;text-align:center;text-wrap:balance}
+.dcard p{margin:0;color:var(--soft);font-size:14px;text-align:center;line-height:1.5;text-wrap:pretty}
+.dcard .btn.ghost{margin-top:0}
+.pill2{align-self:center;border:1.5px solid var(--teal);color:var(--teal);border-radius:999px;padding:3px 14px;font-weight:800;font-size:12px;letter-spacing:.1em}
+.chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}.chips span{border:1px solid var(--teal);color:var(--teal);border-radius:999px;padding:3px 10px;font-size:12.5px;font-weight:700}
+.dlink{background:var(--bg);border:1px dashed var(--bor);border-radius:12px;padding:10px;font:600 13px ui-monospace,Menlo,monospace;color:var(--teal);text-align:center;overflow-wrap:anywhere;user-select:all}
+.sgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.sgrid button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:var(--bg);border:1.5px solid var(--bor);border-radius:12px;padding:10px 4px;font-weight:700;font-size:13px;color:var(--txt)}
+.sgrid button svg,.sgrid button .igi{width:22px;height:22px;flex:0 0 auto}
+.sgrid .cp{grid-column:1/-1;flex-direction:row;gap:8px;font-size:14px;padding:11px 8px;border-color:var(--teal);color:var(--teal)}
+.sgrid .cp svg{width:19px;height:19px}
+.dmsg{min-height:1em;font-size:13px!important;color:var(--teal)!important}
+.dtop{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13px;color:var(--soft)}
+.dtop b{color:var(--teal)}
+.timer{display:flex;align-items:center;gap:10px}
+.timer .bar{flex:1}
+.timer .bar i{background:var(--teal);transition:none}
+.timer.hot .bar i{background:var(--redb)}
+.timer .sec{flex:0 0 44px;text-align:right;font-weight:800;font-size:18px;font-variant-numeric:tabular-nums;color:var(--teal)}
+.timer.hot .sec{color:var(--redb)}
+.vs{display:grid;grid-template-columns:1fr 40px 1fr;align-items:center;text-align:center;gap:4px}
+.vs .nm{font-weight:800;font-size:15px;overflow-wrap:anywhere}.vs .sc{font-weight:800;font-size:40px;color:var(--soft);line-height:1.1;font-variant-numeric:tabular-nums}.vs .tm{font-size:12.5px;color:var(--mut)}
+.vs .x{font-weight:800;font-size:16px;color:var(--mut)}
+.vs .vw .nm,.vs .vw .sc{color:var(--ban)}
+.vs .me .nm::after{content:' (εσύ)';font-weight:600;font-size:12px;color:var(--mut)}
+.dots{display:grid;grid-template-columns:minmax(0,88px) repeat(5,1fr);gap:6px;align-items:center;font-size:12.5px;color:var(--mut)}
+.dots span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dots i{height:12px;border-radius:6px;background:var(--grnb)}.dots i.r{background:var(--redb)}
+.wban{text-align:center;font-weight:800;font-size:27px;color:var(--ban)}.wban.l{color:var(--soft)}
+.h2t{margin:0 0 8px;font-size:12.5px;color:var(--mut)}
+.h2{display:flex;flex-direction:column;gap:6px}
+.h2r{display:flex;align-items:center;gap:10px;background:var(--bg);border:1px solid var(--bor);border-radius:10px;padding:8px 10px;font-size:14px}
+.h2r .nm{flex:1;min-width:0;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.h2r .sc{display:flex;flex-direction:column;align-items:center;font-variant-numeric:tabular-nums}
+.h2r .sc b{font-size:17px;color:var(--soft)}.h2r .sc b.up{color:var(--ban)}.h2r .sc b.dn{color:var(--redt)}
+.h2r .sc small{font-size:11px;color:var(--mut)}
+.h2go{flex:0 0 auto;background:none;border:1.5px solid var(--teal);color:var(--teal);border-radius:999px;padding:5px 10px;font-size:12.5px;font-weight:800}
+.h2res{border:1px solid var(--bor);border-radius:12px;padding:8px 12px;text-align:center}
+.h2res small{display:block;font-size:12px;color:var(--mut)}
+.h2res div{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;font-weight:700;font-size:14px}
+.h2res div span:first-child{text-align:right}.h2res div span:last-child{text-align:left}
+.h2res b{font-size:22px;color:var(--ban);font-variant-numeric:tabular-nums}
+.rv{display:flex;flex-direction:column;gap:10px}
+.rv .it{border:1px solid var(--bor);border-radius:12px;padding:10px 12px;font-size:14px;line-height:1.7;text-align:left}
+.rv .it .h{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:var(--mut);font-weight:700}
+.rv .it .ok{color:var(--grnt)}.rv .it .no{color:var(--redt)}
+.rv .it .an{color:var(--grnt);margin-top:4px}.rv .it .an b{color:var(--mut);font-weight:700}
+.rv .it .ex{color:var(--mut);margin-top:2px}
 </style>
 <link rel="manifest" href="/manifest-quiz.webmanifest">
 <link rel="icon" href="/icon2-quiz-192.png">
@@ -673,7 +737,7 @@ function login(msg){
   const saved=loadLogin();
   app.innerHTML=`
   <div class="banner pop"><h1 class="stack">${LOGO}<span class="words"><span>ΦΩΤΟΝΙΟ</span><span class="w2">QUIZ</span></span></h1><p>Ξεκινάς στο «σκοτάδι».<br>Πάνω από τις μισές μονάδες σού δίνουν ένα φωτόνιο, από 20 και πάνω δύο, και ένα quiz χωρίς λάθος τρία. Κάθε φωτόνιο σε φέρνει πιο κοντά στο «φως».</p></div>
-  <div class="mascot-row"><div id="mascot">${mascot('happy')}</div><div class="bubble" id="say">${msg||'Δώσε μου ψευδώνυμο και PIN και έλα να ταξιδέψουμε προς το «φως».'}</div></div>
+  <div class="mascot-row"><div id="mascot">${mascot('happy')}</div><div class="bubble" id="say">${msg||(DUAPI&&duelPending()?'Σε προκάλεσαν σε μονομαχία! ⚔️ Μπες με το ψευδώνυμό σου για να τη δεις.':'Δώσε μου ψευδώνυμο και PIN και έλα να ταξιδέψουμε προς το «φως».')}</div></div>
   <form class="card field" id="f" autocomplete="off">
     <label for="nick">Ψευδώνυμο (όχι το πραγματικό σου όνομα)</label>
     <input type="text" id="nick" maxlength="16" value="${esc(saved.nick||'')}" placeholder="π.χ. Ακτίνα7" autocapitalize="off" spellcheck="false">
@@ -718,6 +782,7 @@ async function doLogin(create){
       saveLogin(rem?{nick,pin}:{nick:''});
       U={nick:r.nick,pin,profile:r.profile,url:r.url||'',sun:r.sun||null};
       if(TESTSUN){await sunTestInit();return}
+      const pc=DUAPI&&duelPending(); if(pc){openDuel(pc);return}
       lobby(create?'new':'back'); return;
     }
   }catch(err){console.error(err);e.innerHTML=`<div class="err">Δεν υπάρχει σύνδεση. Δοκίμασε ξανά σε λίγο.</div>`;}
@@ -1000,7 +1065,7 @@ function wireCh(){
       b.classList.toggle('on',n===g.it.length);b.classList.toggle('part',n>0&&n<g.it.length);b.setAttribute('aria-pressed',n===g.it.length);
       b.querySelector('small').textContent=n&&g.it.length>1?n+'/'+g.it.length:'';b.parentNode.classList.toggle('open',n>0)});
     const pb=document.getElementById('play');
-    if(pb){pb.disabled=!sel.length;pb.textContent=sel.length?(U.profile.rounds?'Νέος γύρος':'Πάμε για τον πρώτο γύρο'):'Διάλεξε τουλάχιστον μία ενότητα';}
+    if(pb){pb.disabled=!sel.length;pb.textContent=sel.length?(U.profile.rounds?'🎯 Ατομικός γύρος':'🎯 Πάμε για τον πρώτο ατομικό γύρο'):'Διάλεξε τουλάχιστον μία ενότητα';}
     const a=document.getElementById('chall'); if(a)a.textContent=sel.length===ALLK.length?'Καμία επιλογή':'Όλα τα κεφάλαια';
     const cs=document.getElementById('chfold-s'); if(cs)cs.innerHTML=chSum();};
   document.querySelectorAll('.chp').forEach(b=>b.onclick=()=>{let a=getCh();const k=b.dataset.k;
@@ -1050,13 +1115,15 @@ function lobby(how){
   ${sunHome()}
   ${photonCard(p,say)}
   ${chCard()}
-  <button class="btn" id="play">${p.rounds?'Νέος γύρος':'Πάμε για τον πρώτο γύρο'}</button>
+  <button class="btn" id="play">${p.rounds?'🎯 Ατομικός γύρος':'🎯 Πάμε για τον πρώτο ατομικό γύρο'}</button>
+  ${duelHome()}
   ${podium()}
+  ${duelFoldSlot()}
   <button class="btn ghost" id="share" style="margin-top:0">Μοιράσου το φωτόνιό σου</button>
   ${window.DEMO&&p.level.t<10?'<button class="link" id="demo10">Δοκιμή: φτάσε 1 φωτόνιο πριν από τη νέα βαθμίδα</button>':''}
   <button class="link" id="out">Αλλαγή παίκτη · Έξοδος</button>
   <p class="copy">© 2026 Ανδρέας Αναγνωστόπουλος · Φωτόνιο Quiz</p>`;
-  document.getElementById('play').onclick=startRound; wireCh(); loadTop(); sunWire();
+  document.getElementById('play').onclick=startRound; wireCh(); loadTop(); sunWire(); duelWire();
   ['mapgo','mapgo2'].forEach(id=>{const b=document.getElementById(id);if(b)b.onclick=openMap});
   if(p.newAch&&p.newAch.length){const nw=p.newAch;p.newAch=[];setTimeout(()=>achQueue(nw,p),600);}   // π.χ. κεφάλαιο που είχε ήδη ολοκληρώσει
   document.getElementById('share').onclick=()=>share(false);
@@ -1302,6 +1369,240 @@ async function share(isAch){
     try{await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);cpi.textContent='Η εικόνα αντιγράφηκε!';msg('Κάνε επικόλληση σε story, μήνυμα ή post.');}
     catch(e){cpi.textContent='Κράτα πατημένη την εικόνα';msg('Εδώ η αντιγραφή με κουμπί δεν επιτρέπεται. Κράτα πατημένη την εικόνα πάνω και διάλεξε «Αντιγραφή» ή «Αποθήκευση εικόνας».');}
   };
+}
+
+/* ---------- Μονομαχία με φίλο (ασύγχρονη, με σύνδεσμο) ----------
+   Δεν δίνει ούτε παίρνει φωτόνια. Ο server ελέγχει απαντήσεις και χρόνο. */
+const DUAPI=typeof apiCall==='function'?{
+  nw:(ch,vs)=>apiCall('duelNew',[U.nick,U.pin,ch||[],2,vs||''],1),
+  info:c=>apiCall('duelInfo',[U.nick,U.pin,c]),
+  start:c=>apiCall('duelStart',[U.nick,U.pin,c],1),
+  ans:(c,i,ch,ms)=>apiCall('duelAnswer',[U.nick,U.pin,c,i,ch,ms],1),
+  list:()=>apiCall('duelList',[U.nick,U.pin])}:null;
+const DKEY='fotonio_duel';
+/* ?m=ΚΩΔΙΚΟΣ: κρατιέται ώσπου να μπει ο παίκτης και φεύγει από τη γραμμή διευθύνσεων */
+(()=>{try{const u=new URL(location.href),v=(u.searchParams.get('m')||'').toUpperCase();
+  if(/^[A-Z2-9]{5}$/.test(v)){localStorage.setItem(DKEY,JSON.stringify({c:v,t:Date.now()}));u.searchParams.delete('m');history.replaceState(null,'',u.pathname+(u.search||'')+u.hash);}}catch(e){}})();
+function duelPending(){try{const o=JSON.parse(localStorage.getItem(DKEY)||'null');if(o&&Date.now()-o.t<8*864e5)return o.c;localStorage.removeItem(DKEY)}catch(e){}return ''}
+function duelClear(){try{localStorage.removeItem(DKEY)}catch(e){}}
+const fmtT=s=>{s=Number(s)||0;const m=Math.floor(s/60),r=s-m*60;return m?`${m}΄${String(Math.round(r)).padStart(2,'0')}΄΄`:`${(Math.round(r*10)/10).toString().replace('.',',')}΄΄`};
+const chipsOf=a=>`<div class="chips">${(a&&a.length?a:['Όλα τα κεφάλαια']).map(x=>`<span>${esc(x)}</span>`).join('')}</div>`;
+const grpOf=keys=>{const o=[];(keys||[]).forEach(k=>{let g=String(k).split('|')[0];if(g==='Ηλεκτρομαγνητικά κύματα')g='Κύματα';if(!o.includes(g))o.push(g)});return o};
+const TOPBAR=()=>`<div class="top"><div class="brand">${LOGO}<span>Φωτόνιο</span> Quiz</div>${PH(U.profile.photons)}</div>`;
+const DERR={wait:'Ο φίλος σου δεν έχει τελειώσει ακόμα τις δικές του ερωτήσεις. Άνοιξε ξανά τον σύνδεσμο σε λίγο.',taken:'Αυτή τη μονομαχία την έχει ήδη δεχτεί άλλος παίκτης.',gone:'Αυτή η μονομαχία δεν υπάρχει πια (ισχύει 7 μέρες).',slow:'Πιο σιγά! Περίμενε λίγο και δοκίμασε ξανά.',limit:'Έφτασες το όριο μονομαχιών για σήμερα. Τα λέμε αύριο!'};
+function duelMsg(t){app.innerHTML=`${TOPBAR()}<div class="dcard pop"><div class="pill2">ΜΟΝΟΜΑΧΙΑ</div><p>${t}</p><button class="btn" id="dh">Αρχική</button></div>`;document.getElementById('dh').onclick=()=>lobby('back');window.scrollTo({top:0});}
+function duelBusy(t){app.innerHTML=`${TOPBAR()}<div class="mascot-row"><div id="mascot">${mascot('idle')}</div><div class="bubble">${t}</div></div>`;}
+
+/* αρχική: το κουμπί και ΜΟΝΟ όσα θέλουν κίνηση (πρόκληση για σένα, μισοτελειωμένη).
+   Όλα τα υπόλοιπα (σκορ ανά αντίπαλο, αναμονή, αποτελέσματα) μπαίνουν στην πτυσσόμενη «Οι μονομαχίες μου», κάτω από το βάθρο. */
+function duelHome(){return DUAPI?`<button class="duelbtn" id="duel">⚔️ Μονομαχία με φίλο</button><div id="duels" class="dlist"></div>`:''}
+function duelFoldSlot(){return DUAPI?'<div id="dvs"></div>':''}
+function duelWire(){
+  const b=document.getElementById('duel'); if(!b)return;
+  b.onclick=()=>duelIntro();
+  DUAPI.list().then(L=>{const el=document.getElementById('duels'),fs=document.getElementById('dvs'); if(!el||!L)return;
+    const r=L.rec||{w:0,l:0,d:0}, n=r.w+r.l+r.d;
+    const W=x=>`${x.w} ${x.w===1?'νίκη':'νίκες'}`, Lo=x=>`${x.l} ${x.l===1?'ήττα':'ήττες'}`, D=x=>x.d?` · ${x.d} ${x.d===1?'ισοπαλία':'ισοπαλίες'}`:'';
+    const ws=x=>x.left<=1?'λήγει σήμερα':`λήγει σε ${x.left} μέρες`, chs=x=>esc(x.ch.join(', ')||'Όλα τα κεφάλαια');
+    const act=L.act||[], now=act.filter(x=>x.what!=='wait'), wait=act.filter(x=>x.what==='wait');
+    const items=now.map(x=>x.what==='turn'?`<button class="dli turn" data-du="${x.code}"><span class="ic">⚔️</span><span class="tx"><b>${esc(x.opp)}</b> σε προκαλεί!<small>${chs(x)} · ${ws(x)}</small></span><span class="go">Παίξε ›</span></button>`
+      :`<button class="dli" data-du="${x.code}"><span class="ic">⏸️</span><span class="tx">Δεν τελείωσες τη μονομαχία${x.opp?` με <b>${esc(x.opp)}</b>`:''}<small>${ws(x)}</small></span><span class="go">Συνέχισε ›</span></button>`);
+    el.outerHTML=`<div id="duels" class="dlist">${items.join('')}</div>`;
+    if(fs&&(n||wait.length)){
+      const vsRows=(L.vs||[]).map(v=>`<div class="h2r"><span class="nm">${esc(v.opp)}</span><span class="sc"><b class="${v.w>v.l?'up':v.w<v.l?'dn':''}">${v.w} – ${v.l}</b>${v.d?`<small>+${v.d} ισοπ.</small>`:''}</span>${v.code?`<button class="h2go" data-rv="${v.code}" data-op="${esc(v.opp)}" aria-label="Ρεβάνς με ${esc(v.opp)}">⚔️ Ρεβάνς</button>`:''}</div>`).join('');
+      const waitRows=wait.map(x=>`<button class="dli" data-du="${x.code}"><span class="ic">⏳</span><span class="tx">${x.opp?`Περιμένεις <b>${esc(x.opp)}</b> να παίξει`:'Περιμένεις αντίπαλο'}<small>${chs(x)} · ${ws(x)}</small></span><span class="go">${x.opp?'Δες ›':'Στείλε ›'}</span></button>`).join('');
+      const finRows=(L.fin||[]).map(x=>`<button class="dli ${x.res}" data-du="${x.code}"><span class="ic">${x.res==='w'?'🏆':x.res==='l'?'⚔️':'🤝'}</span><span class="tx">${x.res==='w'?'Νίκη':x.res==='l'?'Ήττα':'Ισοπαλία'} με <b>${esc(x.opp)}</b></span><span class="go">${x.my} – ${x.op}</span></button>`).join('');
+      const body=(vsRows?`<p class="h2t">Το σκορ σου απέναντι σε κάθε αντίπαλο (νίκες – ήττες)</p><div class="h2">${vsRows}</div>`:'')
+        +(finRows?`<p class="h2t">${(L.fin||[]).length>1?'Τα '+(L.fin||[]).length+' τελευταία αποτελέσματα':'Τελευταίο αποτέλεσμα'}</p><div class="dlist">${finRows}</div>`:'')
+        +(waitRows?`<p class="h2t">Σε αναμονή</p><div class="dlist">${waitRows}</div>`:'');
+      const sub=(n?`<em>${W(r)}</em> · ${Lo(r)}${D(r)}`:'<em>Καμία ακόμα</em>')+(wait.length?` · ${wait.length} σε αναμονή`:'');
+      fs.outerHTML=`<div id="dvs">${fold('dvsfold','⚔️','Οι μονομαχίες μου',sub,body,foldGet('dvsfold',false))}</div>`;
+    }
+    document.querySelectorAll('[data-du]').forEach(x=>x.onclick=()=>openDuel(x.dataset.du));
+    document.querySelectorAll('[data-rv]').forEach(x=>x.onclick=()=>duelIntro(x.dataset.rv,x.dataset.op));
+  }).catch(()=>{});
+}
+
+/* 1 · πριν ξεκινήσει μια νέα μονομαχία (ή ρεβάνς) */
+function duelIntro(vs,opp,keys){
+  const ks=keys||getCh(), g=grpOf(ks);
+  app.innerHTML=`${TOPBAR()}
+  <div class="dcard pop"><div class="pill2">${vs?'ΡΕΒΑΝΣ':'ΜΟΝΟΜΑΧΙΑ'}</div>
+    <h2>${vs?`Ρεβάνς με ${esc(opp)}`:'Προκάλεσε έναν φίλο ⚔️'}</h2>
+    <p><b>5 ερωτήσεις</b> (3 πολλαπλής επιλογής, 2 Σωστό/Λάθος) από:</p>${chipsOf(g)}
+    <p>⏱️ <b>30 δευτερόλεπτα</b> για κάθε ερώτηση. Πρώτα παίζεις εσύ και μετά ${vs?'η πρόκληση εμφανίζεται στην αρχική του':'στέλνεις τον σύνδεσμο στον φίλο σου'}. Νικά όποιος βρει τις περισσότερες· αν έρθετε ίσοι, ο πιο γρήγορος.</p>
+    <p style="font-size:12.5px;color:var(--mut)">Η μονομαχία δεν δίνει ούτε παίρνει φωτόνια.</p>
+    <div id="de"></div>
+    <button class="btn" id="dgo">Ξεκίνα ⚔️</button><button class="btn ghost" id="dbk">Πίσω</button></div>`;
+  document.getElementById('dbk').onclick=()=>lobby('back');
+  document.getElementById('dgo').onclick=async e=>{const b=e.currentTarget;b.disabled=true;b.textContent='Ετοιμάζω τις ερωτήσεις…';
+    try{const r=await DUAPI.nw(ks,vs);duelPlay(r.code,'a',r.q,vs?opp:'')}
+    catch(er){b.disabled=false;b.textContent='Ξεκίνα ⚔️';
+      if(er&&er.message==='old'){location.replace(location.pathname+'?v='+Date.now());return}
+      document.getElementById('de').innerHTML=`<div class="err">${DERR[er&&er.message]||'Δεν υπάρχει σύνδεση. Δοκίμασε ξανά.'}</div>`;}};
+  window.scrollTo({top:0});
+}
+
+/* ανοίγει μια μονομαχία και πηγαίνει στη σωστή οθόνη */
+async function openDuel(code){
+  duelBusy('Φορτώνω τη μονομαχία…');
+  let d;try{d=await DUAPI.info(code)}catch(e){duelMsg(DERR[e&&e.message]||'Δεν υπάρχει σύνδεση. Δοκίμασε ξανά σε λίγο.');return}
+  duelClear();
+  if(d.st==='done'&&d.me)return duelResult(d);
+  if(d.exp)return duelMsg(DERR.gone);
+  if(d.me==='a'){if(d.st==='a')return duelResume(code);return duelShare(d);}
+  if(d.me==='b'){if(d.st==='b')return duelResume(code);return duelInvite(d);}
+  if(d.st==='a')return duelMsg(DERR.wait);
+  if(d.st==='open'&&!d.b)return duelInvite(d);
+  return duelMsg(DERR.taken);
+}
+async function duelResume(code){
+  duelBusy('Συνεχίζουμε…');
+  try{const r=await DUAPI.start(code);
+    if(r.done)return openDuel(code);
+    duelPlay(code,r.side,r.q,r.opp,r.lost?'Η ερώτηση που είχες ανοιχτή έληξε όσο έλειπες.':'');
+  }catch(e){if(e&&e.message==='done')return openDuel(code);duelMsg(DERR[e&&e.message]||'Δεν υπάρχει σύνδεση. Δοκίμασε ξανά σε λίγο.')}
+}
+
+/* 2 · πρόσκληση (ο φίλος άνοιξε τον σύνδεσμο) */
+function duelInvite(d){
+  app.innerHTML=`${TOPBAR()}
+  <div class="dcard pop"><div class="pill2">ΠΡΟΚΛΗΣΗ</div>
+    <h2><span style="color:var(--ban)">${esc(d.a)}</span> σε προκαλεί! ⚔️</h2>
+    <p>5 ερωτήσεις από:</p>${chipsOf(d.ch)}
+    <p>⏱️ 30 δευτερόλεπτα για κάθε ερώτηση. Νικά όποιος βρει τις περισσότερες· αν έρθετε ίσοι, ο πιο γρήγορος. Δεν δίνει ούτε παίρνει φωτόνια.</p>
+    <div id="de"></div>
+    <button class="btn" id="dgo">Δέξου την πρόκληση ⚔️</button><button class="btn ghost" id="dno">Όχι τώρα</button>
+    <p style="font-size:12px;color:var(--mut)">Ισχύει ακόμα ${d.left<=1?'σήμερα':d.left+' μέρες'}</p></div>`;
+  document.getElementById('dno').onclick=()=>lobby('back');
+  document.getElementById('dgo').onclick=async e=>{const b=e.currentTarget;b.disabled=true;b.textContent='Μια στιγμή…';
+    try{const r=await DUAPI.start(d.code);if(r.done)return openDuel(d.code);duelPlay(d.code,r.side,r.q,r.opp)}
+    catch(er){b.disabled=false;b.textContent='Δέξου την πρόκληση ⚔️';document.getElementById('de').innerHTML=`<div class="err">${DERR[er&&er.message]||'Δεν υπάρχει σύνδεση. Δοκίμασε ξανά.'}</div>`;}};
+  window.scrollTo({top:0});
+}
+
+/* 3 · οι 5 ερωτήσεις με χρονόμετρο */
+let DQ=null;
+function duelPlay(code,side,q,opp,note){
+  if(DQ&&DQ.tick)clearInterval(DQ.tick);
+  DQ={code,side,q,opp:opp||'',busy:false,t0:Date.now(),lim:(q.left||q.sec||30)*1000,sec:q.sec||30};
+  const L=['α','β','γ','δ'];
+  const opts=q.type==='mc'?`<div class="opts">${q.o.map((t,k)=>`<button class="opt" data-k="${k}"><span class="l">${L[k]}</span><span>${m(esc(t))}</span></button>`).join('')}</div>`
+    :`<div class="tf"><button class="opt" data-k="1">Σωστό</button><button class="opt" data-k="0">Λάθος</button></div>`;
+  app.innerHTML=`${TOPBAR()}
+  <div class="dtop"><span>⚔️ ${DQ.opp?`Μονομαχία με <b>${esc(DQ.opp)}</b>`:'<b>Μονομαχία</b>'}</span><span>Ερώτηση <b>${q.i+1}</b> από ${q.n}</span></div>
+  <div class="timer" id="tm"><div class="bar"><i id="tb" style="width:100%"></i></div><span class="sec" id="ts">${Math.ceil(DQ.lim/1000)}</span></div>
+  <div class="card pop">
+    <div class="meta"><span class="tags"><span class="tag">${esc(q.ch)}</span>${panTag(q.src)}</span><span>${q.type==='mc'?'Πολλαπλής επιλογής':'Σωστό ή Λάθος'}</span></div>
+    ${note?`<p class="note" style="text-align:left;color:var(--redt)">${note}</p>`:''}
+    <p class="q">${m(esc(q.q))}</p>
+    ${q.img&&/^data:image\/png;base64,[A-Za-z0-9+/=]+$/.test(q.img)?`<div class="fig"><img src="${q.img}" alt="Σχήμα της ερώτησης"></div>`:''}
+    ${opts}<div id="after"></div>
+  </div>`;
+  app.querySelectorAll('.opt').forEach(b=>b.onclick=()=>duelPick(+b.dataset.k));
+  const tb=document.getElementById('tb'),ts=document.getElementById('ts'),tm=document.getElementById('tm'),full=DQ.sec*1000;
+  const draw=()=>{const left=Math.max(0,DQ.lim-(Date.now()-DQ.t0));tb.style.width=(left/full*100)+'%';ts.textContent=Math.ceil(left/1000);tm.classList.toggle('hot',left<=10000);
+    if(left<=0&&!DQ.busy)duelPick(null);};
+  draw();DQ.tick=setInterval(draw,200);
+  window.scrollTo({top:0});
+}
+async function duelPick(k){
+  if(!DQ||DQ.busy)return; DQ.busy=true; clearInterval(DQ.tick);
+  const q=DQ.q, ms=Math.min(Date.now()-DQ.t0+(DQ.sec*1000-DQ.lim),DQ.sec*1000);
+  const btns=[...app.querySelectorAll('.opt')], box=app.querySelector('.opts,.tf');
+  const chosen=k===null?null:(q.type==='mc'?k:k===1);
+  btns.forEach(b=>{b.disabled=true;if(k!==null&&+b.dataset.k===k)b.classList.add('sel')}); if(box)box.classList.add('locked');
+  const after=document.getElementById('after');
+  if(k===null)after.innerHTML='<div class="fb no"><strong>Ο χρόνος τελείωσε! ⏱️</strong></div>';
+  let r;
+  try{r=await DUAPI.ans(DQ.code,q.i,chosen,k===null?DQ.sec*1000:ms)}
+  catch(e){
+    if(e&&(e.message==='round'||e.message==='done'))return duelResume(DQ.code);
+    after.innerHTML=`<div style="height:10px"></div><div class="err">Δεν υπάρχει σύνδεση.</div><div style="height:8px"></div><button class="btn" id="rt">Ξαναστείλε την απάντηση</button>`;
+    document.getElementById('rt').onclick=()=>{DQ.busy=false;DQ.t0=Date.now()-ms-(DQ.sec*1000-DQ.lim);after.innerHTML='';btns.forEach(b=>{b.disabled=false;b.classList.remove('sel')});if(box)box.classList.remove('locked');duelPick(k)};
+    return;
+  }
+  if(box)box.classList.remove('locked');
+  btns.forEach(b=>{b.classList.remove('sel');const bk=+b.dataset.k;
+    const right=q.type==='mc'?bk===r.a:(bk===1)===r.a;
+    if(right)b.classList.add('ok');else if(k!==null&&bk===k)b.classList.add('no');});
+  if(k!==null)after.innerHTML=r.ok?'<div class="fb ok"><strong>Σωστά! ✓</strong></div>':`<div class="fb no"><strong>${r.late?'Ο χρόνος είχε τελειώσει.':'Λάθος.'}</strong></div>`;
+  await new Promise(z=>setTimeout(z,r.ok?1100:1700));
+  if(r.done){const c=DQ.code;DQ=null;return openDuel(c)}
+  duelPlay(DQ.code,DQ.side,r.next,DQ.opp);
+}
+
+/* 4 · ο Α τελείωσε: στέλνει τον σύνδεσμο */
+function duelShare(d){
+  const url=location.origin+'/?m='+d.code, me=d.mine||{ok:0,s:0};
+  const text=`⚔️ Σε προκαλώ σε μονομαχία στο Φωτόνιο Quiz! 5 ερωτήσεις από: ${(d.ch.length?d.ch:['όλα τα κεφάλαια']).join(', ')}. Μπορείς να με νικήσεις;`;
+  const CHAT='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3C6.6 3 3 6.6 3 11c0 2.4 1.1 4.5 3 6v4l3.6-2.1c.8.2 1.6.3 2.4.3 5.4 0 9-3.6 9-8.1S17.4 3 12 3Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>';
+  const LINK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4.5 4.5 0 0 0 6.4 0l3.2-3.2a4.5 4.5 0 0 0-6.4-6.4L12 5.6M14 10a4.5 4.5 0 0 0-6.4 0l-3.2 3.2a4.5 4.5 0 0 0 6.4 6.4L12 18.4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+  const waitB=d.b&&d.st!=='done';
+  app.innerHTML=`${TOPBAR()}
+  <div class="dcard pop"><div class="pill2">ΜΟΝΟΜΑΧΙΑ</div>
+    <h2>Έκανες ${me.ok} / 5 σε ${fmtT(me.s)}</h2>
+    ${waitB?`<p><b>${esc(d.b)}</b> ${d.st==='b'?'παίζει αυτή τη στιγμή':'θα τη δει στην αρχική του'}. Θα δεις το αποτέλεσμα μόλις τελειώσει.</p>`
+      :`<p>Στείλε την πρόκληση σε φίλο. Θα παίξει τις <b>ίδιες 5 ερωτήσεις</b>.</p>`}
+    ${chipsOf(d.ch)}
+    ${d.st==='open'?`<div class="dlink" id="dl">${esc(url.replace(/^https?:\/\//,''))}</div>
+    <button class="btn" id="dsh">Στείλε στον φίλο σου</button>
+    <div class="sgrid"><button id="svb">${CHAT}<span>Viber</span></button><button id="sms">${CHAT}<span>Messenger</span></button><button id="sig">${IGI}<span>Instagram</span></button>
+      <button id="scp" class="cp">${LINK}Αντιγραφή συνδέσμου</button></div>
+    <p class="dmsg" id="dm"></p>`:''}
+    ${duelReview(d)}
+    <button class="btn ghost" id="dh">Αρχική</button>
+    <p style="font-size:12px;color:var(--mut)">Ισχύει ${d.left<=1?'μέχρι σήμερα':d.left+' μέρες'} · θα δεις το αποτέλεσμα στην αρχική σου μόλις παίξει</p></div>`;
+  document.getElementById('dh').onclick=()=>lobby('back');
+  if(d.st!=='open'){window.scrollTo({top:0});return}
+  const msg=t=>{document.getElementById('dm').textContent=t};
+  const copy=async()=>{try{await navigator.clipboard.writeText(text+' '+url);return true}catch(e){}
+    try{const ta=document.createElement('textarea');ta.value=text+' '+url;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();const ok=document.execCommand('copy');ta.remove();return ok}catch(e){return false}};
+  const native=async()=>{if(!navigator.share)return false;try{await navigator.share({title:'Μονομαχία στο Φωτόνιο Quiz',text,url});return true}catch(e){return e&&e.name==='AbortError'}};
+  const app_=(href,name)=>{const t=Date.now();location.href=href;setTimeout(()=>{if(!document.hidden&&Date.now()-t<2500)msg(`Αν δεν άνοιξε το ${name}, πάτα «Αντιγραφή συνδέσμου» και επικόλλησέ τον στο μήνυμα.`)},1500)};
+  document.getElementById('dsh').onclick=async()=>{if(await native())return;msg((await copy())?'Ο σύνδεσμος αντιγράφηκε! Επικόλλησέ τον σε μήνυμα στον φίλο σου.':'Κράτα πατημένο τον σύνδεσμο πάνω για να τον αντιγράψεις.')};
+  document.getElementById('svb').onclick=()=>app_('viber://forward?text='+encodeURIComponent(text+' '+url),'Viber');
+  document.getElementById('sms').onclick=()=>app_('fb-messenger://share/?link='+encodeURIComponent(url),'Messenger');
+  document.getElementById('sig').onclick=async()=>{if(navigator.share){msg('Διάλεξε Instagram στη λίστα που ανοίγει.');if(await native())return}
+    const ok=await copy();msg(ok?'Ο σύνδεσμος αντιγράφηκε! Επικόλλησέ τον σε μήνυμα στο Instagram.':'Κράτα πατημένο τον σύνδεσμο πάνω για να τον αντιγράψεις.');if(ok)setTimeout(()=>{location.href='https://www.instagram.com/direct/inbox/'},900)};
+  document.getElementById('scp').onclick=async e=>{const b=e.currentTarget;const ok=await copy();
+    if(ok){b.innerHTML=LINK+'Αντιγράφηκε! ✓';msg('Επικόλλησέ τον όπου θέλεις: Viber, Instagram, Messenger, SMS…');setTimeout(()=>{b.innerHTML=LINK+'Αντιγραφή συνδέσμου'},2500)}
+    else msg('Κράτα πατημένο τον σύνδεσμο πάνω για να τον αντιγράψεις.')};
+  window.scrollTo({top:0});
+}
+
+/* οι σωστές απαντήσεις και η αιτιολόγηση, αφού παίξει ο ίδιος */
+function duelReview(d){
+  if(!d.rev)return '';
+  const my=d.myL||[];
+  const body=`<div class="rv">${d.rev.map((x,i)=>x?`<div class="it"><div class="h"><span>${i+1} · ${esc(x.ch)}</span><span class="${my[i]?'ok':'no'}">${my[i]?'✓ σωστό':'✗ λάθος'}</span></div>
+    <div>${m(esc(x.q))}</div><div class="an"><b>Σωστή απάντηση:</b> ${m(esc(x.ans))}</div>${x.ex?`<div class="ex">${m(esc(x.ex))}</div>`:''}</div>`:'').join('')}</div>`;
+  return fold('dufold','📖','Οι σωστές απαντήσεις','με ενδεικτική αιτιολόγηση',body,false);
+}
+
+/* 5 · αποτέλεσμα (το βλέπουν και οι δύο) */
+function duelResult(d){
+  const me=d.me, op=me==='a'?'b':'a', M=me==='a'?d.A:d.B, O=me==='a'?d.B:d.A, myN=me==='a'?d.a:d.b, opN=me==='a'?d.b:d.a;
+  const res=d.win==='tie'?'d':d.win===me?'w':'l';
+  const head=res==='w'?'Νίκησες! ⚔️':res==='l'?'Έχασες αυτή τη φορά':'Ισοπαλία! 🤝';
+  const sub=res==='l'?`<p>Μπράβο για την προσπάθεια! Ζήτα ρεβάνς και πάρε το πίσω 💪</p>`:'';
+  const tie=M.ok===O.ok&&res!=='d'?'<p style="font-size:12.5px;color:var(--mut)">Ίσοι στις σωστές · κερδίζει ο πιο γρήγορος</p>':'';
+  const myL=me==='a'?d.aL:d.bL, opL=me==='a'?d.bL:d.aL;
+  const dots=(n,L)=>`<span>${esc(n)}</span>`+[0,1,2,3,4].map(i=>`<i class="${L&&L[i]?'':'r'}"></i>`).join('');
+  app.innerHTML=`${TOPBAR()}
+  <div class="dcard pop"><div class="pill2">ΜΟΝΟΜΑΧΙΑ</div>
+    <div class="wban ${res==='l'?'l':''}">${head}</div>${sub}
+    <div class="vs"><div class="me ${res==='w'?'vw':''}"><div class="nm">${esc(myN)}</div><div class="sc">${M.ok}</div><div class="tm">${fmtT(M.s)}</div></div>
+      <div class="x">VS</div><div class="${res==='l'?'vw':''}"><div class="nm">${esc(opN)}</div><div class="sc">${O.ok}</div><div class="tm">${fmtT(O.s)}</div></div></div>
+    ${tie}
+    <div class="dots">${dots(myN,myL)}${dots(opN,opL)}</div>
+    ${d.h2h?`<div class="h2res"><small>Μεταξύ σας συνολικά</small><div><span>${esc(myN)}</span><b>${d.h2h.w} – ${d.h2h.l}</b><span>${esc(opN)}</span></div>${d.h2h.d?`<small>και ${d.h2h.d} ${d.h2h.d===1?'ισοπαλία':'ισοπαλίες'}</small>`:''}</div>`:''}
+    ${duelReview(d)}
+    <button class="btn" id="drv">Ρεβάνς: προκάλεσέ τον εσύ</button>
+    <button class="btn ghost" id="dh">Αρχική</button></div>`;
+  document.getElementById('dh').onclick=()=>lobby('back');
+  document.getElementById('drv').onclick=()=>duelIntro(d.code,opN,d.keys);
+  window.scrollTo({top:0});
 }
 
 /* ---------- Εκκίνηση ---------- */
