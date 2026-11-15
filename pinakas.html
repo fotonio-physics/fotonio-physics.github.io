@@ -127,6 +127,11 @@ button.kpi{font:inherit;color:inherit;text-align:left;cursor:pointer;width:100%}
 .weak b{color:var(--redb)}
 .empty{color:var(--dim);font-size:13.5px;padding:8px 2px}
 .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.kpi.sunkpi{grid-column:1/-1;border-color:rgba(245,184,65,.6);box-shadow:0 0 18px rgba(245,184,65,.12)}
+.winl{margin-top:10px}
+.winc{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--bor);border-radius:999px;padding:4px 10px;margin:0 6px 6px 0;font-size:13px;font-weight:700;background:var(--bg)}
+.winc i{color:var(--ban);font-style:normal}
+.pstar{color:var(--ban);font-style:normal}
 .sunnext{margin-top:12px;border-top:1px solid var(--bor);padding-top:10px}
 .nomix{border:1px solid var(--bor);border-radius:999px;padding:1px 8px;font-size:11.5px;color:var(--soft)}
 .h3{font-size:15px;margin:16px 0 4px}
@@ -315,8 +320,9 @@ function kpis(){
     ['Φωτόνια τάξης',ph,'gold',`${P.filter(p=>p.ph>=10).length} μαθητές από Σπίθα και πάνω`],
     ['Σωστές απαντήσεις',n?pct(ok,n)+'%':'—','',`${ok} από ${n} · ${D.qActive} ενεργές ερωτήσεις`],
     ['Ενστάσεις',D.objOpen,D.objOpen?'gold':'',D.objOpen?'περιμένουν έλεγχο':`όλες ελεγμένες (${D.objTotal})`,'objcard']];
+  const S=D.sun, sunT=S&&S.today&&S.has?`<button class="kpi go sunkpi" data-go="suncard"><div class="l">✦ Κυνηγοί φωτονίων σήμερα<span class="arr">→</span></div><div class="v gold">${S.ok}</div><div class="s">έλυσαν σωστά την πρόκληση · από <b>${S.n}</b> που την έπαιξαν${S.n?` (${Math.round(S.ok/S.n*100)}%)`:''}</div></button>`:'';
   const live=D.online==null?'':`<div class="kpi live"><div class="l"><span class="dot"></span>Παίζουν τώρα</div><div class="v" id="onl">${D.online}</div><div class="s">κίνηση στα τελευταία 3 λεπτά · μέγιστο σήμερα: <b id="onlpk">${D.peak}</b></div></div>`;
-  return `<div class="kpis">${live}${tiles.map(t=>t[4]?`<button class="kpi go" data-go="${t[4]}"><div class="l">${t[0]}<span class="arr">→</span></div><div class="v ${t[2]}">${t[1]}</div><div class="s">${t[3]}</div></button>`:`<div class="kpi"><div class="l">${t[0]}</div><div class="v ${t[2]}">${t[1]}</div><div class="s">${t[3]}</div></div>`).join('')}</div>`;
+  return `<div class="kpis">${live}${sunT}${tiles.map(t=>t[4]?`<button class="kpi go" data-go="${t[4]}"><div class="l">${t[0]}<span class="arr">→</span></div><div class="v ${t[2]}">${t[1]}</div><div class="s">${t[3]}</div></button>`:`<div class="kpi"><div class="l">${t[0]}</div><div class="v ${t[2]}">${t[1]}</div><div class="s">${t[3]}</div></div>`).join('')}</div>`;
 }
 
 function activity(){
@@ -359,7 +365,7 @@ function player(p,i,v){
     </div><div>${chs.length?chs.map(x=>`<div class="hb" data-tip="${esc(x.c)}: ${Math.round(x.p*100)}% σωστές σε ${x.n}"><div class="nm">${esc(x.c)}</div><div class="trk"><i style="width:${Math.round(x.p*100)}%"></i></div><div class="pc">${Math.round(x.p*100)}%<small>${x.n}</small></div></div>`).join(''):'<div class="empty">Δεν έχει απαντήσεις ακόμα.</div>'}</div></div>`;
   return `<div class="p ${openSet.has(p.nick)?'open':''}" data-n="${esc(p.nick)}"><button aria-expanded="${openSet.has(p.nick)}">
     <div class="rk ${!p.test&&i<3&&sortBy==='ph'&&v.ph>0?'g':''}">${p.test?'–':i+1}</div><div class="hero">${tierHero(p.ph)}</div>
-    <div class="info"><div class="nk"><span class="nm2">${esc(p.nick)}</span>${p.test?'<span class="new tst">ΔΟΚΙΜΗ · δεν μετρά</span>':isNew?'<span class="new">ΝΕΟΣ</span>':''}</div><div class="meta"><span class="tier">${p.tier}</span> · ${ago(p.seen)}</div></div>
+    <div class="info"><div class="nk"><span class="nm2">${esc(p.nick)}${p.star?' <i class="pstar" title="Κυνηγός φωτονίων αυτή την εβδομάδα">✦</i>':''}</span>${p.test?'<span class="new tst">ΔΟΚΙΜΗ · δεν μετρά</span>':isNew?'<span class="new">ΝΕΟΣ</span>':''}</div><div class="meta"><span class="tier">${p.tier}</span> · ${ago(p.seen)}</div></div>
     <div class="nums"><div><b class="gold">${period==='all'?v.ph:'+'+v.ph}</b><span>φωτόνια</span></div><div><b>${v.rounds}</b><span>γύροι</span></div><div><b>${f1(v.avg)}</b><span>μέσο /25</span></div><div><b>${ok==null?'—':ok+'%'}</b><span>σωστές</span></div></div>
   </button>${det}</div>`;
 }
@@ -425,8 +431,9 @@ function sunday(){
     return `<div class="wq"><div class="wh"><b class="werr">${Math.round(w.err*100)}% λάθος</b><span class="meta">${esc(w.id)} · ${esc(w.ch)} · ${w.n} απαντήσεις</span></div>
       <div class="wtx">${mf(w.txt)}</div><div class="wbars">${bars}</div>
       <div class="acts"><button class="ab" data-setch="${esc(w.id)}">Πρόκληση για ${esc(tgtTxt)}</button><button class="ab t" data-edit="${esc(w.id)}">Προβολή / διόρθωση</button></div></div>`}).join('');
-  return `<div class="card"><h2>Πρόκληση της Κυριακής</h2><div class="sub">${s.today?'Σήμερα':'Κυριακή'} ${dm(s.date)}${s.has&&!s.today?' · το σήμα ✦ ισχύει ως το Σάββατο':''}</div>
-    ${now}
+  const winners=s.today&&s.has&&s.win?`<div class="winl"><div class="meta" style="margin-bottom:6px">${s.win.length?`Την έλυσαν σωστά (${s.win.length}):`:'Κανείς δεν την έχει λύσει σωστά ακόμα.'}</div>${s.win.map(n=>`<span class="winc">${esc(n)} <i>✦</i></span>`).join('')}</div>`:'';
+  return `<div class="card" id="suncard"><h2>Πρόκληση της Κυριακής</h2><div class="sub">${s.today?'Σήμερα':'Κυριακή'} ${dm(s.date)}${s.has&&!s.today?' · το σήμα ✦ ισχύει ως το Σάββατο':''}</div>
+    ${now}${winners}
     <div class="sunnext"><div class="meta">Πρόκληση για ${esc(tgtTxt)}: ${tgtHas?`<b style="color:var(--grnb)">έχει οριστεί ✓</b>${tgtMix===false?' <span class="nomix">χωρίς ανακάτεμα</span>':''}`:'<b style="color:var(--ban)">δεν έχει οριστεί ακόμα</b>'}</div>
       ${tgtHas&&tgtCur?`<div class="chprev"><div class="wtx" style="color:var(--txt);font-weight:700">${mf(tgtCur.q)}</div>
         ${tgtCur.o.map((t,i)=>`<div class="cpo ${i===tgtCur.a?'r':''}"><b>${L[i]}</b><span>${mf(t)}</span>${i===tgtCur.a?'<em>σωστή</em>':''}</div>`).join('')}
