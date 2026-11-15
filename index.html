@@ -175,6 +175,40 @@ sub,sup{line-height:0;font-size:.72em}
 .win{background:var(--grn);color:var(--grnt);border-radius:12px;padding:12px 14px;display:flex;gap:12px;align-items:center;font-weight:700;margin:4px 0 10px}
 .win .plus{flex:0 0 auto;font-size:26px;font-weight:800;color:var(--ban)}
 .chip svg{width:16px;height:16px;vertical-align:-3px;margin-right:4px}
+/* Κυριακή του Φωτονίου */
+.sun{position:relative;background:var(--card);border:1.5px solid var(--ban);border-radius:16px;padding:28px 18px 18px;text-align:center;margin-top:8px;box-shadow:0 0 22px rgba(245,184,65,.12)}
+.sun .lab{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--ban);color:var(--bg);font-size:11.5px;font-weight:800;letter-spacing:.07em;padding:4px 12px;border-radius:6px;white-space:nowrap}
+.sun .star{width:56px;height:56px;border-radius:50%;border:2px solid var(--ban);display:grid;place-items:center;color:var(--ban);font-size:24px;line-height:1;margin:0 auto 12px}
+.sun .star.big{width:92px;height:92px;font-size:40px;margin:10px auto 14px}
+.sun h2{margin:0 0 6px;font-size:20px;text-wrap:balance}
+.sun h2.gold{color:var(--ban);font-size:24px}
+.sun p{margin:0;color:var(--soft,#C9D3E0);font-size:14.5px;line-height:1.5;text-wrap:pretty}
+.sun .warn{border:1px solid var(--redb);border-radius:10px;padding:10px 12px;margin:14px 0;text-align:left;font-size:14px;line-height:1.5;color:var(--redt);display:flex;gap:8px;align-items:flex-start}
+.sun .warn b{font-weight:800}
+.sun .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sun .two .btn,.sun .one .btn{margin-top:0;padding:12px 10px}
+.sun .one{margin-top:14px}
+.sun .okpill{display:inline-block;background:var(--grn);color:var(--grnt);border-radius:8px;padding:3px 12px;font-size:13px;font-weight:800;margin-bottom:4px}
+.sun .me{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--bor);border-radius:999px;padding:6px 16px;margin-top:14px;font-weight:700}
+.sun .me i,.hstar{color:var(--ban);font-style:normal}
+.sun .ans{margin-top:12px;border:1px solid var(--bor);border-radius:10px;padding:10px 12px;text-align:left;font-size:14.5px;line-height:1.7}
+.sun .ans small{display:block;color:var(--mut);font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.sun .ans .exx{color:var(--mut);margin-top:4px}
+a.btn{display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;text-align:center}
+.igi{width:20px;height:20px;flex:0 0 auto}
+.wtri{width:22px;height:22px;flex:0 0 auto;color:var(--redb)}
+.ov.sheetov{align-items:flex-end;padding:0}
+.sheet{background:var(--card);border-top:2px solid var(--ban);border-radius:22px 22px 0 0;padding:14px 20px 22px;width:100%;max-width:520px;text-align:center;display:flex;flex-direction:column;gap:10px;align-items:stretch}
+.sheet .grab{width:44px;height:4px;border-radius:2px;background:var(--bor);margin:0 auto 8px}
+.sheet .wtri{width:30px;height:30px;margin:0 auto}
+.sheet h2{margin:2px 0 0;font-size:21px}
+.sheet p{margin:0 0 6px;color:var(--soft,#C9D3E0);font-size:14.5px;line-height:1.55;text-wrap:pretty}
+.sheet .btn{margin-top:0}
+.testbar{border:1px dashed var(--teal);border-radius:12px;padding:10px 12px;font-size:13.5px;line-height:1.5;color:var(--soft,#C9D3E0);margin-top:8px}
+.testbar b{color:var(--teal)}
+.testbar .row{display:flex;gap:14px;flex-wrap:wrap;margin-top:4px}
+.testbar .link{padding:2px 0;color:var(--teal)}
+@media (prefers-reduced-motion:no-preference){.sheet{animation:sheetup .22s ease-out}@keyframes sheetup{from{transform:translateY(30px);opacity:0}}}
 .ov{position:fixed;inset:0;background:rgba(6,12,22,.82);display:flex;align-items:center;justify-content:center;padding:16px;z-index:10;overflow:auto}
 .ovcard{background:var(--card);border:1.5px solid var(--ban);border-radius:22px;padding:20px;max-width:420px;width:100%;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;box-shadow:0 0 40px rgba(245,184,65,.3)}
 .ovcard .pill{border:2px solid var(--ban);color:var(--ban);border-radius:999px;padding:4px 14px;font-size:12px;font-weight:700;letter-spacing:.1em}
@@ -594,10 +628,156 @@ async function doLogin(create){
       return;
     }else{
       saveLogin(rem?{nick,pin}:{nick:''});
-      U={nick:r.nick,pin,profile:r.profile,url:r.url||''}; lobby(create?'new':'back'); return;
+      U={nick:r.nick,pin,profile:r.profile,url:r.url||'',sun:r.sun||null};
+      if(TESTSUN){await sunTestInit();return}
+      lobby(create?'new':'back'); return;
     }
   }catch(err){console.error(err);e.innerHTML=`<div class="err">Δεν υπάρχει σύνδεση. Δοκίμασε ξανά σε λίγο.</div>`;}
   go.disabled=false; go.textContent=create?'Δημιουργία νέου παίκτη':'Μπες στο παιχνίδι';
+}
+
+/* ---------- Κυριακή του Φωτονίου: πρόκληση της εβδομάδας ----------
+   Ο server λέει αν είναι Κυριακή με πρόκληση (U.sun.on), αν ο παίκτης απάντησε (U.sun.done) και αν έχει το σήμα ✦ (U.sun.badge).
+   Η ερώτηση και η σωστή απάντηση δεν φτάνουν στη συσκευή πριν από το «Είμαι έτοιμος» και την απάντηση αντίστοιχα. */
+const IG_URL='https://www.instagram.com/fotonio.physics/';
+const IGI='<svg class="igi" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5.5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.4" cy="6.6" r="1.3" fill="currentColor"/></svg>';
+const WTRI='<svg class="wtri" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 22.5 21h-21z" fill="currentColor"/><path d="M12 10v5" stroke="#16263D" stroke-width="2.2" stroke-linecap="round"/><circle cx="12" cy="18" r="1.2" fill="#16263D"/></svg>';
+const igLink=cls=>`<a class="btn ${cls||''}" href="${IG_URL}" target="_blank" rel="noopener">${IGI}Εξήγηση</a>`;
+const TESTSUN=/[?&]dokimi=1(&|$)/.test(location.search);   // δοκιμή καθηγητή: οι κάρτες της Κυριακής οποιαδήποτε μέρα, χωρίς καταγραφή
+let TCH=null, TNOTE='';
+const SAMPLE={ch:'Ταλαντώσεις',sub:'Απλή αρμονική ταλάντωση',q:'Δείγμα πρόκλησης: σε μια απλή αρμονική ταλάντωση, όταν το σώμα περνά από τη θέση ισορροπίας, μέγιστη είναι',o:['η επιτάχυνσή του.','η ταχύτητά του.','η δύναμη επαναφοράς.','η δυναμική του ενέργεια.'],a:1,ex:'Στη θέση ισορροπίας η ταχύτητα έχει μέγιστο μέτρο, ενώ επιτάχυνση, δύναμη επαναφοράς και δυναμική ενέργεια μηδενίζονται.'};
+/* Στη δοκιμή του καθηγητή οι επιλογές ανακατεύονται όπως θα τις δει ένας μαθητής: η σωστή αλλάζει πάντα γράμμα.
+   TP[θέση στην οθόνη] = θέση στο φύλλο. Η σωστή του φύλλου είναι TCH.a. */
+let TP=[0,1,2,3];
+function testPerm(){
+  let p=[0,1,2,3];
+  if(TCH.mix!==false){for(let i=3;i>0;i--){const j=Math.floor(Math.random()*(i+1));[p[i],p[j]]=[p[j],p[i]]}
+    if(p.indexOf(TCH.a)===TCH.a)p=[p[3],p[0],p[1],p[2]];}
+  return p;
+}
+const SUNAPI={
+  start:()=>{if(!TESTSUN)return apiCall('chStart',[U.nick,U.pin]); TP=testPerm(); return Promise.resolve({ch:TCH.ch,sub:TCH.sub,q:TCH.q,o:TP.map(i=>TCH.o[i])})},
+  answer:n=>{if(!TESTSUN)return apiCall('chAnswer',[U.nick,U.pin,n]);
+    const ok=TP[n]===TCH.a; return new Promise(r=>setTimeout(()=>r({ok,a:TP.indexOf(TCH.a),right:TCH.o[TCH.a],ex:TCH.ex,badge:ok}),700))}};
+const dm=d=>{const p=String(d||'').split('-');return p.length===3?(+p[2])+'/'+(+p[1]):''};
+const hasBadge=()=>!!(U&&U.sun&&U.sun.badge);
+function sunSeen(mark){                         // η κάρτα στο αποτέλεσμα γύρου: μία φορά τη μέρα ανά παίκτη
+  if(TESTSUN)return false;
+  const k='fotonio_sun_seen_'+String(U.nick).toLowerCase();
+  try{if(mark){localStorage.setItem(k,U.sun.date);return true}return localStorage.getItem(k)===U.sun.date}catch(e){if(mark)U.sun.seen=true;return !!U.sun.seen}
+}
+function sunResult(){                           // 1 · οθόνη αποτελέσματος γύρου
+  const s=U&&U.sun; if(!s||!s.on||s.done||sunSeen())return '';
+  sunSeen(true);
+  return `<div class="sun"><span class="lab">ΣΗΜΕΡΑ, ΚΥΡΙΑΚΗ</span><h2>Η πιο δύσκολη ερώτηση της εβδομάδας</h2>
+    <p>Διάβασε την εξήγηση και δοκίμασε την πρόκληση.</p><div class="one">${igLink()}</div></div>`;
+}
+function sunHome(){                             // 2 και 4 · κάρτα στην κορυφή της αρχικής
+  const s=U&&U.sun; if(!s||!s.on)return '';
+  if(s.done&&s.done.ok)return `<div class="sun" id="suncard"><span class="okpill">Σωστά</span><div class="star big">✦</div>
+    <h2 class="gold">Κυνηγός φωτονίων</h2><p>Το σήμα μένει δίπλα στο ψευδώνυμό σου ως την επόμενη Κυριακή.</p>
+    <div class="me">${esc(U.nick)} <i>✦</i></div></div>`;
+  if(s.done)return `<div class="sun" id="suncard"><span class="lab">ΠΡΟΚΛΗΣΗ ΤΗΣ ΕΒΔΟΜΑΔΑΣ</span>
+    <h2>Η πρόκληση ολοκληρώθηκε.</h2><p>Η επόμενη έρχεται την Κυριακή.</p>
+    <div class="ans"><small>Σωστή απάντηση</small>${['α','β','γ','δ'][s.done.a]||''}) ${m(esc(s.done.right||''))}${s.done.ex?`<div class="exx">${m(esc(s.done.ex))}</div>`:''}</div>
+    <div class="one">${igLink('ghost')}</div></div>`;
+  return `<div class="sun" id="suncard"><span class="lab">ΜΟΝΟ ΣΗΜΕΡΑ, ΚΥΡΙΑΚΗ</span><div class="star">✦</div>
+    <h2>Πρόκληση της εβδομάδας</h2><p>Απάντησε σωστά και γίνε Κυνηγός φωτονίων ως την επόμενη Κυριακή.</p>
+    <div class="warn">${WTRI}<span>Προσοχή: έχεις <b>μία προσπάθεια</b>. Αν δεν είσαι σίγουρος, διάβασε πρώτα την εξήγηση στο Instagram.</span></div>
+    <div class="two">${igLink('ghost')}<button class="btn" id="sungo">Δοκίμασε</button></div></div>`;
+}
+function sunTestBar(){
+  return TESTSUN?`<div class="testbar"><b>Δοκιμή Κυριακής.</b> Βλέπεις ό,τι θα δουν οι μαθητές. Η απάντηση στην πρόκληση δεν καταγράφεται. ${esc(TNOTE)}
+    <div class="row"><button class="link" id="sunreset">Ξανά από την αρχή</button><button class="link" id="sunexit">Έξοδος από τη δοκιμή</button></div></div>`:'';
+}
+function sunWire(){
+  const g=document.getElementById('sungo'); if(g)g.onclick=sunConfirm;
+  const r=document.getElementById('sunreset'); if(r)r.onclick=()=>{U.sun.done=null;U.sun.badge=false;lobby('back')};
+  const x=document.getElementById('sunexit'); if(x)x.onclick=()=>{location.href=location.pathname};
+}
+function sunConfirm(){                          // 3 · επιβεβαίωση πριν ξεκινήσει
+  const ov=document.createElement('div'); ov.className='ov sheetov'; ov.id='sunov';
+  ov.innerHTML=`<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sunh"><div class="grab"></div>${WTRI}
+    <h2 id="sunh">Έχεις μία προσπάθεια</h2>
+    <p>Μετά την απάντησή σου, η πρόκληση κλειδώνει ως την επόμενη Κυριακή. Αν δεν είσαι σίγουρος, διάβασε πρώτα την εξήγηση στο story.</p>
+    <button class="btn" id="sunstart">Είμαι έτοιμος, ξεκίνα</button>${igLink('ghost')}
+    <button class="link" id="suncancel">Όχι τώρα</button></div>`;
+  document.body.appendChild(ov);
+  const close=()=>ov.remove();
+  ov.onclick=e=>{if(e.target===ov)close()};
+  document.getElementById('suncancel').onclick=close;
+  const b=document.getElementById('sunstart'); b.focus();
+  b.onclick=async()=>{b.disabled=true;b.textContent='Μια στιγμή…';
+    try{const r=await SUNAPI.start(); close();
+      if(r.done){U.sun.done=r.done;U.sun.badge=!!r.done.ok||U.sun.badge;lobby('back');return}
+      sunAsk(r);
+    }catch(e){
+      if(e&&e.message==='gone'){close();U.sun.on=false;lobby('back');return}
+      b.disabled=false;b.textContent='Δεν υπάρχει σύνδεση. Πάτα ξανά';}
+  };
+}
+function sunAsk(q){                             // η ερώτηση της πρόκλησης (οι επιλογές με τη σειρά που τις έγραψε ο καθηγητής)
+  const L=['α','β','γ','δ']; let answered=false;
+  app.innerHTML=`
+  <div class="top"><div class="brand">${LOGO}<span>Φωτόνιο</span> Quiz</div><div class="chip"><b>✦</b> Πρόκληση</div></div>
+  <div class="mascot-row"><div id="mascot">${mascot('idle')}</div><div class="bubble" id="say">Μία προσπάθεια. Σκέψου καλά πριν πατήσεις!</div></div>
+  <div class="card pop" style="border-color:var(--ban)">
+    <div class="meta"><span class="tags">${q.ch?`<span class="tag">${esc(q.ch)}</span>`:''}<span class="tag amb">Πρόκληση της εβδομάδας</span></span></div>
+    <p class="q">${m(esc(q.q))}</p>
+    <div class="opts">${q.o.map((t,k)=>`<button class="opt" data-k="${k}"><span class="l">${L[k]}</span><span>${m(esc(t))}</span></button>`).join('')}</div>
+    <div id="after"></div>
+  </div>
+  <p class="note">Η πρόκληση δεν δίνει φωτόνια. Δίνει το σήμα ✦ δίπλα στο ψευδώνυμό σου.</p>`;
+  const btns=[...app.querySelectorAll('.opt')], sayEl=document.getElementById('say'), box=app.querySelector('.opts');
+  btns.forEach(b=>b.onclick=async()=>{
+    if(answered)return; answered=true; const k=+b.dataset.k;
+    btns.forEach(x=>x.disabled=true); b.classList.add('sel'); box.classList.add('locked'); sayEl.textContent='Κλείδωσε! 🔒';
+    const t0=Date.now(); let r;
+    try{r=await SUNAPI.answer(k); const left=600-(Date.now()-t0); if(left>0)await new Promise(z=>setTimeout(z,left));}
+    catch(e){
+      box.classList.remove('locked'); b.classList.remove('sel');
+      if(e&&e.message==='gone'){sayEl.textContent='Η πρόκληση έκλεισε. Η επόμενη έρχεται την Κυριακή.';
+        document.getElementById('after').innerHTML='<div style="height:10px"></div><button class="btn" id="bk">Πίσω στην αρχή</button>';
+        document.getElementById('bk').onclick=()=>{U.sun.on=false;lobby('back')};return}
+      answered=false; btns.forEach(x=>x.disabled=false);
+      sayEl.textContent='Δεν υπάρχει σύνδεση. Πάτα ξανά την απάντησή σου.';return;
+    }
+    box.classList.remove('locked'); b.classList.remove('sel');
+    btns.forEach((x,i)=>{if(i===r.a)x.classList.add('ok'); else if(i===k&&!r.ok)x.classList.add('no')});
+    // αν είχε ήδη απαντήσει από άλλη συσκευή, μετράει η πρώτη απάντηση
+    U.sun.done={ok:!!r.ok,a:r.a,right:r.right,ex:r.ex}; if(r.badge)U.sun.badge=true;
+    document.getElementById('mascot').innerHTML=mascot(r.ok?'cheer':'sad');
+    sayEl.textContent=r.dup?'Είχες ήδη απαντήσει. Μετράει η πρώτη σου απάντηση.':r.ok?'Σωστά! Έγινες Κυνηγός φωτονίων ✦':'Όχι αυτή τη φορά. Η επόμενη έρχεται την Κυριακή.';
+    document.getElementById('after').innerHTML=`<div class="fb ${r.ok?'ok':'no'}"><strong>${r.ok?'Σωστό':'Λάθος'}</strong>${m(esc(String(r.ex||'')))}</div>
+      <div style="height:10px"></div><button class="btn" id="nx">Συνέχεια</button>`;
+    document.getElementById('nx').onclick=()=>lobby('back');
+  });
+  window.scrollTo({top:0});
+}
+async function sunTestInit(){                   // δοκιμή καθηγητή: θέλει τον κωδικό του πίνακα (τον θυμάται η συσκευή από τον πίνακα)
+  let key=''; try{key=localStorage.getItem('fotonio_dash_key')||''}catch(e){}
+  const ask=msg=>new Promise(res=>{
+    app.innerHTML=`<div class="top"><div class="brand">${LOGO}<span>Φωτόνιο</span> Quiz</div></div>
+      <div class="card"><h2 style="margin:0 0 6px">Δοκιμή Κυριακής</h2><p class="note" style="text-align:left;margin-bottom:10px">${msg}</p>
+      <input id="tk" type="password" autocomplete="off" placeholder="Κωδικός πίνακα" style="width:100%"><div style="height:10px"></div>
+      <button class="btn" id="tgo">Συνέχεια</button><button class="link" id="tno">Άκυρο</button></div>`;
+    document.getElementById('tgo').onclick=()=>res(document.getElementById('tk').value.trim());
+    document.getElementById('tno').onclick=()=>{location.href=location.pathname};
+  });
+  if(!key)key=await ask('Μόνο για τον καθηγητή. Γράψε τον κωδικό του πίνακα.');
+  for(;;){
+    try{
+      const r=await apiCall('chPreview',[key]);
+      try{localStorage.setItem('fotonio_dash_key',key)}catch(e){}
+      TCH=r.ch||SAMPLE;
+      TNOTE=(r.ch&&r.ch.mix===false?'Οι επιλογές αυτής της ερώτησης ΔΕΝ ανακατεύονται. ':'Οι επιλογές ανακατεύονται σε κάθε «Ξανά από την αρχή». ')+(!r.ch?'Το φύλλο «Πρόκληση» είναι άδειο: βλέπεις ένα δείγμα.':r.ch.date===r.next?`Πρόκληση για την Κυριακή ${dm(r.next)}.`:`Δεν έχεις γράψει πρόκληση για την Κυριακή ${dm(r.next)}: βλέπεις εκείνη της ${dm(r.ch.date)}.`);
+      U.sun={on:true,test:true,date:r.next,done:null,badge:false};
+      lobby('back'); return;
+    }catch(e){
+      const m2=e&&e.message==='auth'?'Λάθος κωδικός. Δοκίμασε ξανά.':e&&e.message==='locked'?'Πολλές λάθος προσπάθειες. Δοκίμασε σε μία ώρα.':'Δεν υπάρχει σύνδεση. Δοκίμασε ξανά.';
+      key=await ask(m2);
+    }
+  }
 }
 
 /* ---------- Κάρτα προόδου ---------- */
@@ -611,7 +791,7 @@ function nextLine(L){
 function photonCard(p,say,pop){
   const L=p.level;
   return `<div class="pc pop ${L.t===10?'max':''}">
-    <div class="pchead"><span class="nick">${esc(U.nick)}</span><span class="tierchip">${L.t===10?'«Φως»':esc(L.name)}</span></div>
+    <div class="pchead"><span class="nick">${esc(U.nick)}${hasBadge()?' <span class="hstar" title="Κυνηγός φωτονίων">✦</span>':''}</span><span class="tierchip">${L.t===10?'«Φως»':esc(L.name)}</span></div>
     ${say?`<div class="saytop">${say}</div>`:''}
     <div class="hero">${tierHero(p.photons)}</div>
     <div class="num">${p.photons}<small>${p.photons===1?'φωτόνιο':'φωτόνια'}</small></div>
@@ -660,7 +840,7 @@ function podium(){
   const slot=(i)=>{const x=T[i];const r='r'+(i+1);
     if(!x)return `<div class="ps ${r} emp"><div class="ph">${tierHero(0)}</div><div class="nm">κενή θέση</div><div class="ct">—</div><div class="st">${i+1}</div></div>`;
     const isMe=me&&x.nick.toLowerCase()===me.toLowerCase();
-    return `<div class="ps ${r} ${isMe?'me':''}"><div class="ph">${tierHero(x.ph)}</div><div class="nm">${esc(x.nick)}</div><div class="ct">${x.ph} ${x.ph===1?'φωτόνιο':'φωτόνια'}</div><div class="st">${i+1}</div></div>`};
+    return `<div class="ps ${r} ${isMe?'me':''}"><div class="ph">${tierHero(x.ph)}</div><div class="nm">${esc(x.nick)}${x.s||(isMe&&hasBadge())?' <span class="hstar" title="Κυνηγός φωτονίων">✦</span>':''}</div><div class="ct">${x.ph} ${x.ph===1?'φωτόνιο':'φωτόνια'}</div><div class="st">${i+1}</div></div>`};
   let line='';
   if(TOP){const inTop=T.some(x=>me&&x.nick.toLowerCase()===me.toLowerCase());
     if(inTop)line=T[0]&&T[0].nick.toLowerCase()===me.toLowerCase()?'Είσαι στην κορυφή! Κράτα τη θέση σου.':'Είσαι στο βάθρο! Η κορυφή είναι κοντά.';
@@ -681,6 +861,8 @@ function lobby(how){
   const disc=Math.round(p.mastered/Math.max(1,p.questions)*100);
   app.innerHTML=`
   <div class="top"><div class="brand">${LOGO}<span>Φωτόνιο</span> Quiz</div>${PH(p.photons)}</div>
+  ${sunTestBar()}
+  ${sunHome()}
   ${photonCard(p,say)}
   ${podium()}
   <div class="card">
@@ -697,7 +879,7 @@ function lobby(how){
   <button class="btn ghost" id="share" style="margin-top:0">Μοιράσου το φωτόνιό σου</button>
   ${window.DEMO&&p.level.t<10?'<button class="link" id="demo10">Δοκιμή: φτάσε 1 φωτόνιο πριν από τη νέα βαθμίδα</button>':''}
   <button class="link" id="out">Αλλαγή παίκτη · Έξοδος</button>`;
-  document.getElementById('play').onclick=startRound; wireCh(); loadTop();
+  document.getElementById('play').onclick=startRound; wireCh(); loadTop(); sunWire();
   document.getElementById('share').onclick=()=>share(false);
   document.getElementById('out').onclick=()=>{saveLogin(null);U=null;login()};
   const d=document.getElementById('demo10'); if(d)d.onclick=async()=>{U.profile=await API.demoAdd(U.nick,Math.max(1,9-U.profile.level.into));lobby('back')};
@@ -818,7 +1000,7 @@ async function finish(){
   app.innerHTML=`<div class="mascot-row"><div id="mascot">${mascot('idle')}</div><div class="bubble">Μετράω τους πόντους σου…</div></div>`;
   const before=U.profile;
   let res=null;
-  try{res=await API.finish(U.nick,U.pin,S.round); U.profile=res.profile;}catch(e){}
+  try{res=await API.finish(U.nick,U.pin,S.round); U.profile=res.profile; if(res.sun&&!TESTSUN)U.sun=res.sun;}catch(e){}
   const score=res?res.score:S.score;
   const mcOk=S.log.filter(x=>x.ok&&x.type==='mc').length, tfOk=S.log.filter(x=>x.ok&&x.type==='tf').length;
   const p=U.profile, gained=res?p.photons-before.photons:0, tierUp=gained>0&&p.level.t>before.level.t;
@@ -837,6 +1019,7 @@ async function finish(){
     <div style="height:14px"></div>
     <ul class="log">${S.log.map(x=>`<li><span class="d ${x.ok?'g':'r'}"></span>${x.type==='mc'?'Πολλαπλής':'Σωστό/Λάθος'}<em>${esc(x.ch)}${x.kind==='retry'&&x.ok?' · ρεβάνς ✓':''}</em></li>`).join('')}</ul>
     <div style="height:14px"></div>
+    ${(x=>x?x+'<div style="height:14px"></div>':'')(sunResult())}
     <button class="btn" id="again">Κι άλλος γύρος</button>
     <button class="btn ghost" id="home">Το φωτόνιό μου</button>
   </div>

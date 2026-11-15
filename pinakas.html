@@ -51,6 +51,16 @@ button{font:inherit;color:inherit;cursor:pointer;background:none;border:0}
 @media(min-width:900px){.grid2{grid-template-columns:1.25fr 1fr}}
 .card{background:var(--card);border:1px solid var(--bor);border-radius:18px;padding:16px}
 .card h2{font-size:16px;margin:0 0 2px;font-weight:800}
+.cardh{display:flex;width:100%;align-items:center;justify-content:space-between;gap:10px;background:none;border:0;padding:0;color:inherit;text-align:left;cursor:pointer;font:inherit}
+.cardh h2{margin:0}
+.chev{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--teal);border:1px solid var(--bor);border-radius:999px;padding:5px 12px;white-space:nowrap}
+.chev i{font-style:normal}
+.cardh.foot{justify-content:center;margin-top:12px;border:1px solid var(--bor);border-radius:12px;padding:10px;font-size:13.5px;font-weight:700;color:var(--teal)}
+button.kpi{font:inherit;color:inherit;text-align:left;cursor:pointer;width:100%}
+.kpi.go:hover,.kpi.go:focus-visible{border-color:var(--teal)}
+.kpi .arr{float:right;color:var(--teal);font-weight:800}
+.card{scroll-margin-top:12px}
+@media (prefers-reduced-motion:no-preference){.flash{animation:flash 1.4s ease-out}@keyframes flash{0%,30%{box-shadow:0 0 0 3px var(--teal)}100%{box-shadow:0 0 0 0 rgba(63,193,201,0)}}}
 .card .sub{color:var(--mut);font-size:13px;margin-bottom:12px}
 
 /* δραστηριότητα */
@@ -117,6 +127,27 @@ button{font:inherit;color:inherit;cursor:pointer;background:none;border:0}
 .weak b{color:var(--redb)}
 .empty{color:var(--dim);font-size:13.5px;padding:8px 2px}
 .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.sunnext{margin-top:12px;border-top:1px solid var(--bor);padding-top:10px}
+.nomix{border:1px solid var(--bor);border-radius:999px;padding:1px 8px;font-size:11.5px;color:var(--soft)}
+.h3{font-size:15px;margin:16px 0 4px}
+.chprev{margin-top:8px;border:1px solid var(--bor);border-radius:12px;padding:10px 12px;background:var(--bg)}
+.cpo{display:grid;grid-template-columns:22px 1fr auto;gap:8px;align-items:baseline;font-size:13.5px;color:var(--soft);padding:5px 0;border-top:1px solid rgba(46,69,102,.5)}
+.cpo:first-of-type{margin-top:6px}.cpo b{color:var(--mut)}.cpo em{font-style:normal;font-size:11.5px;font-weight:800;color:var(--grnb)}
+.cpo.r{color:var(--grnb);font-weight:700}.cpo.r b{color:var(--grnb)}
+.wq{border:1px solid var(--bor);border-radius:12px;padding:10px 12px;margin-top:8px;background:var(--bg)}
+.wh{display:flex;justify-content:space-between;gap:8px;align-items:baseline;flex-wrap:wrap}
+.werr{color:var(--redb);font-size:14px}
+.wtx{font-size:13.5px;color:var(--soft);margin-top:4px;line-height:1.45}
+.wbars{display:grid;gap:4px;margin-top:8px}
+.wb{display:grid;grid-template-columns:34px 1fr 38px;gap:8px;align-items:center;font-size:12.5px;color:var(--mut)}
+.wb .wt{height:8px;border-radius:4px;background:var(--card);overflow:hidden}.wb .wt i{display:block;height:100%;background:var(--dim)}
+.wb.r{color:var(--grnb);font-weight:800}.wb.r .wt i{background:var(--grnb)}
+.wp{text-align:right;font-variant-numeric:tabular-nums}
+.ab.sure{background:var(--ban);color:var(--bg);border-color:var(--ban)}
+.msg2{min-height:1.2em;margin-top:6px;font-size:13px;color:var(--ban)}
+.sunk{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:6px}
+.sunk div{background:var(--bg);border:1px solid var(--bor);border-radius:12px;padding:10px;text-align:center}
+.sunk b{display:block;font-size:24px;font-weight:800}.sunk b.gold{color:var(--ban)}.sunk span{font-size:12px;color:var(--mut)}
 .ab{border:1px solid var(--bor);border-radius:999px;padding:6px 13px;font-size:12.5px;font-weight:700;color:var(--ban);background:var(--bg)}
 .ab.t{color:var(--teal)} .ab:disabled{opacity:.5}
 .idrow{display:flex;gap:8px;margin-top:4px}
@@ -251,6 +282,7 @@ function tierHero(n){
 let KEY='';
 const LOGO=`<svg viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="100" r="82" fill="none" stroke="#3FC1C9" stroke-width="8"/><path d="M18.0 98.6 L20.0 95.5 L22.0 91.4 L24.0 87.2 L26.0 83.4 L28.0 80.7 L30.0 79.3 L32.0 79.6 L34.0 81.7 L36.0 85.7 L38.0 91.5 L40.0 100.0 L42.0 109.1 L44.0 116.3 L46.0 122.4 L48.0 127.1 L50.0 130.2 L52.0 131.5 L54.0 131.0 L56.0 128.6 L58.0 124.3 L60.0 118.3 L62.0 110.6 L64.0 100.0 L66.0 89.2 L68.0 80.9 L70.0 74.0 L72.0 68.8 L74.0 65.3 L76.0 63.8 L78.0 64.4 L80.0 67.1 L82.0 72.0 L84.0 78.9 L86.0 87.8 L88.0 100.0 L90.0 112.4 L92.0 121.9 L94.0 129.6 L96.0 135.3 L98.0 138.8 L100.0 140.0 L102.0 138.8 L104.0 135.3 L106.0 129.6 L108.0 121.9 L110.0 112.4 L112.0 100.0 L114.0 87.8 L116.0 78.9 L118.0 72.0 L120.0 67.1 L122.0 64.4 L124.0 63.8 L126.0 65.3 L128.0 68.8 L130.0 74.0 L132.0 80.9 L134.0 89.2 L136.0 100.0 L138.0 110.6 L140.0 118.3 L142.0 124.3 L144.0 128.6 L146.0 131.0 L148.0 131.5 L150.0 130.2 L152.0 127.1 L154.0 122.4 L156.0 116.3 L158.0 109.1 L160.0 100.0 L162.0 91.5 L164.0 85.7 L166.0 81.7 L168.0 79.6 L170.0 79.3 L172.0 80.7 L174.0 83.4 L176.0 87.2 L178.0 91.4 L180.0 95.5 L182.0 98.6" fill="none" stroke="#F5B841" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><circle cx="76" cy="106" r="4.5" fill="#F5B841"/><circle cx="124" cy="106" r="4.5" fill="#F5B841"/></svg>`;
 const CHS=["Κρούσεις", "Ταλαντώσεις", "Κύματα", "Ηλεκτρομαγνητικά κύματα", "Στερεό", "Μαγνητικό πεδίο", "Επαγωγή", "Κβαντομηχανική"];
+let stuClosed=(()=>{try{return localStorage.getItem('fotonio_dash_stu')==='0'}catch(e){return false}})();
 let D=null,sortBy='ph',period='all',q='',openSet=new Set(),lastLoad=0;
 
 function esc(s){return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
@@ -277,14 +309,14 @@ function kpis(){
   const ph=P.reduce((s,p)=>s+p.ph,0);
   const n=P.reduce((s,p)=>s+p.n,0),ok=P.reduce((s,p)=>s+p.ok,0);
   const tiles=[
-    ['Μαθητές',P.length,'',`<b>+${nw.length}</b> νέοι την εβδομάδα`],
+    ['Μαθητές',P.length,'',`<b>+${nw.length}</b> νέοι την εβδομάδα`,'stucard'],
     ['Έπαιξαν τις 7 μέρες',act.length,'',`από ${played.length} που έχουν παίξει`],
     ['Γύροι τις 7 μέρες',r7,'',`<b>${rt}</b> σήμερα`],
     ['Φωτόνια τάξης',ph,'gold',`${P.filter(p=>p.ph>=10).length} μαθητές από Σπίθα και πάνω`],
     ['Σωστές απαντήσεις',n?pct(ok,n)+'%':'—','',`${ok} από ${n} · ${D.qActive} ενεργές ερωτήσεις`],
-    ['Ενστάσεις',D.objOpen,D.objOpen?'gold':'',D.objOpen?'περιμένουν έλεγχο':`όλες ελεγμένες (${D.objTotal})`]];
+    ['Ενστάσεις',D.objOpen,D.objOpen?'gold':'',D.objOpen?'περιμένουν έλεγχο':`όλες ελεγμένες (${D.objTotal})`,'objcard']];
   const live=D.online==null?'':`<div class="kpi live"><div class="l"><span class="dot"></span>Παίζουν τώρα</div><div class="v" id="onl">${D.online}</div><div class="s">κίνηση στα τελευταία 3 λεπτά · μέγιστο σήμερα: <b id="onlpk">${D.peak}</b></div></div>`;
-  return `<div class="kpis">${live}${tiles.map(t=>`<div class="kpi"><div class="l">${t[0]}</div><div class="v ${t[2]}">${t[1]}</div><div class="s">${t[3]}</div></div>`).join('')}</div>`;
+  return `<div class="kpis">${live}${tiles.map(t=>t[4]?`<button class="kpi go" data-go="${t[4]}"><div class="l">${t[0]}<span class="arr">→</span></div><div class="v ${t[2]}">${t[1]}</div><div class="s">${t[3]}</div></button>`:`<div class="kpi"><div class="l">${t[0]}</div><div class="v ${t[2]}">${t[1]}</div><div class="s">${t[3]}</div></div>`).join('')}</div>`;
 }
 
 function activity(){
@@ -352,11 +384,14 @@ function players(){
   const when=period==='d'?'Σήμερα':'Τις τελευταίες 7 μέρες';
   const sub=period==='all'?'Πάτα έναν μαθητή για λεπτομέρειες':`${when} έπαιξαν <b>${cnt}</b> ${cnt===1?'μαθητής':'μαθητές'} · <b>${rds}</b> ${rds===1?'ολοκληρωμένος γύρος':'ολοκληρωμένοι γύροι'}`;
   const none=period==='d'?'Κανένας δεν έχει παίξει σήμερα ακόμα.':period==='w'?'Κανένας δεν έπαιξε τις τελευταίες 7 μέρες.':'Κανένας μαθητής ακόμα.';
-  return `<div class="card"><h2>Μαθητές</h2><div class="sub">${sub}</div>
+  const cnt2=period==='all'?`${D.players.filter(p=>!p.test).length} μαθητές`:sub.replace(/<[^>]+>/g,'');
+  return `<div class="card" id="stucard"><button class="cardh" id="stutog" aria-expanded="${!stuClosed}" aria-controls="stubody"><h2>Μαθητές</h2><span class="chev">${stuClosed?'Άνοιγμα':'Κλείσιμο'}<i>${stuClosed?'▾':'▴'}</i></span></button>
+    ${stuClosed?`<div class="sub">${esc(cnt2)} · πάτα τον τίτλο για να ανοίξει</div></div>`:`<div id="stubody"><div class="sub">${sub}</div>
     <div class="ctl"><div class="seg per"><span class="sl2">Περίοδος</span>${T.map(b=>`<button data-t="${b[0]}" class="${period===b[0]?'on':''}">${b[1]}</button>`).join('')}</div>
     <div class="seg srt"><span class="sl2">Ταξινόμηση</span>${B.map(b=>`<button data-s="${b[0]}" class="${sortBy===b[0]?'on':''}">${b[1]}</button>`).join('')}</div>
     <input class="srch" id="q" placeholder="Αναζήτηση ψευδωνύμου" value="${esc(q)}"></div>
-    <div class="pl">${L.length?L.map((x,i)=>player(x.p,i,x.v)).join(''):`<div class="empty">${q?'Δεν βρέθηκε μαθητής.':none}</div>`}</div></div>`;
+    <div class="pl">${L.length?L.map((x,i)=>player(x.p,i,x.v)).join(''):`<div class="empty">${q?'Δεν βρέθηκε μαθητής.':none}</div>`}</div>
+    ${L.length>8?'<button class="cardh foot" id="stutog2">Κλείσιμο λίστας μαθητών ▴</button>':''}</div></div>`}`;
 }
 
 function newbies(){
@@ -369,10 +404,55 @@ function hard(){
     ${D.hard.length?D.hard.map(h=>`<div class="q"><div class="e">${Math.round(h.err*100)}%<small>${h.n} απ.</small></div><div class="t">${esc(h.txt)}<span class="m">${esc(h.id)} · ${esc(h.ch)} · ${esc(h.sub)}${h.on?'':'<span class="off">ανενεργή</span>'}</span>${CAN?`<div class="acts"><button class="ab" data-edit="${esc(h.id)}">Διόρθωση ερώτησης</button></div>`:''}</div></div>`).join(''):'<div class="empty">Χρειάζονται περισσότερες απαντήσεις.</div>'}</div>`;
 }
 function objs(){
-  return `<div class="card"><h2>Ενστάσεις</h2><div class="sub">${CAN?'Πρώτα οι ανοιχτές. Διόρθωσε την ερώτηση ή σημείωσε ότι την έλεγξες.':'Οι πιο πρόσφατες · ελέγχονται στο φύλλο «Ενστάσεις»'}</div>
+  return `<div class="card" id="objcard"><h2>Ενστάσεις</h2><div class="sub">${CAN?'Πρώτα οι ανοιχτές. Διόρθωσε την ερώτηση ή σημείωσε ότι την έλεγξες.':'Οι πιο πρόσφατες · ελέγχονται στο φύλλο «Ενστάσεις»'}</div>
     ${D.objs.length?D.objs.map(o=>`<div class="ob"><div class="h"><b>${esc(o.nick)}</b><span>${ago(o.t)}</span><span>${esc(o.qid)}</span><span class="pill ${o.done?'d':'o'}">${o.done?'ελέγχθηκε':'ανοιχτή'}</span></div><div class="w">${esc(o.why)}</div>${o.txt?`<div class="x">«${esc(o.txt)}»</div>`:''}${o.q?`<div class="x">${esc(o.q)}</div>`:''}${o.mine||o.right?`<div class="x">Απάντησε: <b>${esc(o.mine||'—')}</b> · Το quiz θεωρεί σωστό: <b>${esc(o.right||'—')}</b></div>`:''}${o.done&&o.note?`<div class="x">Σημείωση: ${esc(o.note)}</div>`:''}${CAN?`<div class="acts"><button class="ab" data-edit="${esc(o.qid)}">Διόρθωση ερώτησης</button>${o.done?'':`<button class="ab t" data-res="${o.row}" data-qid="${esc(o.qid)}">Το έλεγξα</button>`}</div>`:''}</div>`).join(''):'<div class="empty">Καμία ένσταση ακόμα.</div>'}</div>`;
 }
 
+function sunday(){
+  const s=D.sun; if(!s)return '';
+  const dm=d=>{const p=String(d||'').split('-');return p.length===3?(+p[2])+'/'+(+p[1]):''};
+  const pc=s.n?Math.round(s.ok/s.n*100):null, L=['α','β','γ','δ'];
+  // για ποια Κυριακή διαλέγει: σήμερα, αν είναι Κυριακή χωρίς πρόκληση και χωρίς απαντήσεις· αλλιώς την επόμενη
+  const tgt=chTarget(), isT=tgt===s.date, tgtHas=isT?s.has:s.next.has, tgtMix=isT?s.mix:s.next.mix, tgtCur=isT?s.cur:s.next.cur;
+  const tgtTxt=tgt===s.date?'σήμερα':'την Κυριακή '+dm(tgt);
+  const now=s.has
+    ?`<div class="sunk"><div><b>${s.n}</b><span>απάντησαν</span></div><div><b class="gold">${s.ok}</b><span>σωστά</span></div><div><b>${pc==null?'–':pc+'%'}</b><span>επιτυχία</span></div></div>
+      <div class="meta" style="margin-top:8px">«${mf(s.q)}»</div>`
+    :`<div class="empty">${s.today?'Σήμερα είναι Κυριακή αλλά δεν έχει οριστεί πρόκληση, οπότε οι μαθητές δεν βλέπουν τίποτα.':`Για την Κυριακή ${dm(s.date)} δεν είχε οριστεί πρόκληση.`}</div>`;
+  const wk=(s.week||[]).map(w=>{
+    const ri=L.indexOf(w.right);
+    const bars=w.d.map((c,i)=>{const p=w.n?Math.round(c/w.n*100):0;return `<div class="wb ${i===ri?'r':''}"><span class="wl">${L[i]}${i===ri?' ✓':''}</span><span class="wt"><i style="width:${p}%"></i></span><span class="wp">${p}%</span></div>`}).join('');
+    return `<div class="wq"><div class="wh"><b class="werr">${Math.round(w.err*100)}% λάθος</b><span class="meta">${esc(w.id)} · ${esc(w.ch)} · ${w.n} απαντήσεις</span></div>
+      <div class="wtx">${mf(w.txt)}</div><div class="wbars">${bars}</div>
+      <div class="acts"><button class="ab" data-setch="${esc(w.id)}">Πρόκληση για ${esc(tgtTxt)}</button><button class="ab t" data-edit="${esc(w.id)}">Προβολή / διόρθωση</button></div></div>`}).join('');
+  return `<div class="card"><h2>Πρόκληση της Κυριακής</h2><div class="sub">${s.today?'Σήμερα':'Κυριακή'} ${dm(s.date)}${s.has&&!s.today?' · το σήμα ✦ ισχύει ως το Σάββατο':''}</div>
+    ${now}
+    <div class="sunnext"><div class="meta">Πρόκληση για ${esc(tgtTxt)}: ${tgtHas?`<b style="color:var(--grnb)">έχει οριστεί ✓</b>${tgtMix===false?' <span class="nomix">χωρίς ανακάτεμα</span>':''}`:'<b style="color:var(--ban)">δεν έχει οριστεί ακόμα</b>'}</div>
+      ${tgtHas&&tgtCur?`<div class="chprev"><div class="wtx" style="color:var(--txt);font-weight:700">${mf(tgtCur.q)}</div>
+        ${tgtCur.o.map((t,i)=>`<div class="cpo ${i===tgtCur.a?'r':''}"><b>${L[i]}</b><span>${mf(t)}</span>${i===tgtCur.a?'<em>σωστή</em>':''}</div>`).join('')}
+        <div class="meta" style="margin-top:6px">Με τη σειρά του φύλλου, όπως στο story σου. Στους μαθητές η σωστή εμφανίζεται σε άλλο γράμμα.${isT&&!s.n?' Μπορείς να την αλλάξεις μέχρι να απαντήσει ο πρώτος μαθητής.':''}</div></div>`:''}
+      <div class="meta" style="margin-top:6px">Οι επιλογές ανακατεύονται για κάθε μαθητή και η σωστή αλλάζει πάντα γράμμα σε σχέση με το story. Το quiz κρατά τη σωστή και τη βαθμολογεί μόνο του.</div></div>
+    ${CAN?`<h3 class="h3">Οι πιο δύσκολες της εβδομάδας</h3><div class="meta" style="margin-bottom:8px">Πολλαπλής επιλογής, με τουλάχιστον 5 απαντήσεις τις τελευταίες 7 μέρες. Οι μπάρες δείχνουν τι απάντησαν οι μαθητές (με τη σειρά του φύλλου, όπως στο story).</div>
+      ${wk||'<div class="empty">Δεν υπάρχουν ακόμα αρκετές απαντήσεις αυτή την εβδομάδα.</div>'}
+      <div class="idrow" style="margin-top:12px"><input class="srch" id="chid" autocomplete="off" autocapitalize="off" placeholder="ή γράψε id ερώτησης"><button class="rf" id="chgo">Ορισμός</button></div>
+      <div class="msg2" id="chmsg"></div>
+      <div class="acts"><a class="ab t" href="./?dokimi=1" target="_blank" rel="noopener" style="text-decoration:none">Δοκιμή Κυριακής (χωρίς καταγραφή)</a></div>`:''}</div>`;
+}
+const mf=t=>esc(String(t||'').replace(/\{([^{}\/]+)\/([^{}]+)\}/g,'$1/$2'));   // κλάσματα {π/2} → π/2 στον πίνακα
+function chTarget(){const s=D.sun;return s.today&&!s.n?s.date:s.next.date}
+const CHERR={tf:'Η πρόκληση πρέπει να είναι ερώτηση πολλαπλής επιλογής.',img:'Ερωτήσεις με σχήμα δεν μπαίνουν ως πρόκληση.',used:'Μαθητές έχουν ήδη απαντήσει σε αυτή την πρόκληση, οπότε δεν αλλάζει.',bad:'Η ερώτηση έχει κενές επιλογές ή σωστή απάντηση. Διόρθωσέ τη πρώτα.'};
+function setCh(id,btn){
+  const tgt=chTarget(), msg=document.getElementById('chmsg');
+  id=String(id||'').trim(); if(!id)return;
+  if(btn&&!btn.dataset.sure){btn.dataset.sure='1';btn.dataset.lbl=btn.textContent;btn.textContent='Σίγουρα; Πάτα ξανά';btn.classList.add('sure');
+    setTimeout(()=>{if(btn.dataset.sure){delete btn.dataset.sure;btn.textContent=btn.dataset.lbl;btn.classList.remove('sure')}},5000);return}
+  if(btn){btn.disabled=true;btn.textContent='Αποθήκευση…'}
+  if(msg)msg.textContent='';
+  apiCall('dashSetCh',[KEY,id,tgt],1).then(r=>{
+    if(r&&r.err){if(msg)msg.textContent=CHERR[r.err]||'Δεν ορίστηκε.';if(btn){btn.disabled=false;delete btn.dataset.sure;btn.textContent=btn.dataset.lbl||'Ορισμός';btn.classList.remove('sure')}return}
+    load(true);
+  }).catch(e=>{if(msg)msg.textContent=e&&e.message==='gone'?'Δεν υπάρχει ερώτηση με αυτό το id.':emsg(e);if(btn){btn.disabled=false;btn.textContent=btn.dataset.lbl||'Ορισμός';delete btn.dataset.sure;btn.classList.remove('sure')}});
+}
 function finder(){
   return CAN?`<div class="card"><h2>Διόρθωση ερώτησης</h2><div class="sub">Γράψε το id της ερώτησης (π.χ. ta07) για να αλλάξεις κείμενο, επιλογές, σωστή απάντηση ή εξήγηση.</div>
     <div class="idrow"><input class="srch" id="qid" autocomplete="off" autocapitalize="off" placeholder="id ερώτησης"><button class="rf" id="qgo">Άνοιγμα</button></div></div>`:'';
@@ -420,6 +500,13 @@ function resolveObj(b){
   apiCall('dashResolve',[KEY,+b.dataset.res,b.dataset.qid,'Ελέγχθηκε '+new Date().toLocaleDateString('el-GR')],1).then(()=>load(true))
     .catch(e=>{b.disabled=false;b.textContent=emsg(e)});
 }
+function setStu(closed){stuClosed=closed;try{localStorage.setItem('fotonio_dash_stu',closed?'0':'1')}catch(e){}}
+function goTo(id){                                  // μετάβαση σε κάρτα, με σύντομη επισήμανση
+  if(id==='stucard'&&stuClosed){setStu(false);render()}
+  const el=document.getElementById(id); if(!el)return;
+  el.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
+  el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash');
+}
 function render(){
   const y=window.scrollY;
   document.getElementById('app').innerHTML=`
@@ -428,15 +515,21 @@ function render(){
   ${kpis()}
   <div class="grid2">${activity()}${chapters()}</div>
   ${players()}
-  <div class="grid2">${hard()}<div style="display:flex;flex-direction:column;gap:16px">${objs()}${finder()}${newbies()}</div></div>`;
+  <div class="grid2">${hard()}<div style="display:flex;flex-direction:column;gap:16px">${sunday()}${objs()}${finder()}${newbies()}</div></div>`;
   window.scrollTo(0,y);
   document.getElementById('rf').onclick=()=>load(true);
   document.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>openEd(b.dataset.edit));
+  document.querySelectorAll('[data-setch]').forEach(b=>b.onclick=()=>setCh(b.dataset.setch,b));
+  document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>goTo(b.dataset.go));
+  {const t=document.getElementById('stutog');if(t)t.onclick=()=>{const y0=document.getElementById('stucard').getBoundingClientRect().top;setStu(!stuClosed);render();
+     const c=document.getElementById('stucard');window.scrollBy(0,c.getBoundingClientRect().top-y0)}}   // η κάρτα μένει στην ίδια θέση στην οθόνη
+  {const t2=document.getElementById('stutog2');if(t2)t2.onclick=()=>{setStu(true);render();const c=document.getElementById('stucard');if(c)c.scrollIntoView({block:'start'})}}
+  {const cg=document.getElementById('chgo');if(cg){const go=()=>setCh(document.getElementById('chid').value,cg);cg.onclick=go;document.getElementById('chid').onkeydown=e=>{if(e.key==='Enter')go()}}}
   document.querySelectorAll('[data-res]').forEach(b=>b.onclick=()=>resolveObj(b));
   const qg=document.getElementById('qgo');if(qg){const go=()=>openEd(document.getElementById('qid').value);qg.onclick=go;document.getElementById('qid').onkeydown=e=>{if(e.key==='Enter')go()}}
   document.querySelectorAll('.seg.srt button').forEach(b=>b.onclick=()=>{sortBy=b.dataset.s;render()});
   document.querySelectorAll('.seg.per button').forEach(b=>b.onclick=()=>{period=b.dataset.t;render()});
-  const qi=document.getElementById('q');qi.oninput=()=>{q=qi.value;const pos=qi.selectionStart;render();const n=document.getElementById('q');n.focus();n.setSelectionRange(pos,pos)};
+  const qi=document.getElementById('q');if(qi)qi.oninput=()=>{q=qi.value;const pos=qi.selectionStart;render();const n=document.getElementById('q');n.focus();n.setSelectionRange(pos,pos)};
   document.querySelectorAll('.p>button').forEach(b=>b.onclick=()=>{const n=b.parentNode.dataset.n;openSet.has(n)?openSet.delete(n):openSet.add(n);b.parentNode.classList.toggle('open');b.setAttribute('aria-expanded',openSet.has(n))});
 }
 // tooltip για στήλες και μπάρες
