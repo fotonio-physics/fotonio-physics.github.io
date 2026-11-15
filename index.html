@@ -1405,7 +1405,7 @@ function duelWire(){
     const W=x=>`${x.w} ${x.w===1?'νίκη':'νίκες'}`, Lo=x=>`${x.l} ${x.l===1?'ήττα':'ήττες'}`, D=x=>x.d?` · ${x.d} ${x.d===1?'ισοπαλία':'ισοπαλίες'}`:'';
     const ws=x=>x.left<=1?'λήγει σήμερα':`λήγει σε ${x.left} μέρες`, chs=x=>esc(x.ch.join(', ')||'Όλα τα κεφάλαια');
     const act=L.act||[], now=act.filter(x=>x.what!=='wait'), wait=act.filter(x=>x.what==='wait');
-    const items=now.map(x=>x.what==='turn'?`<button class="dli turn" data-du="${x.code}"><span class="ic">⚔️</span><span class="tx"><b>${esc(x.opp)}</b> σε προκαλεί!<small>${chs(x)} · ${ws(x)}</small></span><span class="go">Παίξε ›</span></button>`
+    const items=now.map(x=>x.what==='turn'?`<button class="dli turn" data-du="${x.code}"><span class="ic">⚔️</span><span class="tx">${x.mine?`Μονομαχία με <b>${esc(x.opp)}</b>: σειρά σου!`:`<b>${esc(x.opp)}</b> σε προκαλεί!`}<small>${chs(x)} · ${ws(x)}</small></span><span class="go">Παίξε ›</span></button>`
       :`<button class="dli" data-du="${x.code}"><span class="ic">⏸️</span><span class="tx">Δεν τελείωσες τη μονομαχία${x.opp?` με <b>${esc(x.opp)}</b>`:''}<small>${ws(x)}</small></span><span class="go">Συνέχισε ›</span></button>`);
     el.outerHTML=`<div id="duels" class="dlist">${items.join('')}</div>`;
     if(fs&&(n||wait.length)){
@@ -1423,21 +1423,23 @@ function duelWire(){
   }).catch(()=>{});
 }
 
-/* 1 · πριν ξεκινήσει μια νέα μονομαχία (ή ρεβάνς) */
+/* 1 · νέα πρόκληση (ή ρεβάνς). Δίκαιη σειρά: πρώτα βρίσκεται αντίπαλος και μετά ανοίγουν οι ερωτήσεις */
 function duelIntro(vs,opp,keys){
   const ks=keys||getCh(), g=grpOf(ks);
   app.innerHTML=`${TOPBAR()}
   <div class="dcard pop"><div class="pill2">${vs?'ΡΕΒΑΝΣ':'ΜΟΝΟΜΑΧΙΑ'}</div>
     <h2>${vs?`Ρεβάνς με ${esc(opp)}`:'Προκάλεσε έναν φίλο ⚔️'}</h2>
     <p><b>5 ερωτήσεις</b> (3 πολλαπλής επιλογής, 2 Σωστό/Λάθος) από:</p>${chipsOf(g)}
-    <p>⏱️ <b>30 δευτερόλεπτα</b> για κάθε ερώτηση. Πρώτα παίζεις εσύ και μετά ${vs?'η πρόκληση εμφανίζεται στην αρχική του':'στέλνεις τον σύνδεσμο στον φίλο σου'}. Νικά όποιος βρει τις περισσότερες· αν έρθετε ίσοι, ο πιο γρήγορος.</p>
+    <p>${vs?`Η πρόκληση εμφανίζεται κατευθείαν στην αρχική του. Παίζετε τις ίδιες ερωτήσεις, ο καθένας όποτε θέλει.`
+      :`Πρώτα στέλνεις τον σύνδεσμο. Οι ερωτήσεις ανοίγουν <b>μόλις τη δεχτεί ο φίλος σου</b>, ώστε κανείς να μην τις δει πριν από τον άλλον.`}</p>
+    <p>⏱️ <b>30 δευτερόλεπτα</b> για κάθε ερώτηση. Νικά όποιος βρει τις περισσότερες· αν έρθετε ίσοι, ο πιο γρήγορος.</p>
     <p style="font-size:12.5px;color:var(--mut)">Η μονομαχία δεν δίνει ούτε παίρνει φωτόνια.</p>
     <div id="de"></div>
-    <button class="btn" id="dgo">Ξεκίνα ⚔️</button><button class="btn ghost" id="dbk">Πίσω</button></div>`;
+    <button class="btn" id="dgo">${vs?'Στείλε τη ρεβάνς ⚔️':'Φτιάξε την πρόκληση ⚔️'}</button><button class="btn ghost" id="dbk">Πίσω</button></div>`;
   document.getElementById('dbk').onclick=()=>lobby('back');
-  document.getElementById('dgo').onclick=async e=>{const b=e.currentTarget;b.disabled=true;b.textContent='Ετοιμάζω τις ερωτήσεις…';
-    try{const r=await DUAPI.nw(ks,vs);duelPlay(r.code,'a',r.q,vs?opp:'')}
-    catch(er){b.disabled=false;b.textContent='Ξεκίνα ⚔️';
+  document.getElementById('dgo').onclick=async e=>{const b=e.currentTarget,t=b.textContent;b.disabled=true;b.textContent='Μια στιγμή…';
+    try{const r=await DUAPI.nw(ks,vs);openDuel(r.code)}
+    catch(er){b.disabled=false;b.textContent=t;
       if(er&&er.message==='old'){location.replace(location.pathname+'?v='+Date.now());return}
       document.getElementById('de').innerHTML=`<div class="err">${DERR[er&&er.message]||'Δεν υπάρχει σύνδεση. Δοκίμασε ξανά.'}</div>`;}};
   window.scrollTo({top:0});
@@ -1449,22 +1451,25 @@ async function openDuel(code){
   let d;try{d=await DUAPI.info(code)}catch(e){duelMsg(DERR[e&&e.message]||'Δεν υπάρχει σύνδεση. Δοκίμασε ξανά σε λίγο.');return}
   duelClear();
   if(d.st==='done'&&d.me)return duelResult(d);
-  if(d.exp)return duelMsg(DERR.gone);
-  if(d.me==='a'){if(d.st==='a')return duelResume(code);return duelShare(d);}
-  if(d.me==='b'){if(d.st==='b')return duelResume(code);return duelInvite(d);}
-  if(d.st==='a')return duelMsg(DERR.wait);
+  if(d.st==='exp')return duelMsg(DERR.gone);
+  if(d.me){
+    if(d.myDone)return duelWait(d);
+    if(d.st==='open')return duelShare(d);
+    if(d.started)return duelResume(code);
+    return d.me==='a'?duelReady(d):duelInvite(d);
+  }
   if(d.st==='open'&&!d.b)return duelInvite(d);
   return duelMsg(DERR.taken);
 }
 async function duelResume(code){
-  duelBusy('Συνεχίζουμε…');
+  duelBusy('Μια στιγμή…');
   try{const r=await DUAPI.start(code);
     if(r.done)return openDuel(code);
     duelPlay(code,r.side,r.q,r.opp,r.lost?'Η ερώτηση που είχες ανοιχτή έληξε όσο έλειπες.':'');
   }catch(e){if(e&&e.message==='done')return openDuel(code);duelMsg(DERR[e&&e.message]||'Δεν υπάρχει σύνδεση. Δοκίμασε ξανά σε λίγο.')}
 }
 
-/* 2 · πρόσκληση (ο φίλος άνοιξε τον σύνδεσμο) */
+/* 2α · ο φίλος άνοιξε τον σύνδεσμο (ή του ήρθε ρεβάνς) */
 function duelInvite(d){
   app.innerHTML=`${TOPBAR()}
   <div class="dcard pop"><div class="pill2">ΠΡΟΚΛΗΣΗ</div>
@@ -1472,13 +1477,31 @@ function duelInvite(d){
     <p>5 ερωτήσεις από:</p>${chipsOf(d.ch)}
     <p>⏱️ 30 δευτερόλεπτα για κάθε ερώτηση. Νικά όποιος βρει τις περισσότερες· αν έρθετε ίσοι, ο πιο γρήγορος. Δεν δίνει ούτε παίρνει φωτόνια.</p>
     <div id="de"></div>
-    <button class="btn" id="dgo">Δέξου την πρόκληση ⚔️</button><button class="btn ghost" id="dno">Όχι τώρα</button>
-    <p style="font-size:12px;color:var(--mut)">Ισχύει ακόμα ${d.left<=1?'σήμερα':d.left+' μέρες'}</p></div>`;
+    <button class="btn" id="dgo">Δέξου και παίξε ⚔️</button><button class="btn ghost" id="dno">Όχι τώρα</button>
+    <p style="font-size:12px;color:var(--mut)">Ισχύει ακόμα ${d.left<=1?'μέχρι σήμερα':d.left+' μέρες'}</p></div>`;
   document.getElementById('dno').onclick=()=>lobby('back');
-  document.getElementById('dgo').onclick=async e=>{const b=e.currentTarget;b.disabled=true;b.textContent='Μια στιγμή…';
-    try{const r=await DUAPI.start(d.code);if(r.done)return openDuel(d.code);duelPlay(d.code,r.side,r.q,r.opp)}
-    catch(er){b.disabled=false;b.textContent='Δέξου την πρόκληση ⚔️';document.getElementById('de').innerHTML=`<div class="err">${DERR[er&&er.message]||'Δεν υπάρχει σύνδεση. Δοκίμασε ξανά.'}</div>`;}};
+  document.getElementById('dgo').onclick=e=>duelGo(e.currentTarget,d.code,'Δέξου και παίξε ⚔️');
   window.scrollTo({top:0});
+}
+/* 2β · ο δημιουργός: ο αντίπαλος βρέθηκε, παίζει όποτε θέλει */
+function duelReady(d){
+  app.innerHTML=`${TOPBAR()}
+  <div class="dcard pop"><div class="pill2">ΜΟΝΟΜΑΧΙΑ</div>
+    <h2>Μονομαχία με <span style="color:var(--ban)">${esc(d.b)}</span> ⚔️</h2>
+    <p>${d.opStarted?`<b>${esc(d.b)}</b> δέχτηκε την πρόκληση.`:'Ο αντίπαλος είναι έτοιμος.'} Παίζετε τις ίδιες 5 ερωτήσεις, ο καθένας όποτε θέλει. Το αποτέλεσμα βγαίνει μόλις τελειώσετε και οι δύο.</p>
+    ${chipsOf(d.ch)}
+    <p>⏱️ 30 δευτερόλεπτα για κάθε ερώτηση. Μόλις ξεκινήσεις, μετρά.</p>
+    <div id="de"></div>
+    <button class="btn" id="dgo">Παίξε τώρα ⚔️</button><button class="btn ghost" id="dno">Αργότερα</button>
+    <p style="font-size:12px;color:var(--mut)">Ισχύει ακόμα ${d.left<=1?'μέχρι σήμερα':d.left+' μέρες'}</p></div>`;
+  document.getElementById('dno').onclick=()=>lobby('back');
+  document.getElementById('dgo').onclick=e=>duelGo(e.currentTarget,d.code,'Παίξε τώρα ⚔️');
+  window.scrollTo({top:0});
+}
+async function duelGo(b,code,label){
+  b.disabled=true;b.textContent='Μια στιγμή…';
+  try{const r=await DUAPI.start(code);if(r.done)return openDuel(code);duelPlay(code,r.side,r.q,r.opp,r.lost?'Η ερώτηση που είχες ανοιχτή έληξε όσο έλειπες.':'')}
+  catch(er){if(er&&er.message==='done')return openDuel(code);b.disabled=false;b.textContent=label;document.getElementById('de').innerHTML=`<div class="err">${DERR[er&&er.message]||'Δεν υπάρχει σύνδεση. Δοκίμασε ξανά.'}</div>`;}
 }
 
 /* 3 · οι 5 ερωτήσεις με χρονόμετρο */
@@ -1532,29 +1555,25 @@ async function duelPick(k){
   duelPlay(DQ.code,DQ.side,r.next,DQ.opp);
 }
 
-/* 4 · ο Α τελείωσε: στέλνει τον σύνδεσμο */
+/* 4 · η πρόκληση είναι έτοιμη: στέλνει τον σύνδεσμο (χωρίς να έχει δει ερωτήσεις) */
 function duelShare(d){
-  const url=location.origin+'/?m='+d.code, me=d.mine||{ok:0,s:0};
+  const url=location.origin+'/?m='+d.code;
   const text=`⚔️ Σε προκαλώ σε μονομαχία στο Φωτόνιο Quiz! 5 ερωτήσεις από: ${(d.ch.length?d.ch:['όλα τα κεφάλαια']).join(', ')}. Μπορείς να με νικήσεις;`;
   const CHAT='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3C6.6 3 3 6.6 3 11c0 2.4 1.1 4.5 3 6v4l3.6-2.1c.8.2 1.6.3 2.4.3 5.4 0 9-3.6 9-8.1S17.4 3 12 3Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>';
   const LINK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4.5 4.5 0 0 0 6.4 0l3.2-3.2a4.5 4.5 0 0 0-6.4-6.4L12 5.6M14 10a4.5 4.5 0 0 0-6.4 0l-3.2 3.2a4.5 4.5 0 0 0 6.4 6.4L12 18.4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
-  const waitB=d.b&&d.st!=='done';
   app.innerHTML=`${TOPBAR()}
   <div class="dcard pop"><div class="pill2">ΜΟΝΟΜΑΧΙΑ</div>
-    <h2>Έκανες ${me.ok} / 5 σε ${fmtT(me.s)}</h2>
-    ${waitB?`<p><b>${esc(d.b)}</b> ${d.st==='b'?'παίζει αυτή τη στιγμή':'θα τη δει στην αρχική του'}. Θα δεις το αποτέλεσμα μόλις τελειώσει.</p>`
-      :`<p>Στείλε την πρόκληση σε φίλο. Θα παίξει τις <b>ίδιες 5 ερωτήσεις</b>.</p>`}
+    <h2>Η πρόκληση είναι έτοιμη! ⚔️</h2>
+    <p>Στείλε τον σύνδεσμο σε φίλο. Οι ερωτήσεις ανοίγουν <b>για εσένα</b> μόλις τη δεχτεί, και θα τη βρεις στην αρχική σου.</p>
     ${chipsOf(d.ch)}
-    ${d.st==='open'?`<div class="dlink" id="dl">${esc(url.replace(/^https?:\/\//,''))}</div>
+    <div class="dlink" id="dl">${esc(url.replace(/^https?:\/\//,''))}</div>
     <button class="btn" id="dsh">Στείλε στον φίλο σου</button>
     <div class="sgrid"><button id="svb">${CHAT}<span>Viber</span></button><button id="sms">${CHAT}<span>Messenger</span></button><button id="sig">${IGI}<span>Instagram</span></button>
       <button id="scp" class="cp">${LINK}Αντιγραφή συνδέσμου</button></div>
-    <p class="dmsg" id="dm"></p>`:''}
-    ${duelReview(d)}
+    <p class="dmsg" id="dm"></p>
     <button class="btn ghost" id="dh">Αρχική</button>
-    <p style="font-size:12px;color:var(--mut)">Ισχύει ${d.left<=1?'μέχρι σήμερα':d.left+' μέρες'} · θα δεις το αποτέλεσμα στην αρχική σου μόλις παίξει</p></div>`;
+    <p style="font-size:12px;color:var(--mut)">Ισχύει ${d.left<=1?'μέχρι σήμερα':d.left+' μέρες'} · μία πρόκληση, ένας αντίπαλος</p></div>`;
   document.getElementById('dh').onclick=()=>lobby('back');
-  if(d.st!=='open'){window.scrollTo({top:0});return}
   const msg=t=>{document.getElementById('dm').textContent=t};
   const copy=async()=>{try{await navigator.clipboard.writeText(text+' '+url);return true}catch(e){}
     try{const ta=document.createElement('textarea');ta.value=text+' '+url;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();const ok=document.execCommand('copy');ta.remove();return ok}catch(e){return false}};
@@ -1568,6 +1587,21 @@ function duelShare(d){
   document.getElementById('scp').onclick=async e=>{const b=e.currentTarget;const ok=await copy();
     if(ok){b.innerHTML=LINK+'Αντιγράφηκε! ✓';msg('Επικόλλησέ τον όπου θέλεις: Viber, Instagram, Messenger, SMS…');setTimeout(()=>{b.innerHTML=LINK+'Αντιγραφή συνδέσμου'},2500)}
     else msg('Κράτα πατημένο τον σύνδεσμο πάνω για να τον αντιγράψεις.')};
+  window.scrollTo({top:0});
+}
+
+/* 4β · έπαιξε, περιμένει τον αντίπαλο */
+function duelWait(d){
+  const me=d.mine||{ok:0,s:0}, opp=d.me==='a'?d.b:d.a;
+  app.innerHTML=`${TOPBAR()}
+  <div class="dcard pop"><div class="pill2">ΜΟΝΟΜΑΧΙΑ</div>
+    <h2>Έκανες ${me.ok} / 5 σε ${fmtT(me.s)}</h2>
+    <p>Περιμένουμε <b>${esc(opp)}</b> να παίξει. Θα δεις το αποτέλεσμα στην αρχική σου μόλις τελειώσει.</p>
+    ${chipsOf(d.ch)}
+    ${duelReview(d)}
+    <button class="btn ghost" id="dh">Αρχική</button>
+    <p style="font-size:12px;color:var(--mut)">Ισχύει ακόμα ${d.left<=1?'μέχρι σήμερα':d.left+' μέρες'}</p></div>`;
+  document.getElementById('dh').onclick=()=>lobby('back');
   window.scrollTo({top:0});
 }
 
