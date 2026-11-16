@@ -705,6 +705,19 @@ function duels(){
     <div class="sub">${S.avg!=null?`Μ.Ο. σωστών στις μονομαχίες: <b class="am">${String(S.avg).replace('.',',')} / 5</b>`:''}${S.topCh?` · πιο συχνό κεφάλαιο: ${esc(S.topCh)}`:''}</div>`;
   return sec('dvcard','⚔️ Μονομαχίες',body,`${S.made} φτιάχτηκαν · ${S.done} ολοκληρώθηκαν · ${S.newP} νέοι παίκτες (${dvP==='w'?'7 μέρες':'συνολικά'})`);
 }
+
+/* ---------- Instagram: πόσοι πάτησαν τον σύνδεσμο μέσα από το quiz ---------- */
+let igP='w';
+const IGN={home:'Αρχική (κουμπί)',line:'Αρχική (γραμμή)',round:'Τέλος γύρου',sun:'Δοκιμασία Κυριακής',other:'Άλλο'};
+function igcard(){
+  if(!D.ig)return '';
+  const S=D.ig[igP]||{n:0,u:0,by:{}}, mx=Math.max(1,...Object.values(S.by||{}));
+  const tg=`<div class="dvtg"><button data-ip="w" class="${igP==='w'?'on':''}">7 μέρες</button><button data-ip="all" class="${igP==='all'?'on':''}">Συνολικά</button></div>`;
+  const body=`${tg}<div class="dvk"><div><b>${S.u}</b><span>μαθητές πάτησαν τον σύνδεσμο</span></div><div><b>${S.n}</b><span>πατήματα συνολικά</span></div></div>
+    ${S.n?`<div class="dvh">Από πού πάτησαν</div><div class="dvf">${Object.keys(IGN).filter(k=>S.by[k]).map(k=>`<div><span>${IGN[k]}</span><i style="width:${Math.round(100*S.by[k]/mx)}%"></i><em>${S.by[k]}</em></div>`).join('')}</div>`:''}
+    <div class="sub">Μετρά πατήματα μέσα από το quiz (όχι πόσοι έκαναν τελικά ακόλουθο). Ο καθένας μετρά το πολύ λίγες φορές την ώρα.</div>`;
+  return sec('igcard','📷 Instagram',body,`${S.u} μαθητές · ${S.n} πατήματα (${igP==='w'?'7 μέρες':'συνολικά'})`);
+}
 function render(){
   const y=window.scrollY;
   document.getElementById('app').innerHTML=`
@@ -715,6 +728,7 @@ function render(){
   <div class="grid2">${activity()}${chapters()}</div>
   ${hours()}
   ${duels()}
+  ${igcard()}
   ${players()}
   <div class="grid2"><div style="display:flex;flex-direction:column;gap:16px">${weekHard()}${hard()}</div><div style="display:flex;flex-direction:column;gap:16px">${sunday()}${objs()}${sources()}${finder()}${newbies()}</div></div>`;
   window.scrollTo(0,y);
@@ -727,6 +741,7 @@ function render(){
   document.querySelectorAll('[data-pick]').forEach(b=>b.onclick=()=>pickHard(b));
   document.querySelectorAll('[data-hn]').forEach(b=>b.onclick=()=>{hrsN=+b.dataset.hn;render()});
   document.querySelectorAll('[data-dv]').forEach(b=>b.onclick=()=>{dvP=b.dataset.dv;render()});
+  document.querySelectorAll('[data-ip]').forEach(b=>b.onclick=()=>{igP=b.dataset.ip;render()});
   {const hd=document.getElementById('hrday');if(hd)hd.onchange=()=>{hrsDay=hd.value;render()}}
   {const a=document.getElementById('spadd');if(a)a.onclick=()=>setSpecial(false);const d=document.getElementById('spdel');if(d)d.onclick=()=>setSpecial(true)}
   {const t=document.getElementById('actg');if(t)t.onclick=()=>{onlyAct=!onlyAct;render()}}

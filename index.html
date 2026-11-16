@@ -337,6 +337,15 @@ textarea#cpt{width:100%;height:90px;background:var(--bg);color:var(--soft);borde
 .ovcard .bigem svg{width:62px;height:62px}
 .ovcard .achorb{width:150px}
 .ps .ph{width:64px;height:64px}
+.igcard{display:flex;align-items:center;gap:12px;background:var(--bg);border:1px solid var(--bor);border-radius:14px;padding:12px 14px;text-decoration:none;color:var(--txt);text-align:left}
+.igcard .igi{width:26px;height:26px;flex:0 0 auto;color:var(--ban)}
+.igcard span{flex:1;font-size:15px;font-weight:800;line-height:1.4;color:var(--ban)}.igcard small{display:block;font-weight:700;font-size:12.5px}
+.igcard em{display:block;font-style:normal;font-weight:600;font-size:13.5px;color:var(--soft,#C9D3E0)}
+.igcard small b,.igcard small{color:var(--teal)}
+.igcard>b{flex:0 0 auto;color:var(--ban);font-size:13.5px}
+.igbtn{margin-top:0;text-decoration:none}.igbtn .igi{width:1.25em;height:1.25em}
+.igline{display:flex;align-items:center;justify-content:center;gap:7px;margin:4px auto 0;padding:8px 12px;font-size:13px;color:var(--mut);text-decoration:none}
+.igline .igi{width:16px;height:16px;flex:0 0 auto;color:var(--teal)}.igline b{color:var(--teal);font-weight:700}
 .copy{margin:18px 0 6px;text-align:center;font-size:11.5px;color:var(--dim,#6F84A0);letter-spacing:.02em}
 .tag.pan{background:rgba(245,184,65,.14);color:var(--ban);border:1px solid rgba(245,184,65,.6)}
 .btn.bk{display:flex;align-items:center;justify-content:center;gap:8px}.btn.bk svg{width:1.05em;height:1.05em;flex:0 0 auto}
@@ -820,9 +829,24 @@ async function doLogin(create){
    Ο server λέει αν είναι Κυριακή με πρόκληση (U.sun.on), αν ο παίκτης απάντησε (U.sun.done) και αν έχει το σήμα ✦ (U.sun.badge).
    Η ερώτηση και η σωστή απάντηση δεν φτάνουν στη συσκευή πριν από το «Είμαι έτοιμος» και την απάντηση αντίστοιχα. */
 const IG_URL='https://www.instagram.com/fotonio.physics/';
+/* μόλις πατήσει μία φορά το Instagram, το μεγάλο κουμπί γίνεται μικρή γραμμή (για να μην είναι συνέχεια μπροστά του) */
+const igSeen=()=>{try{return !!localStorage.getItem('fotonio_ig')}catch(e){return false}};
+document.addEventListener('click',e=>{const a=e.target.closest('[data-ig]');if(!a)return;try{localStorage.setItem('fotonio_ig',String(Date.now()))}catch(er){}
+  try{if(typeof apiCall==='function'&&U)apiCall('igClick',[U.nick,U.pin,a.dataset.ig||'other']).catch(()=>{})}catch(er){}});   // μετρητής για τον πίνακα
+/* στο τέλος ενός καλού γύρου (2+ φωτόνια): μικρή κάρτα Instagram. Την πρώτη φορά σε όποιον καλό γύρο,
+   και μετά ξανά μόνο αφού περάσουν τουλάχιστον 10 γύροι από την τελευταία φορά που εμφανίστηκε (πάτησε ή όχι). */
+function igRound(gained){
+  try{
+    const n=(+localStorage.getItem('fotonio_igr_n')||0)+1, shown=localStorage.getItem('fotonio_igr_s');
+    localStorage.setItem('fotonio_igr_n',String(n));                      // γύροι από την τελευταία εμφάνιση
+    if(gained<2||(shown&&n<10))return '';
+    localStorage.setItem('fotonio_igr_s','1');localStorage.setItem('fotonio_igr_n','0');
+  }catch(e){return ''}
+  return `<a class="igcard" href="${IG_URL}" target="_blank" rel="noopener" data-ig="round">${IGI}<span>Μπράβο!<em>Για περισσότερα tips φυσικής</em><small>@fotonio.physics στο Instagram</small></span><b>Δες ›</b></a><div style="height:14px"></div>`;
+}
 const IGI='<svg class="igi" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5.5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.4" cy="6.6" r="1.3" fill="currentColor"/></svg>';
 const WTRI='<svg class="wtri" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 22.5 21h-21z" fill="currentColor"/><path d="M12 10v5" stroke="#16263D" stroke-width="2.2" stroke-linecap="round"/><circle cx="12" cy="18" r="1.2" fill="#16263D"/></svg>';
-const igLink=cls=>`<a class="btn ${cls||''}" href="${IG_URL}" target="_blank" rel="noopener">${IGI}Εξήγηση</a>`;
+const igLink=cls=>`<a class="btn ${cls||''}" href="${IG_URL}" target="_blank" rel="noopener" data-ig="sun">${IGI}Εξήγηση</a>`;
 const TESTSUN=/[?&]dokimi=1(&|$)/.test(location.search);   // δοκιμή καθηγητή: οι κάρτες της Κυριακής οποιαδήποτε μέρα, χωρίς καταγραφή
 let TCH=null, TNOTE='';
 const SAMPLE={ch:'Ταλαντώσεις',sub:'Απλή αρμονική ταλάντωση',q:'Δείγμα πρόκλησης: σε μια απλή αρμονική ταλάντωση, όταν το σώμα περνά από τη θέση ισορροπίας, μέγιστη είναι',o:['η επιτάχυνσή του.','η ταχύτητά του.','η δύναμη επαναφοράς.','η δυναμική του ενέργεια.'],a:1,ex:'Στη θέση ισορροπίας η ταχύτητα έχει μέγιστο μέτρο, ενώ επιτάχυνση, δύναμη επαναφοράς και δυναμική ενέργεια μηδενίζονται.'};
@@ -1161,6 +1185,8 @@ function lobby(how){
   ${duelFoldSlot()}
   <button class="btn ghost" id="share" style="margin-top:0">Μοιράσου το φωτόνιό σου</button>
   ${window.DEMO&&p.level.t<10?'<button class="link" id="demo10">Δοκιμή: φτάσε 1 φωτόνιο πριν από τη νέα βαθμίδα</button>':''}
+  ${igSeen()?`<a class="igline" href="${IG_URL}" target="_blank" rel="noopener" data-ig="line">${IGI}<span>Φωτόνιο στο Instagram · <b>@fotonio.physics</b></span></a>`
+    :`<a class="btn ghost bk igbtn" style="margin-top:0" href="${IG_URL}" target="_blank" rel="noopener" data-ig="home">${IGI}<span>Το Φωτόνιο στο Instagram</span></a>`}
   <button class="link" id="out">Αλλαγή παίκτη · Έξοδος</button>
   <p class="copy">© 2026 Ανδρέας Αναγνωστόπουλος · Φωτόνιο Quiz</p>`;
   document.getElementById('play').onclick=startRound; wireCh(); loadTop(); sunWire(); duelWire();
@@ -1305,7 +1331,7 @@ async function finish(){
     <div style="height:14px"></div>
     <ul class="log">${S.log.map(x=>`<li><span class="d ${x.ok?'g':'r'}"></span>${x.type==='mc'?'Πολλαπλής':'Σωστό/Λάθος'}<em>${esc(x.ch)}${x.kind==='retry'&&x.ok?' · ρεβάνς ✓':''}</em></li>`).join('')}</ul>
     <div style="height:14px"></div>
-    ${(x=>x?x+'<div style="height:14px"></div>':'')(sunResult())}
+    ${(x=>x?(igRound(0),x+'<div style="height:14px"></div>'):igRound(gained))(sunResult())}
     <button class="btn" id="again">Κι άλλος γύρος</button>
     <button class="btn ghost bk" id="home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12H5M11 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Πίσω στην αρχική</button>
   </div>
