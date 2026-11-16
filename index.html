@@ -411,6 +411,7 @@ textarea#cpt{width:100%;height:90px;background:var(--bg);color:var(--soft);borde
 .dch button.on{background:rgba(63,193,201,.16);border-color:var(--teal);color:var(--txt)}
 .dch button.on::before{content:'✓ ';color:var(--teal)}
 .dch button.part{border-style:dashed}
+.dchs{text-align:left}.dchs .chg:first-of-type{padding-top:0}
 .dchn{font-size:12.5px!important;color:var(--mut)!important;margin-top:-4px!important}
 .dwr{display:flex;gap:8px;align-items:stretch}.dwr .dli{flex:1;min-width:0}
 .ddel{flex:0 0 auto;width:44px;background:var(--red);border:1.5px solid var(--redb);border-radius:12px;color:var(--redb);font-weight:800;font-size:20px;line-height:1;padding:0}
@@ -434,6 +435,8 @@ textarea#cpt{width:100%;height:90px;background:var(--bg);color:var(--soft);borde
 .ptg button{flex:1;border:0;background:none;color:var(--mut);font-weight:700;font-size:13px;border-radius:999px;padding:7px 6px}
 .ptg button.on{background:var(--ban);color:var(--bg)}
 .pnote{margin:10px 0 0;text-align:center;font-size:12.5px;color:var(--mut)}.pnote b{color:var(--teal)}
+.nsugs{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:8px}.nsugs span{font-size:12.5px;opacity:.85}
+.nsug{background:transparent;border:1.5px solid currentColor;color:inherit;border-radius:999px;padding:4px 11px;font-weight:700;font-size:13px}
 .rv{display:flex;flex-direction:column;gap:10px}
 .rv .it{border:1px solid var(--bor);border-radius:12px;padding:10px 12px;font-size:14px;line-height:1.7;text-align:left}
 .rv .it .h{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:var(--mut);font-weight:700}
@@ -807,7 +810,16 @@ async function doLogin(create){
   e.innerHTML=''; go.disabled=true; go.textContent='Μια στιγμή…';
   try{
     const r=await API.login(nick,pin,create,create?SRC:'');
-    if(r.err){e.innerHTML=`<div class="err">${ERR[r.err]||'Κάτι πήγε στραβά. Δοκίμασε ξανά.'}</div>`;}
+    if(r.err==='taken'||r.err==='wrongpin'&&r.taken){
+      /* το ψευδώνυμο το έχει ήδη άλλος: το λέμε καθαρά και δίνουμε ελεύθερες προτάσεις */
+      const sg=(r.sug||[]).map(x=>`<button type="button" class="nsug" data-n="${esc(x)}">${esc(x)}</button>`).join('');
+      e.innerHTML=`<div class="err">${r.err==='taken'?`Υπάρχει ήδη παίκτης με το ψευδώνυμο «${esc(r.taken)}». Δοκίμασε κάτι διαφορετικό.`
+        :`Το ψευδώνυμο «${esc(r.taken)}» χρησιμοποιείται ήδη. Αν είναι δικό σου, έλεγξε το PIN. Αν είσαι καινούριος, διάλεξε άλλο.`}
+        ${sg?`<div class="nsugs"><span>Ελεύθερα:</span>${sg}</div>`:''}</div>`;
+      e.querySelectorAll('[data-n]').forEach(b=>b.onclick=()=>{const i=document.getElementById('nick');i.value=b.dataset.n;i.focus();e.innerHTML='';
+        go.textContent='Μπες στο παιχνίδι';document.getElementById('f').onsubmit=ev=>{ev.preventDefault();doLogin(false)}});
+    }
+    else if(r.err){e.innerHTML=`<div class="err">${ERR[r.err]||'Κάτι πήγε στραβά. Δοκίμασε ξανά.'}</div>`;}
     else if(r.needCreate){
       document.getElementById('say').textContent=`Πρώτη φορά εδώ, ${nick}; Θα φτιάξω νέο παίκτη. Θυμήσου το PIN σου!`;
       document.getElementById('mascot').innerHTML=mascot('cheer');
@@ -1529,7 +1541,8 @@ function duelIntro(vs,opp,keys,target){
       <button class="opt2" data-md="pl"><span class="i">⚔️</span><span><b>Προκάλεσε παίκτη του Φωτονίου</b><small>Η πρόκληση εμφανίζεται κατευθείαν στην αρχική του.</small></span></button></div>
     <div id="dpl"></div>`}
     <p><b>5 ερωτήσεις</b> (3 πολλαπλής επιλογής, 2 Σωστό/Λάθος) από:</p>
-    <div class="chips dch">${CHUI.map(G=>`<button data-g="${esc(G.ch)}" aria-pressed="false">${esc(G.ch)}</button>`).join('')}</div>
+    <div class="chsel dchs">${CHUI.map(G=>`<div class="chg"><button class="chh" data-dg="${esc(G.ch)}"><span>${esc(G.ch)}</span><small></small></button>
+      ${G.it.length>1?`<div class="chps">${G.it.map(x=>`<button class="chp" data-dk="${esc(x.k)}">${esc(x.l)}</button>`).join('')}</div>`:''}</div>`).join('')}</div>
     <p class="dchn" id="dchn"></p>
     <p id="dtx"></p>
     <p>⏱️ <b>30 δευτερόλεπτα</b> για κάθε ερώτηση. Νικά όποιος βρει τις περισσότερες· αν έρθετε ίσοι, ο πιο γρήγορος.</p>
@@ -1549,18 +1562,24 @@ function duelIntro(vs,opp,keys,target){
     box.querySelectorAll('[data-pk]').forEach(b=>b.onclick=()=>{tg=b.dataset.pk;paint()});
     document.getElementById('dsf').onsubmit=async e=>{e.preventDefault();const q=document.getElementById('dsq').value.trim(),m=document.getElementById('dsm');if(!q)return;
       m.textContent='Ψάχνω…';try{const r=await DUAPI.find(q);tg=r.nick;paint()}catch(er){m.textContent=DERR[er&&er.message]||'Δεν υπάρχει σύνδεση. Δοκίμασε ξανά.'}};};
-  const paint=()=>{document.querySelectorAll('.dch button').forEach(b=>{const G=CHUI.find(x=>x.ch===b.dataset.g),n=(sel[G.ch]||[]).length;
-      b.classList.toggle('on',n>0);b.classList.toggle('part',n>0&&n<G.it.length);b.setAttribute('aria-pressed',n>0)});
+  const paint=()=>{document.querySelectorAll('[data-dg]').forEach(b=>{const G=CHUI.find(x=>x.ch===b.dataset.dg),n=(sel[G.ch]||[]).length;
+      b.classList.toggle('on',n===G.it.length);b.classList.toggle('part',n>0&&n<G.it.length);b.setAttribute('aria-pressed',n===G.it.length);
+      b.querySelector('small').textContent=n&&G.it.length>1?n+'/'+G.it.length:'';b.parentNode.classList.toggle('open',n>0)});
+    document.querySelectorAll('[data-dk]').forEach(b=>{const G=CHUI.find(g=>g.it.some(x=>x.k===b.dataset.dk)),on=(sel[G.ch]||[]).includes(b.dataset.dk);
+      b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
     const n=Object.keys(sel).length;
     const part=CHUI.filter(G=>sel[G.ch]&&sel[G.ch].length<G.it.length).map(G=>G.ch);
-    document.getElementById('dchn').textContent=n?(part.length?`Από ${part.join(', ')} μόνο οι ενότητες που έχεις διαλέξει. Πάτα για να βγει ή να μπει.`:'Πάτα ένα κεφάλαιο για να το βγάλεις ή να το βάλεις.'):'Πάτα τα κεφάλαια που θέλεις.';
+    document.getElementById('dchn').textContent=n?'Πάτα ένα κεφάλαιο για να μπει ή να βγει· μέσα του βγάζεις όποια ενότητα δεν θέλεις.':'Πάτα τα κεφάλαια που θέλεις.';
     document.getElementById('dtx').innerHTML=mode==='link'?'Πρώτα στέλνεις τον σύνδεσμο. Οι ερωτήσεις ανοίγουν <b>μόλις τη δεχτεί ο φίλος σου</b>, ώστε κανείς να μην τις δει πριν από τον άλλον.'
       :'Η πρόκληση εμφανίζεται κατευθείαν στην αρχική του. Παίζετε τις ίδιες ερωτήσεις, ο καθένας όποτε θέλει.';
     go.disabled=!n||mode==='pl'&&!tg;
     go.textContent=!n?'Διάλεξε τουλάχιστον ένα κεφάλαιο':mode==='rv'?'Στείλε τη ρεβάνς ⚔️':mode==='pl'?(tg?`Προκάλεσε ${tg} ⚔️`:'Διάλεξε αντίπαλο'):'Φτιάξε την πρόκληση ⚔️';
     paintPl();};
-  document.querySelectorAll('.dch button').forEach(b=>b.onclick=()=>{const G=CHUI.find(x=>x.ch===b.dataset.g);
-    if(sel[G.ch])delete sel[G.ch];else sel[G.ch]=G.it.map(x=>x.k);paint();});
+  document.querySelectorAll('[data-dg]').forEach(b=>b.onclick=()=>{const G=CHUI.find(x=>x.ch===b.dataset.dg);   // όλο το κεφάλαιο μέσα ή έξω
+    if(sel[G.ch]&&sel[G.ch].length===G.it.length)delete sel[G.ch];else sel[G.ch]=G.it.map(x=>x.k);paint();});
+  document.querySelectorAll('[data-dk]').forEach(b=>b.onclick=()=>{const k=b.dataset.dk,G=CHUI.find(g=>g.it.some(x=>x.k===k));   // μία ενότητα
+    let a=sel[G.ch]||[];a=a.includes(k)?a.filter(x=>x!==k):G.it.map(x=>x.k).filter(x=>x===k||a.includes(x));
+    if(a.length)sel[G.ch]=a;else delete sel[G.ch];paint();});
   document.querySelectorAll('[data-md]').forEach(b=>b.onclick=()=>{mode=b.dataset.md;de.innerHTML='';paint()});
   paint();
   document.getElementById('dbk').onclick=()=>lobby('back');
