@@ -421,6 +421,10 @@ textarea#cpt{width:100%;height:90px;background:var(--bg);color:var(--soft);borde
 .dtg b{color:var(--ban)}
 .pdu{display:block;margin:4px auto 0;border:1.5px solid var(--teal);background:none;color:var(--teal);border-radius:999px;padding:2px 10px;font-size:13px;line-height:1.4}
 .dli.no{opacity:.8}
+.ptg{display:flex;background:var(--bg);border:1px solid var(--bor);border-radius:999px;padding:3px;gap:3px;margin:0 0 12px}
+.ptg button{flex:1;border:0;background:none;color:var(--mut);font-weight:700;font-size:13px;border-radius:999px;padding:7px 6px}
+.ptg button.on{background:var(--ban);color:var(--bg)}
+.pnote{margin:10px 0 0;text-align:center;font-size:12.5px;color:var(--mut)}.pnote b{color:var(--teal)}
 .rv{display:flex;flex-direction:column;gap:10px}
 .rv .it{border:1px solid var(--bor);border-radius:12px;padding:10px 12px;font-size:14px;line-height:1.7;text-align:left}
 .rv .it .h{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:var(--mut);font-weight:700}
@@ -1104,26 +1108,38 @@ function wireCh(){
 
 /* ---------- Top 3 ---------- */
 let TOP=null;
+let TOPA=null,TOPW=null,MYW=null,WLEFT=0,PODM='w';   // βάθρο: πάντα ξεκινά από «Αυτή την εβδομάδα»
 function podium(){
-  const T=TOP||[],me=U&&U.nick,my=U?U.profile.photons:0;
+  const wk=PODM==='w'&&TOPW!==null, T=(wk?TOPW:TOPA)||[], me=U&&U.nick, my=wk?(MYW||0):(U?U.profile.photons:0), ld=wk?TOPW:TOPA;
+  const where=wk?'στο βάθρο της εβδομάδας':'στο βάθρο';
   const slot=(i)=>{const x=T[i];const r='r'+(i+1);
     if(!x)return `<div class="ps ${r} emp"><div class="ph">${orbit(0,[],'sm')}</div><div class="nm">κενή θέση</div><div class="ct">—</div><div class="st">${i+1}</div></div>`;
     const isMe=me&&x.nick.toLowerCase()===me.toLowerCase();
     const xa=isMe&&U.profile?achOf(U.profile):String(x.a||'').split(',').filter(k=>EM[k]);
-    return `<div class="ps ${r} ${isMe?'me':''}"><div class="ph">${orbit(x.ph,xa,'sm')}</div><div class="nm">${esc(x.nick)}${x.s||(isMe&&hasBadge())?' <span class="hstar" title="Κυνηγός φωτονίων">✦</span>':''}</div><div class="ct">${x.ph} ${x.ph===1?'φωτόνιο':'φωτόνια'}</div>${!isMe&&DUAPI?`<button class="pdu" data-tg="${esc(x.nick)}" aria-label="Πρόκληση σε ${esc(x.nick)}">⚔️</button>`:''}<div class="st">${i+1}</div></div>`};
+    const tot=isMe&&U.profile?U.profile.photons:(x.tot!=null?x.tot:x.ph);   // το φωτόνιο δείχνει πάντα τη συνολική βαθμίδα
+    return `<div class="ps ${r} ${isMe?'me':''}"><div class="ph">${orbit(tot,xa,'sm')}</div><div class="nm">${esc(x.nick)}${x.s||(isMe&&hasBadge())?' <span class="hstar" title="Κυνηγός φωτονίων">✦</span>':''}</div><div class="ct">${wk?'+':''}${x.ph} ${x.ph===1?'φωτόνιο':'φωτόνια'}</div>${!isMe&&DUAPI?`<button class="pdu" data-tg="${esc(x.nick)}" aria-label="Πρόκληση σε ${esc(x.nick)}">⚔️</button>`:''}<div class="st">${i+1}</div></div>`};
   let line='';
-  if(TOP){const inTop=T.some(x=>me&&x.nick.toLowerCase()===me.toLowerCase());
-    if(inTop)line=T[0]&&T[0].nick.toLowerCase()===me.toLowerCase()?'<b>Είσαι στην κορυφή!</b> Κράτα τη θέση σου 👑':'<b>Είσαι στο βάθρο!</b> Η κορυφή είναι κοντά 👀';
-    else if(T.length<3)line='<b>Ελεύθερη θέση</b> στο βάθρο! Ένα φωτόνιο και είναι δική σου ✨';
+  if(ld){const inTop=T.some(x=>me&&x.nick.toLowerCase()===me.toLowerCase());
+    if(inTop)line=T[0]&&T[0].nick.toLowerCase()===me.toLowerCase()?`<b>Είσαι στην κορυφή${wk?' της εβδομάδας':''}!</b> Κράτα τη θέση σου 👑`:`<b>Είσαι ${where}!</b> Η κορυφή είναι κοντά 👀`;
+    else if(T.length<3)line=`<b>Ελεύθερη θέση</b> ${where}! Ένα φωτόνιο και είναι δική σου ✨`;
     else{const need=Math.max(1,T[2].ph-my+1), g=Math.ceil(need/3);              // ένας τέλειος γύρος δίνει 3 φωτόνια
       const NUM=['','Ένας','Δύο','Τρεις'];
-      line=need===1?'<b>1 φωτόνιο</b> και ανεβαίνεις στο βάθρο! Ένας γύρος ακόμα 💪'
-        :need<=9?`Μόλις <b>${need} φωτόνια</b> για το βάθρο! ${g===1?'Ένας τέλειος γύρος αρκεί':NUM[g]+' τέλειοι γύροι αρκούν'} 🔥`
-        :`<b>${need} φωτόνια</b> για να μπεις στο βάθρο. Κάθε γύρος σε φέρνει πιο κοντά! 🚀`}}
-  const body=`<div class="podc"><div class="pod">${slot(1)}${slot(0)}${slot(2)}</div></div>`;
-  return fold('podium','🏆','Το βάθρο του Φωτονίου',line?line.replace(/<b>/g,'<em>').replace(/<\/b>/g,'</em>'):'Top 3 σε φωτόνια',body,foldGet('podium',false));
+      line=need===1?`<b>1 φωτόνιο</b> και ανεβαίνεις ${where}! Ένας γύρος ακόμα 💪`
+        :need<=9?`Μόλις <b>${need} φωτόνια</b> για ${wk?'το βάθρο της εβδομάδας':'το βάθρο'}! ${g===1?'Ένας τέλειος γύρος αρκεί':NUM[g]+' τέλειοι γύροι αρκούν'} 🔥`
+        :`<b>${need} φωτόνια</b> για να μπεις ${where}. Κάθε γύρος σε φέρνει πιο κοντά! 🚀`}}
+  const tg=TOPW!==null?`<div class="ptg" role="tablist"><button data-pm="w" class="${wk?'on':''}" aria-selected="${wk}">Αυτή την εβδομάδα</button><button data-pm="all" class="${wk?'':'on'}" aria-selected="${!wk}">Συνολικά</button></div>`:'';
+  const note=wk?`<p class="pnote">${MYW?`Αυτή την εβδομάδα έχεις <b>${MYW} ${MYW===1?'φωτόνιο':'φωτόνια'}</b> · `:''}νέο βάθρο κάθε Δευτέρα${WLEFT===1?' (αύριο)':WLEFT?` (σε ${WLEFT} μέρες)`:''}</p>`:'';
+  const body=`${tg}<div class="podc"><div class="pod">${slot(1)}${slot(0)}${slot(2)}</div></div>${note}`;
+  return fold('podium','🏆','Το βάθρο του Φωτονίου',line?line.replace(/<b>/g,'<em>').replace(/<\/b>/g,'</em>'):(wk?'Top 3 της εβδομάδας':'Top 3 σε φωτόνια'),body,foldGet('podium',false));
 }
-function loadTop(){API.top3().then(t=>{TOP=t||[];const el=document.getElementById('podium');if(el)el.outerHTML=podium()}).catch(()=>{});}
+function loadTop(){
+  const paint=()=>{TOP=(PODM==='w'&&TOPW?TOPW:TOPA)||[];const el=document.getElementById('podium');if(el)el.outerHTML=podium()};
+  const old=()=>API.top3().then(t=>{TOPA=t||[];TOPW=null;paint()}).catch(()=>{});
+  if(typeof apiCall!=='function'||!U)return old();
+  apiCall('top3b',[U.nick,U.pin]).then(r=>{if(!r||!r.all)return old();TOPA=r.all;TOPW=r.w||[];MYW=r.myw;WLEFT=r.left||0;paint()}).catch(old);
+}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-pm]');if(!b)return;PODM=b.dataset.pm;TOP=(PODM==='w'&&TOPW?TOPW:TOPA)||[];
+  const el=document.getElementById('podium');if(el)el.outerHTML=podium()});
 
 function lobby(how){
   const p=U.profile;
@@ -1364,15 +1380,19 @@ async function share(isAch){
   const text=(isAch?`Έφτασα στη βαθμίδα «${L.name}» στο Φωτόνιο Quiz με ${p.photons} φωτόνια!`:`Έχω ${p.photons} φωτόνια στο Φωτόνιο Quiz (βαθμίδα «${L.name}»).`)
     +' Πόσο κοντά στο «φως» μπορείς να φτάσεις εσύ; Παίξε κι εσύ: @fotonio.physics';
   let blob=null;try{blob=await shareImage(p,isAch)}catch(e){}
-  const file=blob?new File([blob],'fotonio-quiz.png',{type:'image/png'}):null;
+  shareSheet(blob,text+(url?' '+url:''),'Η κάρτα του φωτονίου σου','fotonio-quiz.png');
+}
+/* κοινό παράθυρο κοινοποίησης εικόνας (φωτόνιο, μονομαχία) */
+async function shareSheet(blob,text,alt,fname){
+  const file=blob?new File([blob],fname||'fotonio-quiz.png',{type:'image/png'}):null;
   const img=blob?await new Promise(r=>{const f=new FileReader();f.onload=()=>r(f.result);f.onerror=()=>r('');f.readAsDataURL(blob)}):'';
   const ov=document.createElement('div');ov.className='ov';
   ov.innerHTML=`<div class="ovcard pop">
     <div class="pill">ΚΟΙΝΟΠΟΙΗΣΗ</div>
-    ${img?`<img class="shot" src="${img}" alt="Η κάρτα του φωτονίου σου">`:''}
+    ${img?`<img class="shot" src="${img}" alt="${alt||'Η κάρτα σου'}">`:''}
     <button class="btn" id="shr">Κοινοποίηση</button>
     ${blob?`<button class="btn ghost" id="cpi">Αντιγραφή εικόνας</button>
-    <a class="link" id="dl" href="${img}" download="fotonio-quiz.png">Αποθήκευση εικόνας</a>`:''}
+    <a class="link" id="dl" href="${img}" download="${fname||'fotonio-quiz.png'}">Αποθήκευση εικόνας</a>`:''}
     <p class="note" id="shmsg">Στην κοινοποίηση διάλεξε Instagram, Facebook, TikTok ή όποια εφαρμογή θέλεις, για story ή post.</p>
     <button class="link" id="cl">Κλείσιμο</button>
   </div>`;
@@ -1380,7 +1400,7 @@ async function share(isAch){
   const msg=t=>{ov.querySelector('#shmsg').textContent=t};
   ov.querySelector('#cl').onclick=()=>ov.remove();
   ov.querySelector('#shr').onclick=async()=>{
-    const full={text:text+(url?' '+url:'')};
+    const full={text};
     try{
       if(file&&navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share(Object.assign({files:[file]},full));return;}
       if(navigator.share){await navigator.share(full);msg('Στάλθηκε μόνο το κείμενο. Για story, αποθήκευσε την εικόνα και ανέβασέ τη από την εφαρμογή.');return;}
@@ -1474,7 +1494,7 @@ function duelIntro(vs,opp,keys,target){
   let mode=vs?'rv':target?'pl':'link', tg=target||'';
   const me=String(U.nick).toLowerCase();
   const sugg=()=>{const L=[];const add=(n,s)=>{if(n&&n.toLowerCase()!==me&&!L.some(x=>x.n.toLowerCase()===n.toLowerCase()))L.push({n,s})};
-    (TOP||[]).forEach((x,i)=>add(x.nick,['🥇','🥈','🥉'][i]+' '+x.ph+' φωτόνια'));
+    (TOPA||TOP||[]).forEach((x,i)=>add(x.nick,['🥇','🥈','🥉'][i]+' '+x.ph+' φωτόνια'));
     ((DLAST&&DLAST.vs)||[]).slice(0,4).forEach(v=>add(v.opp,`Εσύ ${v.w} – ${v.l}`));return L};
   app.innerHTML=`${TOPBAR()}
   <div class="dcard pop"><div class="pill2">${vs?'ΡΕΒΑΝΣ':'ΜΟΝΟΜΑΧΙΑ'}</div>
@@ -1700,6 +1720,74 @@ function duelReview(d){
   return fold('dufold','📖','Οι σωστές απαντήσεις','με ενδεικτική αιτιολόγηση',body,false);
 }
 
+
+/* ---------- Εικόνα μονομαχίας 1080×1350: τα δύο φωτόνια αντιμέτωπα ---------- */
+async function duelImage(d){
+  const W=1080,H=1350,c=document.createElement('canvas');c.width=W;c.height=H;const g=c.getContext('2d');
+  try{await document.fonts.ready}catch(e){}
+  const F='Inter, system-ui, sans-serif';
+  const res=d.win==='tie'?'d':d.win, wN=res==='a'?d.a:res==='b'?d.b:'';
+  g.fillStyle='#0F1B2D';g.fillRect(0,0,W,H);
+  g.strokeStyle='#2E4566';g.lineWidth=4;g.strokeRect(40,40,W-80,H-80);
+  const logo=await svgToImg(LOGO.replace('<svg ','<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" '));
+  g.drawImage(logo,88,92,80,80);
+  g.textBaseline='middle';g.textAlign='left';g.fillStyle='#EEF2F8';g.font='800 46px '+F;g.fillText('ΦΩΤΟΝΙΟ',186,114);
+  g.fillStyle='#F5B841';g.fillText('QUIZ',186,160);
+  g.textAlign='right';g.fillStyle='#3FC1C9';g.font='700 32px '+F;g.fillText('@fotonio.physics',W-88,134);
+  // τίτλος
+  g.textAlign='center';
+  const pill='ΜΟΝΟΜΑΧΙΑ';g.font='800 30px '+F;const pw=g.measureText(pill).width+70;
+  g.beginPath();if(g.roundRect)g.roundRect((W-pw)/2,236,pw,56,28);else g.rect((W-pw)/2,236,pw,56);g.strokeStyle='#3FC1C9';g.lineWidth=3;g.stroke();
+  g.fillStyle='#3FC1C9';g.fillText(pill,W/2,265);
+  const title=res==='d'?'Ισοπαλία!':`${wN} νίκησε!`;
+  let ts=78;g.font='800 '+ts+'px '+F;while(g.measureText(title).width>900&&ts>40){ts-=4;g.font='800 '+ts+'px '+F}
+  g.fillStyle='#F5B841';g.fillText(title,W/2,360);
+  // τα δύο φωτόνια
+  const side=[{n:d.a,ph:d.phA||0,S:d.A,L:d.aL,x:270,w:res==='a'},{n:d.b,ph:d.phB||0,S:d.B,L:d.bL,x:810,w:res==='b'}];
+  const cy=660;
+  for(const s of side){
+    if(s.w||res==='d'){const rg=g.createRadialGradient(s.x,cy,30,s.x,cy,300);rg.addColorStop(0,'rgba(245,184,65,0.28)');rg.addColorStop(1,'rgba(245,184,65,0)');g.fillStyle=rg;g.fillRect(s.x-320,cy-320,640,640);}
+  }
+  for(let i=0;i<2;i++){const s=side[i];
+    /* η εικόνα δεν δείχνει βαθμίδες: ο νικητής είναι λαμπερός με στέμμα, ο άλλος πιο σβηστός, όποια φωτόνια κι αν έχουν */
+    const win=s.w, crown=win?'<g><path d="M110 64 L106 22 L130 42 L150 12 L170 42 L194 22 L190 64 Z" fill="#F5B841" stroke="#FFD36E" stroke-width="3" stroke-linejoin="round"/><circle cx="130" cy="54" r="4.5" fill="#0F1B2D"/><circle cx="150" cy="54" r="4.5" fill="#0F1B2D"/><circle cx="170" cy="54" r="4.5" fill="#0F1B2D"/><circle cx="150" cy="12" r="5" fill="#FFD36E"/><circle cx="106" cy="22" r="4" fill="#FFD36E"/><circle cx="194" cy="22" r="4" fill="#FFD36E"/></g>':'';
+    const hs0=tierHero(res==='d'?40:win?50:10).replace('</svg>',crown+'</svg>'), v0=hs0.match(/viewBox="([^"]+)"/)[1].split(' ').map(Number), pd=40;
+    const vb=[v0[0]-pd,v0[1]-pd,v0[2]+2*pd,v0[3]+2*pd], hs=hs0.replace(/viewBox="[^"]+"/,'viewBox="'+vb.join(' ')+'"');
+    const sc=s.w||res==='d'?1:0.88; let hw=Math.round(400*sc),hh=Math.round(hw*vb[3]/vb[2]);if(hh>380*sc){hh=Math.round(380*sc);hw=Math.round(hh*vb[2]/vb[3])}
+    const im=await svgToImg(hs.replace('<svg ',`<svg width="${hw}" height="${hh}" `));
+    g.save();g.translate(s.x,cy);if(i===1)g.scale(-1,1);            // ο δεξιός κοιτά προς τα αριστερά: αντιμέτωποι
+    g.globalAlpha=s.w||res==='d'?1:0.7;g.drawImage(im,-hw/2,-hh/2,hw,hh);g.restore();
+  }
+  // σύγκρουση στη μέση: έκρηξη και σπαθιά
+  const bx=W/2,by=cy;g.save();g.translate(bx,by);g.beginPath();
+  for(let k=0;k<24;k++){const r=k%2?46:108,a=k*Math.PI/12;g.lineTo(r*Math.cos(a),r*Math.sin(a))}g.closePath();
+  g.shadowColor='rgba(245,184,65,0.8)';g.shadowBlur=30;g.fillStyle='rgba(245,184,65,0.22)';g.fill();g.lineWidth=4;g.strokeStyle='#F5B841';g.stroke();g.restore();
+  const sword=(ang)=>{g.save();g.translate(bx,by);g.rotate(ang);
+    g.fillStyle='#E6EDF5';g.beginPath();g.moveTo(0,-96);g.lineTo(9,-80);g.lineTo(9,40);g.lineTo(-9,40);g.lineTo(-9,-80);g.closePath();g.fill();
+    g.fillStyle='#F5B841';g.fillRect(-30,40,60,11);g.fillStyle='#8A5A2B';g.fillRect(-6,51,12,32);g.fillStyle='#F5B841';g.beginPath();g.arc(0,88,9,0,7);g.fill();g.restore()};
+  sword(-Math.PI/4);sword(Math.PI/4);
+  // ονόματα, σκορ, χρόνοι
+  for(const s of side){
+    let ns=46;g.font='800 '+ns+'px '+F;while(g.measureText(s.n).width>420&&ns>26){ns-=2;g.font='800 '+ns+'px '+F}
+    g.fillStyle=s.w?'#F5B841':'#EEF2F8';g.fillText(s.n,s.x,935);
+    g.font='800 130px '+F;g.fillStyle=s.w?'#F5B841':'#C9D3E0';g.fillText(String(s.S.ok),s.x,1045);
+    g.font='600 32px '+F;g.fillStyle='#9FB0C4';g.fillText(fmtT(s.S.s),s.x,1130);
+  }
+  g.font='800 60px '+F;g.fillStyle='#6F84A0';g.fillText('VS',W/2,1045);
+  g.fillStyle='#9FB0C4';g.font='600 32px '+F;g.fillText('Μονομαχίες φυσικής στο Φωτόνιο Quiz ⚔️',W/2,1232);
+  return await new Promise(r=>c.toBlob(r,'image/png'));
+}
+async function duelShareImg(d,btn){
+  const me=d.me, M=me==='a'?d.A:d.B, O=me==='a'?d.B:d.A, opN=me==='a'?d.b:d.a, res=d.win==='tie'?'d':d.win===me?'w':'l';
+  const text=(res==='w'?`Νίκησα ${opN} ${M.ok}–${O.ok} σε μονομαχία στο Φωτόνιο Quiz! ⚔️ Μπορείς να με νικήσεις;`
+    :res==='l'?`Μονομαχία με ${opN} στο Φωτόνιο Quiz: ${M.ok}–${O.ok}. Την επόμενη φορά η ρεβάνς είναι δική μου! ⚔️`
+    :`Ισοπαλία ${M.ok}–${O.ok} με ${opN} σε μονομαχία στο Φωτόνιο Quiz! ⚔️`)+' @fotonio.physics';
+  const t=btn&&btn.innerHTML; if(btn){btn.disabled=true;btn.querySelector('span').textContent='Ετοιμάζω την εικόνα…'}
+  let blob=null;try{blob=await duelImage(d)}catch(e){}
+  if(btn){btn.disabled=false;btn.innerHTML=t}
+  shareSheet(blob,text+(U.url?' '+U.url:''),'Η εικόνα της μονομαχίας','fotonio-monomaxia.png');
+}
+
 /* 5 · αποτέλεσμα (το βλέπουν και οι δύο) */
 function duelResult(d){
   const me=d.me, op=me==='a'?'b':'a', M=me==='a'?d.A:d.B, O=me==='a'?d.B:d.A, myN=me==='a'?d.a:d.b, opN=me==='a'?d.b:d.a;
@@ -1718,10 +1806,12 @@ function duelResult(d){
     <div class="dots">${dots(myN,myL)}${dots(opN,opL)}</div>
     ${d.h2h?`<div class="h2res"><small>Μεταξύ σας συνολικά</small><div><span>${esc(myN)}</span><b>${d.h2h.w} – ${d.h2h.l}</b><span>${esc(opN)}</span></div>${d.h2h.d?`<small>και ${d.h2h.d} ${d.h2h.d===1?'ισοπαλία':'ισοπαλίες'}</small>`:''}</div>`:''}
     ${duelReview(d)}
+    <button class="btn ghost bk dsimg" id="dimg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8.5A2.5 2.5 0 0 1 6.5 6h1.6l1.4-2h5l1.4 2h1.6A2.5 2.5 0 0 1 20 8.5v8a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 16.5z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><circle cx="12" cy="12.5" r="3.6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg><span>${res==='w'?'Μοιράσου τη νίκη σου':'Μοιράσου τη μονομαχία'}</span></button>
     <button class="btn" id="drv">Ρεβάνς: προκάλεσέ τον εσύ</button>
     <button class="btn ghost" id="dh">Αρχική</button></div>`;
   document.getElementById('dh').onclick=()=>lobby('back');
   document.getElementById('drv').onclick=()=>duelIntro(d.code,opN,d.keys);
+  document.getElementById('dimg').onclick=e=>duelShareImg(d,e.currentTarget);
   window.scrollTo({top:0});
 }
 
