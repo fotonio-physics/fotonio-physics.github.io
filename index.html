@@ -347,6 +347,25 @@ textarea#cpt{width:100%;height:90px;background:var(--bg);color:var(--soft);borde
 .igline{display:flex;align-items:center;justify-content:center;gap:7px;margin:4px auto 0;padding:8px 12px;font-size:13px;color:var(--mut);text-decoration:none}
 .igline .igi{width:16px;height:16px;flex:0 0 auto;color:var(--teal)}.igline b{color:var(--teal);font-weight:700}
 .copy{margin:18px 0 6px;text-align:center;font-size:11.5px;color:var(--dim,#6F84A0);letter-spacing:.02em}
+.copy.mid{margin:22px 0 0}
+.tlink{display:block;margin:10px auto 6px;background:none;border:0;color:var(--mut);font-size:11.5px;text-decoration:underline;text-underline-offset:2px;padding:4px 6px}
+.qsrc{margin:12px 0 0;font-size:11px;line-height:1.4;color:#6F8299;text-align:left}
+.sheet.termsh{max-height:92vh;overflow-y:auto;gap:0;text-align:left}
+.termsh h2{text-align:center;font-size:18px;margin-bottom:4px}
+.termsh .upd{text-align:center;font-size:12px;color:var(--mut);margin:0 0 6px}
+.termsh section{border-top:1px solid var(--bor);padding:10px 0 4px}
+.termsh h3{font-size:14px;margin:0 0 6px;color:var(--txt)}
+.termsh p,.termsh li{font-size:13px;line-height:1.6;color:var(--soft);margin:0 0 6px;text-align:left;text-wrap:wrap}
+.termsh ul{margin:0 0 6px;padding-left:18px}
+.termsh .btn{margin-top:10px}
+.tck{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.5;color:var(--soft);margin-top:10px;text-align:left}
+.tck input{flex:0 0 auto;width:18px;height:18px;margin:1px 0 0;accent-color:var(--teal)}
+.tck .tl{background:none;border:0;padding:0;color:var(--teal);text-decoration:underline;text-underline-offset:2px;font:inherit;cursor:pointer}
+.terr{color:var(--redt);font-size:12px;margin:8px 0 0}
+.gate{display:flex;flex-direction:column;gap:6px}
+.gate .gi{font-size:30px;text-align:center;color:var(--ban)}
+.gate h2{text-align:center;font-size:19px;margin:0}
+.gate p.g{text-align:center;color:var(--soft);font-size:14px;line-height:1.55;margin:4px 0 2px}
 .tag.pan{background:rgba(245,184,65,.14);color:var(--ban);border:1px solid rgba(245,184,65,.6)}
 .btn.bk{display:flex;align-items:center;justify-content:center;gap:8px}.btn.bk svg{width:1.05em;height:1.05em;flex:0 0 auto}
 /* ---------- Μονομαχία ---------- */
@@ -633,7 +652,7 @@ function apiCall(fn,args,tries,n){
     .catch(e=>{if(!e.server&&tries>1)return new Promise(r=>setTimeout(r,700+n*900+Math.random()*900)).then(()=>apiCall(fn,args,tries-1,n+1));throw e});
 }
 
-const API={login:(n,p,c,s)=>apiCall('login',[n,p,!!c,String(s||'')]), newRound:(n,p,c)=>apiCall('newRound',[n,p,c||[],2]),
+const API={login:(n,p,c,s,t)=>apiCall('login',[n,p,!!c,String(s||''),String(t||'')]), newRound:(n,p,c)=>apiCall('newRound',[n,p,c||[],2]),
   answer:(n,p,r,q,c)=>apiCall('answer',[n,p,r,q,c]), report:(n,p,r,q,why,t)=>apiCall('report',[n,p,r,q,why,t||'']),
   finish:(n,p,r)=>apiCall('finish',[n,p,r]), top3:()=>apiCall('top3',[]).then(j=>JSON.parse(j))};
 
@@ -770,6 +789,106 @@ const app=document.getElementById('app');
 let U=null;   // {nick,pin,profile}
 let S=null;   // γύρος
 
+/* ---------- Όροι χρήσης και πηγή ερωτήσεων ----------
+   TERMS_V: έκδοση των όρων. Αν αλλάξουν οι όροι, αυξάνεται (v2 κ.λπ.) και όλοι τους ξαναβλέπουν μία φορά. */
+const TERMS_V='v1', TERMS_DATE='20/11/2026', TERMS_MAIL='aanagnostopoulos96@gmail.com';
+/* Γραμμή πηγής κάτω από την ερώτηση. Δικές του ερωτήσεις (Διαγώνισμα, Παραλλαγή): καμία γραμμή. */
+function srcText(src){
+  const s=String(src||'').trim(); let x;
+  if((x=s.match(/^(Επαναληπτικ\S*|Πανελ\S*)(?:\s+Πανελ\S*)?\s+(\d{4})(?:\s*·\s*([ΑΒΓΔαβγδ])\s*(\d))?/))){
+    const t=(/^Επαν/.test(x[1])?'Επαναληπτικές Πανελλήνιες ':'Πανελλήνιες ')+x[2];
+    return x[3]?t+' · Θέμα '+x[3].toUpperCase()+x[4]:t;
+  }
+  if(/^study4exams/i.test(s))return 'Study4Exams · ΙΤΥΕ Διόφαντος · CC BY-NC-SA';
+  if(/^Σχολικ/.test(s))return 'Σχολικό βιβλίο';
+  return '';
+}
+function srcLine(src){const t=srcText(src);return t?`<p class="qsrc">Πηγή: ${esc(t)}</p>`:''}
+const TERMS_HTML=`
+<section><h3>1. Ορισμοί και αποδοχή των όρων</h3>
+<p>«Πλατφόρμα» είναι η διαδικτυακή εφαρμογή «Φωτόνιο Quiz». «Διαχειριστής» είναι ο δημιουργός και διαχειριστής της Πλατφόρμας, ο οποίος είναι και υπεύθυνος για την επεξεργασία των δεδομένων των Χρηστών. «Χρήστης» είναι κάθε πρόσωπο που εγγράφεται ή χρησιμοποιεί την Πλατφόρμα.</p>
+<p>Η εγγραφή και η χρήση της Πλατφόρμας συνεπάγονται την ανεπιφύλακτη αποδοχή των παρόντων όρων. Σε περίπτωση διαφωνίας, ο Χρήστης οφείλει να μη χρησιμοποιεί την Πλατφόρμα.</p></section>
+<section><h3>2. Αντικείμενο και ανεξαρτησία</h3>
+<p>Η Πλατφόρμα παρέχει δωρεάν, για εκπαιδευτικούς σκοπούς, ερωτήσεις φυσικής για μαθητές Λυκείου. Είναι ανεξάρτητη και δεν συνδέεται με το Υπουργείο Παιδείας, τις Πανελλαδικές Εξετάσεις, το ΙΤΥΕ «Διόφαντος» ή οποιονδήποτε εκδότη. Η αναφορά των ανωτέρω ως πηγών δεν συνιστά έγκριση ή συνεργασία.</p></section>
+<section><h3>3. Προϋποθέσεις και κανόνες χρήσης</h3>
+<p>Η χρήση της Πλατφόρμας επιτρέπεται αποκλειστικά σε πρόσωπα που έχουν συμπληρώσει το 15ο έτος της ηλικίας τους.</p>
+<p>Το ψευδώνυμο δεν επιτρέπεται να περιέχει το πραγματικό όνομα ή άλλα στοιχεία που αποκαλύπτουν την ταυτότητα του Χρήστη, ούτε προσβλητικό περιεχόμενο.</p>
+<p>Απαγορεύεται η αντιγραφή, η μαζική συλλογή ή η αναδημοσίευση του περιεχομένου της Πλατφόρμας, η πρόσβαση σε αυτήν με αυτοματοποιημένα μέσα, καθώς και κάθε απόπειρα παράκαμψης των μέτρων ασφαλείας ή παρέμβασης στη λειτουργία της.</p>
+<p>Ο Διαχειριστής δικαιούται να τροποποιεί ή να διαγράφει ψευδώνυμα και λογαριασμούς που παραβιάζουν τους παρόντες όρους ή χρησιμοποιούνται καταχρηστικά, χωρίς προηγούμενη ειδοποίηση.</p></section>
+<section><h3>4. Περιορισμός ευθύνης</h3>
+<p>Το περιεχόμενο παρέχεται «ως έχει». Ο Διαχειριστής καταβάλλει εύλογη επιμέλεια για την ορθότητα των ερωτήσεων, χωρίς να εγγυάται την απουσία σφαλμάτων ή τη συνεχή και αδιάλειπτη λειτουργία της Πλατφόρμας. Ο Χρήστης μπορεί να υποβάλλει ένσταση για κάθε ερώτηση μέσω της σχετικής λειτουργίας. Η βαθμολογία και τα φωτόνια έχουν αποκλειστικά ενδεικτικό και ψυχαγωγικό χαρακτήρα.</p>
+<p>Ο Διαχειριστής δύναται να τροποποιεί, να αναστέλλει ή να διακόπτει την Πλατφόρμα ή μέρος της οποτεδήποτε.</p></section>
+<section><h3>5. Προσωπικά δεδομένα</h3>
+<p>5.1. Δεδομένα που συλλέγονται:</p>
+<ul><li>ψευδώνυμο και PIN (το PIN αποθηκεύεται κρυπτογραφημένο),</li>
+<li>ημερομηνία εγγραφής και τελευταίας χρήσης, καθώς και ο σύνδεσμος μέσω του οποίου πραγματοποιήθηκε η εγγραφή,</li>
+<li>απαντήσεις, χρόνοι απάντησης, γύροι, βαθμολογία, φωτόνια και επιτεύγματα,</li>
+<li>στοιχεία μονομαχιών (αντίπαλος, απαντήσεις, αποτέλεσμα),</li>
+<li>ενστάσεις και τα συνοδευτικά σχόλια,</li>
+<li>στοιχεία χρήσης της εφαρμογής, όπως οι λειτουργίες και οι σύνδεσμοι που επιλέγονται.</li></ul>
+<p>Δεν συλλέγονται ονοματεπώνυμο, διεύθυνση ηλεκτρονικού ταχυδρομείου ή άλλα στοιχεία επικοινωνίας. Το ψευδώνυμο και το PIN είναι απαραίτητα για τη χρήση της Πλατφόρμας.</p>
+<p>5.2. Σκοπός: η λειτουργία της Πλατφόρμας, η παρακολούθηση της προόδου του Χρήστη και η βελτίωση του εκπαιδευτικού περιεχομένου.</p>
+<p>5.3. Νομική βάση: η συγκατάθεση του Χρήστη.</p>
+<p>5.4. Πρόσβαση: τη διαχείριση των δεδομένων έχει αποκλειστικά ο Διαχειριστής. Τα δεδομένα δεν πωλούνται και δεν διαβιβάζονται σε τρίτους.</p>
+<p>5.5. Δημόσια εμφάνιση: το ψευδώνυμο, τα φωτόνια, η βαθμίδα και τα διακριτικά του Χρήστη εμφανίζονται στο βάθρο, στην αναζήτηση αντιπάλου και στις μονομαχίες. Οι εικόνες κοινοποίησης δημιουργούνται στη συσκευή του Χρήστη και κοινοποιούνται μόνο με δική του ενέργεια.</p>
+<p>5.6. Στατιστικά: ο Διαχειριστής δύναται να δημοσιεύει, στην Πλατφόρμα και στα μέσα κοινωνικής δικτύωσης «Φωτόνιο Physics», ανώνυμα συγκεντρωτικά στατιστικά στοιχεία (ενδεικτικά, αριθμό απαντήσεων και ποσοστό επιτυχίας ανά ερώτηση), χωρίς ψευδώνυμα ή στοιχεία που επιτρέπουν την ταυτοποίηση Χρηστών.</p>
+<p>5.7. Αποθήκευση: τα δεδομένα τηρούνται σε υπηρεσίες υπολογιστικού νέφους αξιόπιστου τρίτου παρόχου, με κατάλληλα τεχνικά και οργανωτικά μέτρα ασφαλείας. Οι διακομιστές ενδέχεται να βρίσκονται εκτός Ευρωπαϊκού Οικονομικού Χώρου.</p>
+<p>5.8. Διάρκεια τήρησης: λογαριασμοί που δεν χρησιμοποιούνται για δώδεκα (12) μήνες διαγράφονται. Ανώνυμα συγκεντρωτικά στατιστικά δύνανται να διατηρούνται.</p>
+<p>5.9. Δικαιώματα: ο Χρήστης έχει δικαίωμα πρόσβασης, διόρθωσης, διαγραφής, περιορισμού της επεξεργασίας και εναντίωσης, καθώς και δικαίωμα ανάκλησης της συγκατάθεσης ανά πάσα στιγμή, με αίτημα στη διεύθυνση επικοινωνίας που αναφέρει το ψευδώνυμο. Ο Διαχειριστής δύναται να ζητήσει επιβεβαίωση ότι ο αιτών είναι κάτοχος του λογαριασμού. Ο Χρήστης έχει δικαίωμα υποβολής καταγγελίας στην Αρχή Προστασίας Δεδομένων Προσωπικού Χαρακτήρα (www.dpa.gr).</p></section>
+<section><h3>6. Πνευματική ιδιοκτησία και προέλευση ερωτήσεων</h3>
+<p>Ο σχεδιασμός, ο κώδικας, η μασκότ, το λογότυπο και οι ερωτήσεις χωρίς ένδειξη πηγής αποτελούν πνευματική ιδιοκτησία του Διαχειριστή. Απαγορεύεται η αναπαραγωγή τους χωρίς έγγραφη άδεια.</p>
+<p>Οι ερωτήσεις από τρίτες πηγές φέρουν ένδειξη της πηγής τους και τα δικαιώματα επ' αυτών ανήκουν στους δικαιούχους:</p>
+<ul><li>Study4Exams: υλικό του ΙΤΥΕ «Διόφαντος», υπό άδεια Creative Commons BY-NC-SA. Οι διασκευές του διατίθενται με την ίδια άδεια.</li>
+<li>Πανελλαδικές Εξετάσεις: θέματα του Υπουργείου Παιδείας.</li>
+<li>Σχολικά βιβλία: υλικό του ΙΤΥΕ «Διόφαντος».</li></ul>
+<p>Δικαιούχος που θεωρεί ότι υλικό του χρησιμοποιείται χωρίς δικαίωμα δύναται να απευθυνθεί στη διεύθυνση επικοινωνίας. Το υλικό αφαιρείται εντός δεκαπέντε (15) ημερών από την παραλαβή του αιτήματος.</p></section>
+<section><h3>7. Τροποποίηση των όρων</h3>
+<p>Ο Διαχειριστής δύναται να τροποποιεί τους παρόντες όρους. Οι τροποποιήσεις ισχύουν από την ανάρτησή τους στην Πλατφόρμα, με ένδειξη της ημερομηνίας τελευταίας ενημέρωσης.</p></section>
+<section><h3>8. Επικοινωνία</h3>
+<p>${TERMS_MAIL}</p></section>`;
+/* Το φύλλο των όρων: ανοίγει μόνο όταν πατηθεί ο σύνδεσμος */
+function openTerms(){
+  if(document.getElementById('termsov'))return;
+  const ov=document.createElement('div'); ov.className='ov sheetov'; ov.id='termsov'; ov.style.zIndex='30';
+  ov.innerHTML=`<div class="sheet termsh" role="dialog" aria-modal="true" aria-labelledby="termh"><div class="grab"></div>
+    <h2 id="termh">Όροι χρήσης και πολιτική προστασίας δεδομένων</h2><p class="upd">Τελευταία ενημέρωση: ${TERMS_DATE}</p>${TERMS_HTML}
+    <button class="btn" id="termx">Κλείσιμο</button></div>`;
+  document.body.appendChild(ov);
+  const close=()=>{ov.remove();document.removeEventListener('keydown',k)}, k=e=>{if(e.key==='Escape')close()};
+  ov.onclick=e=>{if(e.target===ov)close()}; document.getElementById('termx').onclick=close; document.addEventListener('keydown',k);
+}
+document.addEventListener('click',e=>{if(e.target.closest('[data-terms]')){e.preventDefault();openTerms()}});
+const TERMS_LINK='<button type="button" class="tlink" data-terms>Όροι χρήσης και προσωπικά δεδομένα</button>';
+/* τα δύο κουτάκια (κενά από προεπιλογή): εγγραφή και οθόνη αποδοχής για όσους ήδη παίζουν */
+const TERMS_CHECKS=`<label class="tck"><input type="checkbox" id="tc1"><span>Αποδέχομαι τους <button type="button" class="tl" data-terms>Όρους χρήσης</button> και δηλώνω ότι είμαι 15 ετών και άνω.</span></label>
+  <label class="tck"><input type="checkbox" id="tc2"><span>Συναινώ στην επεξεργασία των δεδομένων μου, όπως περιγράφεται στην <button type="button" class="tl" data-terms>πολιτική προστασίας δεδομένων</button>.</span></label>
+  <p class="terr" id="terr" hidden>Για να συνεχίσετε, επιλέξτε και τα δύο.</p>`;
+function termsOk(){const a=document.getElementById('tc1'),b=document.getElementById('tc2'),e=document.getElementById('terr');
+  const ok=!!(a&&b&&a.checked&&b.checked); if(e)e.hidden=ok; return ok;}
+function termsWire(){['tc1','tc2'].forEach(id=>{const x=document.getElementById(id);if(x)x.onchange=()=>{const e=document.getElementById('terr');if(e&&!e.hidden)termsOk()}})}
+/* Υπάρχοντες παίκτες: μία φορά, πριν από την αρχική. Η πρόοδος δεν αλλάζει. */
+function termsGate(next){
+  app.innerHTML=`<div class="card pop gate"><div class="gi">📄</div><h2>Ενημέρωση όρων χρήσης</h2>
+    <p class="g">Το Φωτόνιο Quiz απέκτησε όρους χρήσης και πολιτική προστασίας δεδομένων. Τα φωτόνια και η πρόοδός σας παραμένουν ως έχουν.</p>
+    ${TERMS_CHECKS}<div id="ge"></div><button class="btn" id="gok">Συνέχεια</button>
+    <button class="link" id="gno">Δεν συμφωνώ</button></div>`;
+  termsWire(); window.scrollTo({top:0});
+  const ok=document.getElementById('gok');
+  ok.onclick=async()=>{
+    if(!termsOk())return;
+    ok.disabled=true; ok.textContent='Μια στιγμή…'; document.getElementById('ge').innerHTML='';
+    try{await apiCall('terms',[U.nick,U.pin,TERMS_V]); U.tv=TERMS_V; next();}
+    catch(e){ok.disabled=false; ok.textContent='Συνέχεια'; document.getElementById('ge').innerHTML='<div class="err" style="margin-top:8px">Δεν υπάρχει σύνδεση. Δοκίμασε ξανά σε λίγο.</div>';}
+  };
+  document.getElementById('gno').onclick=()=>{
+    app.innerHTML=`<div class="card pop gate"><h2>Χωρίς αποδοχή των όρων</h2>
+      <p class="g">Για να συνεχίσετε να παίζετε χρειάζεται η αποδοχή των όρων χρήσης. Αν θέλετε να διαγραφεί ο λογαριασμός σας, στείλτε το ψευδώνυμό σας στο ${TERMS_MAIL}.</p>
+      <button class="btn" id="gbk">Πίσω στους όρους</button><button class="link" id="gout">Έξοδος</button></div>`;
+    document.getElementById('gbk').onclick=()=>termsGate(next);
+    document.getElementById('gout').onclick=()=>{U=null;login()};
+  };
+}
+
 /* ---------- Είσοδος ---------- */
 
 function login(msg){
@@ -784,12 +903,13 @@ function login(msg){
     <label for="pin">PIN (4 ψηφία, μην το ξεχάσεις)</label>
     <input type="password" id="pin" maxlength="4" inputmode="numeric" pattern="[0-9]*" value="${esc(saved.pin||'')}" placeholder="••••">
     <label class="check"><input type="checkbox" id="rem" ${saved.nick||!('nick' in saved)?'checked':''}> Να με θυμάται αυτή η συσκευή</label>
+    <div id="tcs"></div>
     <div id="e"></div>
     <div style="height:8px"></div>
     <button class="btn" id="go" type="submit">Μπες στο παιχνίδι</button>
   </form>
   ${window.DEMO?'<p class="note">Δοκιμαστική έκδοση: η πρόοδος μένει μόνο σε αυτή τη συσκευή.</p>':''}
-  <p class="copy">© 2026 Ανδρέας Αναγνωστόπουλος · Φωτόνιο Quiz</p>`;
+  <p class="copy">© 2026 Ανδρέας Αναγνωστόπουλος · Φωτόνιο Quiz</p>${TERMS_LINK}`;
   document.getElementById('f').onsubmit=e=>{e.preventDefault();doLogin(false)};
   fitTitle();
 }
@@ -807,9 +927,11 @@ const ERR={locked:'Πολλές λάθος προσπάθειες. Το ψευδ
 async function doLogin(create){
   const nick=document.getElementById('nick').value.trim(), pin=document.getElementById('pin').value.trim();
   const rem=document.getElementById('rem').checked, e=document.getElementById('e'), go=document.getElementById('go');
-  e.innerHTML=''; go.disabled=true; go.textContent='Μια στιγμή…';
+  e.innerHTML='';
+  if(create&&!termsOk())return;
+  go.disabled=true; go.textContent='Μια στιγμή…';
   try{
-    const r=await API.login(nick,pin,create,create?SRC:'');
+    const r=await API.login(nick,pin,create,create?SRC:'',create?TERMS_V:'');
     if(r.err==='taken'||r.err==='wrongpin'&&r.taken){
       /* το ψευδώνυμο το έχει ήδη άλλος: το λέμε καθαρά και δίνουμε ελεύθερες προτάσεις */
       const sg=(r.sug||[]).map(x=>`<button type="button" class="nsug" data-n="${esc(x)}">${esc(x)}</button>`).join('');
@@ -817,21 +939,26 @@ async function doLogin(create){
         :`Το ψευδώνυμο «${esc(r.taken)}» χρησιμοποιείται ήδη. Αν είναι δικό σου, έλεγξε το PIN. Αν είσαι καινούριος, διάλεξε άλλο.`}
         ${sg?`<div class="nsugs"><span>Ελεύθερα:</span>${sg}</div>`:''}</div>`;
       e.querySelectorAll('[data-n]').forEach(b=>b.onclick=()=>{const i=document.getElementById('nick');i.value=b.dataset.n;i.focus();e.innerHTML='';
-        go.textContent='Μπες στο παιχνίδι';document.getElementById('f').onsubmit=ev=>{ev.preventDefault();doLogin(false)}});
+        go.textContent='Μπες στο παιχνίδι';document.getElementById('tcs').innerHTML='';document.getElementById('f').onsubmit=ev=>{ev.preventDefault();doLogin(false)}});
     }
     else if(r.err){e.innerHTML=`<div class="err">${ERR[r.err]||'Κάτι πήγε στραβά. Δοκίμασε ξανά.'}</div>`;}
     else if(r.needCreate){
       document.getElementById('say').textContent=`Πρώτη φορά εδώ, ${nick}; Θα φτιάξω νέο παίκτη. Θυμήσου το PIN σου!`;
       document.getElementById('mascot').innerHTML=mascot('cheer');
       go.textContent='Δημιουργία νέου παίκτη'; go.disabled=false;
+      document.getElementById('tcs').innerHTML=TERMS_CHECKS; termsWire();
       document.getElementById('f').onsubmit=ev=>{ev.preventDefault();doLogin(true)};
       return;
     }else{
       saveLogin(rem?{nick,pin}:{nick:''});
-      U={nick:r.nick,pin,profile:r.profile,url:r.url||'',sun:r.sun||null};
-      if(TESTSUN){await sunTestInit();return}
-      const pc=DUAPI&&duelPending(); if(pc){openDuel(pc);return}
-      lobby(create?'new':'back'); return;
+      U={nick:r.nick,pin,profile:r.profile,url:r.url||'',sun:r.sun||null,tv:r.tv||''};
+      const next=async()=>{
+        if(TESTSUN){await sunTestInit();return}
+        const pc=DUAPI&&duelPending(); if(pc){openDuel(pc);return}
+        lobby(create?'new':'back');
+      };
+      if(!window.DEMO&&typeof apiCall==='function'&&'tv' in r&&r.tv!==TERMS_V){termsGate(next);return}   // μία φορά: αποδοχή των νέων όρων
+      await next(); return;
     }
   }catch(err){console.error(err);e.innerHTML=`<div class="err">Δεν υπάρχει σύνδεση. Δοκίμασε ξανά σε λίγο.</div>`;}
   go.disabled=false; go.textContent=create?'Δημιουργία νέου παίκτη':'Μπες στο παιχνίδι';
@@ -972,7 +1099,7 @@ function sunAsk(q){                             // η ερώτηση της πρ
     document.getElementById('mascot').innerHTML=mascot(r.ok?'cheer':'sad');
     sayEl.textContent=r.dup?'Είχες ήδη απαντήσει. Μετράει η πρώτη σου απάντηση.':r.ok?'Σωστά! Έγινες Κυνηγός φωτονίων ✦':'Όχι αυτή τη φορά. Η επόμενη έρχεται την Κυριακή.';
     document.getElementById('after').innerHTML=`<div class="fb ${r.ok?'ok':'no'}"><strong>Ενδεικτική αιτιολόγηση</strong>${m(esc(String(r.ex||'')))}</div>
-      <div style="height:10px"></div><button class="btn" id="nx">Συνέχεια</button>`;
+      ${srcLine(r.src)}<div style="height:10px"></div><button class="btn" id="nx">Συνέχεια</button>`;
     document.getElementById('nx').onclick=()=>lobby('back');
   });
   window.scrollTo({top:0});
@@ -1200,7 +1327,7 @@ function lobby(how){
   ${igSeen()?`<a class="igline" href="${IG_URL}" target="_blank" rel="noopener" data-ig="line">${IGI}<span>Φωτόνιο στο Instagram · <b>@fotonio.physics</b></span></a>`
     :`<a class="btn ghost bk igbtn" style="margin-top:0" href="${IG_URL}" target="_blank" rel="noopener" data-ig="home">${IGI}<span>Το Φωτόνιο στο Instagram</span></a>`}
   <button class="link" id="out">Αλλαγή παίκτη · Έξοδος</button>
-  <p class="copy">© 2026 Ανδρέας Αναγνωστόπουλος · Φωτόνιο Quiz</p>`;
+  <p class="copy mid">© 2026 Ανδρέας Αναγνωστόπουλος · Φωτόνιο Quiz</p>${TERMS_LINK}`;
   document.getElementById('play').onclick=startRound; wireCh(); loadTop(); sunWire(); duelWire();
   ['mapgo','mapgo2'].forEach(id=>{const b=document.getElementById(id);if(b)b.onclick=openMap});
   if(p.newAch&&p.newAch.length){const nw=p.newAch;p.newAch=[];setTimeout(()=>achQueue(nw,p),600);}   // π.χ. κεφάλαιο που είχε ήδη ολοκληρώσει
@@ -1249,8 +1376,9 @@ function ask(){
     ${q.img&&/^data:image\/png;base64,[A-Za-z0-9+/=]+$/.test(q.img)?`<div class="fig"><img src="${q.img}" alt="Σχήμα της ερώτησης"></div>`:''}
     ${opts}
     <div id="after"></div>
+    ${srcLine(q.src)}
   </div>
-  <p class="note">Ερώτηση ${S.i+1} από ${S.qs.length}${q.src&&q.src.indexOf('Πανελλαδικ')>=0||q.src&&q.src.indexOf('Επαναληπτικ')>=0?' · '+esc(q.src):''}</p>`;
+  <p class="note">Ερώτηση ${S.i+1} από ${S.qs.length}</p>`;
   app.querySelectorAll('.opt').forEach(b=>b.onclick=()=>pick(+b.dataset.k));
   window.scrollTo({top:0});
 }
@@ -1667,6 +1795,7 @@ function duelPlay(code,side,q,opp,note){
     <p class="q">${m(esc(q.q))}</p>
     ${q.img&&/^data:image\/png;base64,[A-Za-z0-9+/=]+$/.test(q.img)?`<div class="fig"><img src="${q.img}" alt="Σχήμα της ερώτησης"></div>`:''}
     ${opts}<div id="after"></div>
+    ${srcLine(q.src)}
   </div>`;
   app.querySelectorAll('.opt').forEach(b=>b.onclick=()=>duelPick(+b.dataset.k));
   const tb=document.getElementById('tb'),ts=document.getElementById('ts'),tm=document.getElementById('tm'),full=DQ.sec*1000;
